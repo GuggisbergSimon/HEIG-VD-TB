@@ -22,7 +22,7 @@
 #let TBsupervisor = "Prof. Bertil Chapuis"
 
 #let TBresumePubliable = [
-  Dans ce travail... Ceci est le résumé publiable...
+  TODO résumé publiable
 ]
 
 /*
@@ -40,14 +40,6 @@
 #_title(TBtitle, TBsubtitle, TBacademicYears, TBdpt, TBfiliere, TBorient, TBauthor, TBsupervisor, confidential)
 #import "template/_second_title.typ": *
 #_second_title(TBtitle, TBacademicYears, TBdpt, TBfiliere, TBorient, TBauthor, TBsupervisor, TBresumePubliable)
-#include "template/_preambule.typ"
-#import "template/_authentification.typ": *
-#_authentification(TBauthor)
-
-/*
- Cahier des charges
-*/
-#include "chapters/cdc.typ"
 
 /*
  Table of Content
@@ -57,9 +49,11 @@
 /*
  Content
 */
-#include "chapters/introduction.typ"
+#include "template/_preambule.typ"
 
-#include "chapters/planification.typ"
+#include "chapters/cdc.typ"
+
+#include "chapters/introduction.typ"
 
 #include "chapters/etat-de-lart.typ"
 
@@ -79,4 +73,8 @@
 /*
  Annexes
 */
+
+#import "template/_authentification.typ": *
+#_authentification(TBauthor)
+
 #include "chapters/outils.typ"
