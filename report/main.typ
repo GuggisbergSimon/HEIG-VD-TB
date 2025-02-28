@@ -53,9 +53,9 @@
 
 #include "chapters/cdc.typ"
 
-#include "chapters/introduction.typ"
-
 #include "chapters/etat-de-lart.typ"
+
+#include "chapters/outils.typ"
 
 #include "chapters/architecture.typ"
 
@@ -76,5 +76,3 @@
 
 #import "template/_authentification.typ": *
 #_authentification(TBauthor)
-
-#include "chapters/outils.typ"
