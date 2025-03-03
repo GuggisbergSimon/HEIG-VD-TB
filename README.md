@@ -27,6 +27,16 @@ Application is built using Unity in the [unity](/unity/) subfolder.
 
 Linked to the GitHub repository, [here](https://github.com/users/GuggisbergSimon/projects/2).
 
+## CI/CD
+
+In order to run the GitHub Actions:
+- Refer to [GameCI documentation](https://game.ci/docs/github/activation) regarding secrets to be added to your repository.
+- Create a tag labelled `v.*` and push it.
+
+A release with a build will be created on GitHub after ~17 minutes.
+[ ] TODO build for other platforms
+[ ] TODO compile typst report to pdf
+
 ## Releases
 
 Builds of the application are under the [releases](https://github.com/GuggisbergSimon/HEIG-VD-TB/releases/latest) of the GitHub repository.
