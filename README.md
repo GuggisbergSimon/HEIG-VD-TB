@@ -34,8 +34,8 @@ In order to run the GitHub Actions:
 - Create a tag labelled `v.*` and push it.
 
 A release with a build will be created on GitHub after ~17 minutes.
-[ ] TODO build for other platforms
-[ ] TODO compile typst report to pdf
+- [ ] TODO build for other platforms
+- [ ] TODO compile typst report to pdf
 
 ## Releases
 

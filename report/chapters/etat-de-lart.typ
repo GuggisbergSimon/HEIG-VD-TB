@@ -1,25 +1,28 @@
 = État de l'art <etatdelart>
 
-Le développement de jeux vidéos est complexe car il demande une grande spécialisation dans de nombreux domaines : Programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
+Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : Programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
 
-Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide et pour facilement rejoindre d'autres projets. Cela se fait au détriment ou de la performance ou du build final, puisque ces moteurs de jeux sont des outils très puissants mais dont les fonctionnalités ne sont pas toutes nécessaires.
+Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide. 
+Cela a comme second avantage de faciliter de nouveaux employés à rejoindre un projet, pourvu que ceux-ci soient familiers avec les outils. 
+Utiliser un moteur de jeu se fait au détriment de la performance ou de la taille du build final.
 
-En excluant les moteurs de jeux privés, il existe néanmoins beaucoup de possibilités de moteurs de jeux dont les tarifs restent non payants pourvu que ce soit, ou à titre éducatif, ou lorsque les revenus restent au niveau amateur. Voici une liste résumée ainsi qu'une étude détaillée des plus populaires, répondant aux besoins du projet.
+Voici une liste non exhaustive de plusieurs moteurs de jeux, et une étude approfondie des trois les plus populaires en 2024.
 
 #table(
-  columns: (auto, auto, auto, auto, auto, auto),
+  columns: (23%, auto, auto, 20%, 13%, auto),
   inset: 10pt,
   align: horizon,
   table.header(
-    [*Moteurs de jeu*], [*Sortie initiale*], [*Rendu graphique*], [*Langage*], [*Open Source*],[*Code Source disponible*],
+    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],
   ),
-  "CryEngine", "2002", "3D", "C++/C#/Lua", "Non", "Oui",
+  "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui",
   "GameMaker", "2007", "2D", "GML", "Non", "Non",
-  "Godot", "2014", "2D/3D", "GDScript/C#", "Oui", "Oui",
+  strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui",
   "Löve", "2008", "2D", "Lua", "Oui", "Oui",
+  "Ren'Py", "2004", "2D(3D)", "Python", "Oui", "Oui",
   "Rogue Engine", "2020", "3D", "Js", "Oui", "Oui",
-  "Unity", "2005", "2D/3D", "C#", "Non", "Partiellement",
-  "Unreal Engine", "2014", "3D", "C++", "Non", "Oui",
+  strong("Unity"), "2005", "2D/3D", "C#", "Non", "Partiellement",
+  strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui",
 )
 
 == Unity
@@ -54,17 +57,17 @@ Tout comme Unreal Engine, les contributions par pull request sont possibles, mai
 
 == Conclusion
 
-Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que RenPy pour les visual novels, tandis que d'autres permettent une plus grande flexibilité. Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main. Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
-
-De plus, le 
+Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité. Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main. Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
 
 == Techniques
 
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour.
 Ci-dessous le tableau résumant la disponibilité de ces techniques dans les trois moteurs de jeu les plus populaires.
 
+Les trois moteurs de jeu les plus populaires permettent tous de couvrir ces techniques, au contraire de Ren'Py, par exemple.
+
 #table(
-  columns: (auto, auto, auto, auto, auto, auto),
+  columns: (23%, auto, auto, auto, auto, auto),
   inset: 10pt,
   align: horizon,
   table.header(
