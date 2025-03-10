@@ -25,10 +25,20 @@ Voici une liste non exhaustive de plusieurs moteurs de jeux, et une étude appro
   strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui",
 )
 
+== Godot
+
+Moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
+
+Très léger et bien plus compact que les deux autres moteurs, il manque néanmoins de beaucoup de fonctionnalités.
+Très souvent, il est alors nécessaire de passer par des workarounds ou de développer soi-même les fonctionnalités manquantes, ce qui va dans le sens de la communité open source que ce moteur représente.
+
+Les contributions par pull request sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de bugs, certaines ignorées jusqu'à une année.
+
 == Unity
 
 Représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
 Moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
+
 Facile à prendre en main et dispose d'une très large documentation malgré un code source partiellement disponible.
 Ce code source peut être acheté par une entreprise, si besoin est.
 
@@ -39,25 +49,20 @@ De plus, un grand nombre de fonctionnalités importantes, disponibles via des pa
 
 Représente \~30% des jeux sortis en 2024 sur la plateforme de vente Steam.
 Moteur axé 3D dont le rendu se veut principalement photoréaliste, et ce au travers de nombreuses techniques de rendu et d'optimisation.
+
 Au contraire de Unity, il dispose de nombreux outils et une bien meilleure gestion des assets et des équipes, ce qui rend son utilisation bien plus aisée pour des projets pour de plus grande envergure.
 La raison principale à cela est que les fonctionnalités de celui-ci sont développées sur des projets de jeux vidéo existants, ce que Unity ne fait pas.
 
 Malheureusement, Unreal Engine est plus difficile d'accès et demande souvent de modifier le code source quand les rares fonctionnalités prévues ne suffisent pas.
-Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré.
+Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré, bien plus souvent que pour Godot.
 De plus, en raison de la large complexité du moteur, la codebase est très grande et difficile à comprendre pour un nouveau venu.
-
-== Godot
-
-Moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
-
-Très léger et bien plus compact que les deux moteurs précédents, il manque néanmoins de beaucoup de fonctionnalités.
-Très souvent, il est alors nécessaire de passer par des workarounds ou de développer soi-même les fonctionnalités manquantes, ce qui va dans le sens de la communité open source que ce moteur représente.
-
-Tout comme Unreal Engine, les contributions par pull request sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de bugs, certaines ignorées jusqu'à une année.
 
 == Conclusion
 
-Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité. Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main. Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
+Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité.
+
+Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main.
+Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
 
 == Techniques
 
