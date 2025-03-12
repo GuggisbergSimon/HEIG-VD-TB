@@ -1,38 +1,76 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TerrainGenerator : MonoBehaviour {
-    [SerializeField] private int depth = 20;
-    [SerializeField] private int width = 256;
-    [SerializeField] private int height = 256;
+    [Header("Terrain")] [SerializeField] private int depth = 20;
+    [SerializeField] private int size = 256;
     [SerializeField] private float scale = 20f;
+    [SerializeField] private Material terrainMaterial;
+    [Header("Buildings")] [SerializeField] private GameObject[] buildingPrefabs;
+    [SerializeField] private float yOffset = -5f;
+    [SerializeField] private int buildingCount = 100;
 
-    private Terrain _terrain;
-    
-    private void Start() {
-        _terrain = GetComponent<Terrain>();
-        _terrain.terrainData = GenerateTerrain(_terrain.terrainData);
+    private void OnValidate() {
+        GenerateTerrain();
     }
 
-    private TerrainData GenerateTerrain(TerrainData terrainData) {
-        terrainData.heightmapResolution = width + 1;
-        terrainData.size = new Vector3(width, depth, height);
-        terrainData.SetHeights(0, 0, GenerateHeights());
-        return terrainData;
+    [ContextMenu("Generate Terrain")]
+    private void GenerateTerrain() {
+        foreach (var terrain in Terrain.activeTerrains) {
+            TerrainData terrainData = terrain.terrainData;
+            int HMR = size + 1;
+            terrainData.heightmapResolution = HMR;
+            terrainData.size = new Vector3(size, depth, size);
+            float[,] heights = new float[HMR, HMR];
+            for (int x = 0; x < HMR; x++) {
+                for (int z = 0; z < HMR; z++) {
+                    float worldPosX = (float)x / HMR * HMR + terrain.transform.position.x;
+                    float worldPosZ = (float)z / HMR * HMR + terrain.transform.position.z;
+                    heights[z, x] = Mathf.PerlinNoise(worldPosX * scale, worldPosZ * scale);
+                }
+            }
+
+            terrainData.SetHeights(0, 0, heights);
+            terrain.materialTemplate = terrainMaterial;
+        }
     }
 
-    private float[,] GenerateHeights() {
-        float[,] heights = new float[width, height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                heights[x, y] = CalculateHeight(x, y);
+    [ContextMenu("Place Buildings")]
+    private void PlaceBuildings() {
+        foreach (var terrain in Terrain.activeTerrains) {
+            TerrainData terrainData = terrain.terrainData;
+            for (int i = terrain.transform.childCount - 1; i >= 0; i--) {
+                DestroyImmediate(terrain.transform.GetChild(i).gameObject);
+            }
+
+            int posX = (int)terrain.transform.position.x;
+            int posZ = (int)terrain.transform.position.z;
+
+            for (int i = 0; i < buildingCount; i++) {
+                Vector3 position = new Vector3(
+                    Random.Range(posX, posX + size),
+                    0,
+                    Random.Range(posZ, posZ + size)
+                );
+
+                position.y = GetTerrainHeight(terrain, position.x, position.z) + yOffset;
+
+                Quaternion rotation =
+                    Quaternion.FromToRotation(Vector3.up, GetTerrainNormal(terrainData, position.x, position.z)) *
+                    Quaternion.Euler(0, Random.Range(0, 360), 0);
+
+                GameObject building = buildingPrefabs[Random.Range(0, buildingPrefabs.Length)];
+                Instantiate(building, position, rotation, terrain.transform);
             }
         }
-        return heights;
     }
 
-    private float CalculateHeight(int x, int y) {
-        float xCoord = (float) x / width * scale;
-        float yCoord = (float) y / height * scale;
-        return Mathf.PerlinNoise(xCoord, yCoord);
+    private float GetTerrainHeight(Terrain terrain, float x, float z) {
+        return terrain.SampleHeight(new Vector3(x, 0, z));
+    }
+
+    private Vector3 GetTerrainNormal(TerrainData terrainData, float x, float z) {
+        return terrainData.GetInterpolatedNormal(x / size, z / size);
     }
 }
