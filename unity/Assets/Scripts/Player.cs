@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
-    [Header("Movement Settings")] [SerializeField]
-    private float moveMaxSpeed = 5f;
+    [Header("Movement Settings")] 
+    [SerializeField] private float moveMaxSpeed = 5f;
 
     [SerializeField] private float moveMaxAcceleration = 5f;
     [SerializeField] private float rotationMaxSpeed = 10;
