@@ -2,15 +2,16 @@
 
 Author: Simon Guggisberg
 
-This repository contains all information related to the TB.
+This repository containing all information related to my Bachelor's thesis.
 
 ## First Formulation
 
-Only as an informative piece. under the [formulation](/formulation/TB_first_formulation_OWP.typ) subfolder.
+Only as an informative piece.
+Under the [formulation](/formulation/TB_first_formulation_OWP.typ) subfolder.
 
 ## Report
 
-[ ] TODO detail instructions for Typst
+- [ ] TODO detail instructions for Typst
 
 Report is written using Typst.
 A PDF export is available for each milestone of the project.
@@ -19,7 +20,7 @@ Its content is under the [report](/report/main.typ) subfolder.
 
 ## Application
 
-[ ] TODO detail installation instructions
+- [ ] TODO detail installation instructions
 
 Application is built using Unity in the [unity](/unity/) subfolder.
 

@@ -61,7 +61,7 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
   Ceci dans le but d'éviter des temps de chargement à la moindre nouvelle ressource ou parcelle du monde rencontrée.
 - *Création d'un prototype de jeu vidéo en monde ouvert* :
   Ce prototype contiendra un large environnement en 3D à taille finie, ou infinie.
-  Il devra contenir différents modèles 3D et composants afin de simuler le comporttement attendu pour un jeu en monde ouvert.
+  Il devra contenir différents modèles 3D et composants afin de simuler le comportement attendu pour un jeu en monde ouvert.
 - *Performances acceptables* :
   Il faudra améliorer les performances du prototype de jeu vidéo dénué de toute optimisation. 
   De plus, un ordre de grandeur sera à respecter, plus de 30 frames par seconde tout en évitant les chutes de framerate hors d'écran de chargement.
