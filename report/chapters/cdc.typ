@@ -24,7 +24,7 @@ Ceci implique toute une série de caractéristiques et contraintes :
 
 En plus de laisser une grande liberté de déplacement au joueur, les jeux en monde ouvert vont souvent mettre en place des systèmes offrant une liberté de choix mécanique.
 + Modifications par le joueur :
-  Un joueur peut modifier le terrain, ou instantier des objets.
+  Un joueur peut modifier le terrain, ou instancier des objets.
   Enregistrer ces informations et refléter ces changements ajoute une couche de complexité.
 + Multijoueur :
   Un environnement en monde ouvert est souvent une excuse pour une expérience multijoueur. 
@@ -43,8 +43,8 @@ En plus de laisser une grande liberté de déplacement au joueur, les jeux en mo
 
 Les jeux vidéo ont toujours eu comme problématique centrale d'atteindre un compromis acceptable entre performances et fidélité visuelle.
 
-La problématique de ce travail de bachelor est d'améliorer les performances pour un prototype de jeu en monde ouvert en 3D.
-Pour ce faire, il faudra utiliser l'état de l'art des techniques d'optimisation dans un moteur de jeu existant.
+La problématique de ce travail de bachelor est d'implémenter les composants de base permettant de créer un jeu 3D en monde ouvert dans un moteur de jeu existant.
+Cette implémentation initiale servira à un travail d'optimisation de performances basé sur l'état de l'art de ce domaine.
 
 == Objectifs <objectifs>
 
@@ -52,7 +52,7 @@ Le travail consistera en la réalisation d'un prototype de jeu vidéo en monde o
 Par la suite, il faudra améliorer ses performances en utilisant plusieurs techniques.
 Les performances seront mesurées à plusieurs moments distincts.
 
-En outre, les points suivants définis en tant que composante d'un jeu en monde ouvert seront abordés dans les fonctionnalités
+En outre, les points suivants définis en tant que composante d'un jeu en monde ouvert seront abordés dans les fonctionnalités.
 
 === Requis
 
