@@ -38,6 +38,28 @@ L'intérêt de cette fonctionnalité est pour la génération procédurale d'un 
 impostor : pixyz -> unity industry
 plugins : amplify
 
+== Génération procédurale de terrain
+
+Il existe de nombreux outils de générations procédurale de terrains.
+Ceux-ci se présentent sous la forme de plugins dans un moteur de jeu ou en tant qu'outils externes.
+Parmi les outils externes, Gaea, Houdini et World Creator sont les plus importants pour l'état de l'art actuel.
+Ces outils permettent, entre autres, de simuler effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront utilisables par les moteurs de jeux.
+
+En raison de l'utilisation industrielle de ces outils, le tiers gratuit qu'ils possèdent éventuellement limitent bon nombre de ressources, notamment l'export sous forme de tiles, qui permettrait de passer outre la limitation de taille d'export 1024 x 1024 px.
+
+L'échelle des mondes virtuelles varie grandement :
+- The Elder Scrolls V: Skyrim - 40km²
+- GTA V - 76km²
+- The Legend of Zelda : Breath of the Wild - 80km²
+- The Witcher 3 : 125 km²
+- The Elder Scrolls II: Daggerfall - 1 600 km²
+- The Crew - 5 200 km²
+- Fuel - 18 000 km²
+- Microsoft Flight Simulator - 510 000 000 km² - Carte se basant sur la Terre, ceci est sa surface.
+- Minecraft - 3 600 000 000 km² - Carte générée entièrement procéduralement selon chaque partie
+
+Les logiciels de génération procédurale permettent de générer jusqu'à 1km² dans les tiers gratuits
+
 == Autres
 
 Typst pour la rédaction du rapport au travers de l'extension Tinymist pour Visual Studio Code.

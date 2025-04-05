@@ -1,5 +1,7 @@
 = État de l'art <etatdelart>
 
+== Moteurs de jeux
+
 Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : Programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
 
 Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide. 
@@ -25,7 +27,7 @@ Voici une liste non exhaustive de plusieurs moteurs de jeux, et une étude appro
   strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui",
 )
 
-== Godot
+=== Godot
 
 Moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
 
@@ -34,7 +36,7 @@ Très souvent, il est alors nécessaire de passer par des workarounds ou de dév
 
 Les contributions par pull request sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de bugs, certaines ignorées jusqu'à une année.
 
-== Unity
+=== Unity
 
 Représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
 Moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
@@ -45,7 +47,7 @@ Ce code source peut être acheté par une entreprise, si besoin est.
 Malheureusement, Unity ne scale néanmoins pas très bien avec une grande quantité d'assets et de membres d'équipe.
 De plus, un grand nombre de fonctionnalités importantes, disponibles via des packages officiels externes, ne sont pas toujours bien intégrés, restant souvent en preview pendant de longues années.
 
-== Unreal Engine
+=== Unreal Engine
 
 Représente \~30% des jeux sortis en 2024 sur la plateforme de vente Steam.
 Moteur axé 3D dont le rendu se veut principalement photoréaliste, et ce au travers de nombreuses techniques de rendu et d'optimisation.
@@ -57,7 +59,7 @@ Malheureusement, Unreal Engine est plus difficile d'accès et demande souvent de
 Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré, bien plus souvent que pour Godot.
 De plus, en raison de la large complexité du moteur, la codebase est très grande et difficile à comprendre pour un nouveau venu.
 
-== Conclusion
+=== Conclusion
 
 Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité.
 
@@ -99,6 +101,33 @@ Consiste à ne pas afficher tout élément caché par un autre.
 Très efficace dans les espaces intérieurs. 
 
 TODO
+
+  === glTF
+
+glTF, Graphics Library Transmission Format, est un standard développé par Khronos Group, aussi connu pour OpenXR, OpenGL, Vulkan et WebGL. 
+Il s'agit d'un standard de format de fichier 3D qui permet de transmettre de manière efficiente des modèles, scènes 3D, et animations.
+Le format est entre autre connu pour son standard de matériaux PBR (Physically Based Rendering).
+Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un rendu réaliste en implémentant différentes fonctionnalités telles que
+- Emissive
+- Metallic
+- Normal
+- Roughness
+- Specular
+Ces propriétés sont présentes dans la plupart des moteurs de jeu et de logiciels de modélisation 3D mais ne suivent pas forcément les mêmes standards de nom ou de valeurs.
+Ce standard, en particulier le subset PBR, a été largement adopté par l'industrie.
+
+=== 3DTiles
+
+3DTiles est un format de données 3D géospatial permettant l'affichage, streaming et partage de celles-ci.
+Le format est maintenu par Cesium/Bentley ? TODO check
+3DTiles supporte et préfère le format glTF pour les tiles.
+Plusieurs implémentations existent, notamment pour Unreal Engine et Unity.
+
+=== Cesium
+
+Cesium est une solution pour streamer un globe et des assets 3DTiles.
+Va également garder le joueur, la caméra, au centre du monde en tout temps.
+Plusieurs solutions existent notamment des plugins pour Unreal et Unity.
 
 === Mipmaps
 
