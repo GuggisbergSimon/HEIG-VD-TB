@@ -61,22 +61,22 @@ jobs:
           restore-keys: |
             Library-
       
-            - name: Build Windows project
-              uses: game-ci/unity-builder@v4
-              env:
-                UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-                UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-              with:
-                projectPath: unity
-                buildsPath: build/win
-                targetPlatform: StandaloneWindows64
-                allowDirtyBuild: true
+      - name: Build Windows project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: unity
+          buildsPath: build/win
+          targetPlatform: StandaloneWindows64
+          allowDirtyBuild: true
 
-            - uses: actions/upload-artifact@v4
-              with:
-                name: BuildWin
-                path: build/win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BuildWin
+          path: build/win
 
       - name: Build Linux project
         uses: game-ci/unity-builder@v4
