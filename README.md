@@ -34,9 +34,7 @@ In order to run the GitHub Actions:
 - Refer to [GameCI documentation](https://game.ci/docs/github/activation) regarding secrets to be added to your repository.
 - Create a tag labelled `v.*` and push it.
 
-A release with a build will be created on GitHub after ~17 minutes.
-- [ ] TODO build for other platforms
-- [ ] TODO compile typst report to pdf
+A release with a pdf of the report and builds for Linux and Windows will be created on GitHub after ~1h.
 
 ## Releases
 
