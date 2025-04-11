@@ -8,11 +8,8 @@ public class Player : MonoBehaviour {
     [SerializeField] private float moveMaxAcceleration = 5f;
     [SerializeField] private float rotationMaxSpeed = 10;
 
-    [Header("Ground Check")] [SerializeField]
-    private LayerMask groundLayer;
-
     private Rigidbody _rb;
-    InputAction _moveAction;
+    private InputAction _moveAction;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
