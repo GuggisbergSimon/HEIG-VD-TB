@@ -3,6 +3,6 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/TerrainScriptableObject")]
 public class TerrainScriptableObject : ScriptableObject {
-    public SceneAsset scene;
+    public string sceneName;
     public Vector2Int coords;
 }

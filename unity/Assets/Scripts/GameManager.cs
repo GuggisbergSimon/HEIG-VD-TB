@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject Player;
 
-    private SceneAsset[][] _sortedScenes;
+    private string[][] _sortedScenes;
     private List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
 
@@ -31,13 +31,13 @@ public class GameManager : MonoBehaviour {
         Player = GameObject.FindGameObjectWithTag("Player");
 
         int length = (int)Mathf.Sqrt(scenes.Length);
-        _sortedScenes = new SceneAsset[length][];
+        _sortedScenes = new string[length][];
         for (int i = 0; i < length; i++) {
-            _sortedScenes[i] = new SceneAsset[length];
+            _sortedScenes[i] = new string[length];
         }
 
         foreach (var scene in scenes) {
-            _sortedScenes[scene.coords.x][scene.coords.y] = scene.scene;
+            _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
     }
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour {
                 continue;
             }
 
-            SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y].name);
+            SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
             _chunksLoaded = _chunksLoaded.Where(c => c != coords).ToList();
         }
 
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour {
                     continue;
                 }
                 
-                SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord].name, LoadSceneMode.Additive);
+                SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
                 _chunksLoaded = _chunksLoaded.Append(coords).ToList();
             }
         }

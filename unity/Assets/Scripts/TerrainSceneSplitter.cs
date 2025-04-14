@@ -1,11 +1,14 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 using System.IO;
 using UnityEditor;
 
 public class TerrainSceneSplitter : MonoBehaviour {
     [ContextMenu("Split Terrains Into Scenes")]
     private void SplitTerrainsIntoScenes() {
+#if UNITY_EDITOR
         Transform[] children = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++) {
             children[i] = transform.GetChild(i);
@@ -18,10 +21,10 @@ public class TerrainSceneSplitter : MonoBehaviour {
             }
         }
     }
-    
+
     private void GenerateObjectsFromScenes(GameObject terrainObject) {
         TerrainScriptableObject terrainSO = ScriptableObject.CreateInstance<TerrainScriptableObject>();
-        terrainSO.scene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Scenes/Chunks/" + terrainObject.name + ".unity");
+        terrainSO.name = terrainObject.name;
         terrainSO.coords = new Vector2Int(
             int.Parse(terrainObject.name.Split('_')[1]),
             int.Parse(terrainObject.name.Split('_')[2])
@@ -37,18 +40,19 @@ public class TerrainSceneSplitter : MonoBehaviour {
         Directory.CreateDirectory(Path.GetDirectoryName(scenePath) ?? "Assets/Scenes/Chunks");
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         scene.name = sceneName;
-    
+
         Vector3 worldPosition = terrainObject.transform.position;
         Quaternion worldRotation = terrainObject.transform.rotation;
         Vector3 worldScale = terrainObject.transform.lossyScale;
-    
+
         GameObject newTerrain = Instantiate(terrainObject);
         newTerrain.name = terrainObject.name;
-    
+
         newTerrain.transform.position = worldPosition;
         newTerrain.transform.rotation = worldRotation;
         newTerrain.transform.localScale = worldScale;
-    
+
         EditorSceneManager.SaveScene(scene, scenePath);
+#endif
     }
 }
