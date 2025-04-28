@@ -35,4 +35,8 @@ public class Player : MonoBehaviour {
         velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
         _rb.linearVelocity = velocity;
     }
+    
+    private void OnMenu() {
+        GameManager.Instance.QuitGame();
+    }
 }
