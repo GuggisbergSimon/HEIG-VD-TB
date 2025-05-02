@@ -120,7 +120,7 @@ Seuls les éléments présents dans celle-ci doivent être affichés, et cela re
 @godot-documentation
 
 #figure(
-  image("../images/frustum_culling.png", width: 60%),
+  image("images/frustum_culling.png", width: 60%),
   caption: [
     Frustum culling en action, en rouge les objets ayant été retirés.
   ],
@@ -138,7 +138,7 @@ De plus, les moteurs de jeux Godot et Unity demandent une mise en place addition
 @unreal-documentation
 
 #figure(
-  image("../images/occlusion_culling.png", width: 60%),
+  image("images/occlusion_culling.png", width: 60%),
   caption: [
     Occlusion culling en action, en bleu les objets ayant été retirés.
   ],
@@ -191,7 +191,7 @@ Celle-ci permet une compression des assets très agressive pour l'espace disque 
 @unity-documentation
 
 #figure(
-  image("../images/mipmaps.png", width: 60%),
+  image("images/mipmaps.png", width: 60%),
   caption: [
     Exemples de différentes mipmaps par taille décroissante.
   ],
@@ -230,7 +230,7 @@ Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre le
 @lod-3d-graphics
 
 #figure(
-  image("../images/LOD0Image.png", width: 60%),
+  image("images/LOD0Image.png", width: 60%),
   caption: [
     Exemple de deux LODs d'un même modèle 3D.
   ],
