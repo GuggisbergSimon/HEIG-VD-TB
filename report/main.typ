@@ -66,6 +66,9 @@
 /*
  Tables
 */
+
+= Annexes
+
 #include "template/_bibliography.typ"
 #include "template/_figures.typ"
 #include "template/_tables.typ"

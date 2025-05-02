@@ -1,1 +1,3 @@
-#bibliography("../bibliography.yaml", style: "ieee")
+== Bibliographie <bibliography>
+
+#bibliography("../bibliography.yaml", style: "ieee", title: none)

@@ -9,24 +9,25 @@ Utiliser des moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu
 
 #figure(
   table(
-    columns: (auto, auto, auto, auto, auto, auto),
-    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],[*Sorties 2024 sur Steam*],
-    "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui", "1",
-    "GameMaker", "2007", "2D", "GML", "Non", "Non", "1120",
-    strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
-    "TODO idTech", "1996", "3D", "C/C++", "Non", "Non", "14",
-    "Löve", "2008", "2D", "Lua", "Oui", "Oui", "41",
-    "TODO PyGame", "2002", "2D", "Python", "Oui", "Oui", "870",
-    "Ren'Py", "2004", "2D(3D)", "Python", "Oui", "Oui", "839",
-    "TODO RPG Maker", "2000", "  2D", "Ruby", "Non", "Non", "704",
+    columns: (21%, auto, auto, auto, auto, auto, auto),
+    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],[*Sorties 2024*],
     strong("Unity"), "2005", "2D/3D", "C#", "Non", "Partiellement", "12638",
     strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui", "4707",
-
+    strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
+    "GameMaker", "2007", "2D", "GML", "Non", "Non", "1120",
+    "PyGame", "2000", "2D/3D", "Python", "Oui", "Oui", "870",
+    "Ren'Py", "2004", "2D", "Python", "Oui", "Oui", "839",
+    "RPG Maker", "1992", "  2D", "Ruby/Js", "Non", "Non", "704",
+    "Löve", "2008", "2D", "Lua", "Oui", "Oui", "41",
+    "idTech", "1993", "3D", "C++", "Partiellement", "Partiellement", "14",
+    "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui", "1",
   ),
-  caption: "Liste non exhaustive de moteurs de jeux"
+  caption: "Liste non exhaustive de moteurs de jeux, par nombre de sorties steam 2024, estimées par steamDB"
 )
 
-Les trois moteur de jeux les plus populaires en 2024 ont une étude approfondie ci-dessous.
+À noter que, pour le cas de Godot, le nombre de sorties a doublé depuis 2023.
+
+Les trois moteurs de jeux 3D les plus populaires sont Unity, Unreal Engine et Godot et ce sont ces trois moteurs qui auront une analyse détaillée dans la section suivante.
 
 @steamdb
 
@@ -115,16 +116,33 @@ Ceci est aussi plus communément connu sous le nom de bounding box.
 Cette box contient un near clipping plane, un far clipping plane, et les bords de la caméra, consistant, ainsi, une boîte.
 Seuls les éléments présents dans celle-ci doivent être affichés, et cela représente une amélioration simple et implémentée par défaut dans les trois moteurs de jeux principaux.
 
+@unity-documentation
+@godot-documentation
+
+#figure(
+  image("../images/frustum_culling.png", width: 60%),
+  caption: [
+    Frustum culling en action, en rouge les objets ayant été retirés.
+  ],
+)
+
 === Hidden-surface determination (Occlusion culling)
 
 Consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'overdraw.
 Cette technique est très efficace dans les espaces intérieurs mais nécessite une mise en place particulière.
 En effet, pour pouvoir ne pas rendre des parties d'une scène, il faut que la scène soit divisée en plusieurs parties petites.
-De plus, les moteurs de jeux Godot et Unity demandent une mise en place additionnelle pour que la technique soit appliquée.§
+De plus, les moteurs de jeux Godot et Unity demandent une mise en place additionnelle pour que la technique soit appliquée.
 
 @godot-documentation
 @unity-documentation
 @unreal-documentation
+
+#figure(
+  image("../images/occlusion_culling.png", width: 60%),
+  caption: [
+    Occlusion culling en action, en bleu les objets ayant été retirés.
+  ],
+)
 
 === Lightmap
 
@@ -170,14 +188,14 @@ Une contrainte pour posséder des mipmaps, et de disposer de textures dont la ta
 Cette particularité est également utilisée par la technique d'optimisation d'assets appellée Crunch Compression.
 Celle-ci permet une compression des assets très agressive pour l'espace disque du build tout en ayant de très bonnes performances en runtime.
 
+@unity-documentation
+
 #figure(
-  image("../images/mipmaps.png", width: 80%),
+  image("../images/mipmaps.png", width: 60%),
   caption: [
     Exemples de différentes mipmaps par taille décroissante.
   ],
 )
-
-@unity-documentation
 
 === Level of detail (LOD)
 
@@ -209,14 +227,14 @@ Le dithering est une technique de rendu graphique qui consiste à ajouter du bru
 Ici, le LOD disparaissant verra sa transparence progressivement augmenter via le dithering.
 Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre les deux LODs, l'un deux semi transparent.
 
+@lod-3d-graphics
+
 #figure(
-  image("../images/LOD0Image.png", width: 80%),
+  image("../images/LOD0Image.png", width: 60%),
   caption: [
     Exemple de deux LODs d'un même modèle 3D.
   ],
 )
-
-@lod-3d-graphics
 
 === Impostor
 
