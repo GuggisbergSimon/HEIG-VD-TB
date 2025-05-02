@@ -1,3 +1,3 @@
 == Figures <list-of-figures>
 
-#outline(title: "Figures", target: figure.where(kind: image))
+#outline(title: none, target: figure.where(kind: image))

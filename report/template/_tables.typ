@@ -1,3 +1,3 @@
 == Tables <list-of-tables>
 
-#outline(title: "Tables", target: figure.where(kind: table))
+#outline(title: none, target: figure.where(kind: table))

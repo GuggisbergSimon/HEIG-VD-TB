@@ -166,6 +166,26 @@ Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumi�
 @unity-documentation
 @unreal-documentation
 
+=== Virtual Textures
+
+Il s'agit d'une technique aussi connu sous le nom de Megatexture dans le moteur idTech, ou Streaming Virtual Texturing dans Unreal Engine.
+Elle consiste à disposer d'une seule grande texture avec des coordonnées UV pour l'indexer.
+En runtime, cette texture est ensuite streamée et cachée en mémoire selon les besoins.
+Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps
+
+@unreal-documentation
+
+=== Mesh Shader
+
+TODO réécrire
+
+Cette technologie est connue dans le moteur Unreal Engine sous le nom de Nanite.
+Elle ne s'applique donc que pour ce qui ne bouge pas, typiquement un environnement fixe.
+Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles.
+
+@nvidia-mesh-shader
+@unreal-documentation
+
 === Mipmaps
 
 Il s'agit de set de textures de résolutions plus petites que celle originale à afficher.
@@ -241,7 +261,6 @@ Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre le
 Forme avancée de Billboards.
 Les Billboards sont des quads affichant une texture dont la rotation est ajustée pour toujours faire face à la caméra.
 Différentes variantes existent, certaines permettant aux billboards de figer la rotation d'un ou plusieurs axes afin de contraindre le billboard à n'être visible que depuis une vue panoramique.
-TODO explain with picture
 
 Les billboards ont comme particularité de représenter une image 2D dans un environnement 3D, ce qui est parfait pour des objets distants, mais cette solution comporte des limitations.
 Afin de rendre une image 3D dans un environnement 3D, il faut dessiner le modèle, selon l'angle requis et les conditions de lumière.
@@ -253,6 +272,18 @@ Pour mettre à jour un imposteur deux possibilités existent :
 - Runtime : plus coûteux mais rend mieux les conditions de lumières, d'éventuelles animations procédurales, etc.
 
 @nvidia-true-impostors
+@medium-octahedral-impostors
+
+#figure(
+  grid(
+    columns: 2,
+    image("images/impostors_camera.jpg", width: 90%),
+    image("images/impostors_atlas.jpg", width: 90%)
+  ),
+  caption: [
+    À gauche: Placement des caméras pour un imposteur octahedral. À droite: Atlas de textures pour un imposteur Baked.
+  ],
+)
 
 == Digital Elevation Model
 
