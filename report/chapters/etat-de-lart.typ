@@ -2,29 +2,33 @@
 
 == Moteurs de jeux
 
-Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : Programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
+Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
 
-Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide. 
+Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide.
 Utiliser des moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu exclusif à une compagnie, permet de réduire les potentiels bugs rencontrés, de bénéficier de plus nombreuses fonctionnalités, et de faciliter l'intégration de nouveaux employés, à la condition que ceux-ci soient déjà familiers avec ces outils.
 
-Voici une liste non exhaustive de plusieurs moteurs de jeux, et une étude approfondie des trois les plus populaires en 2024.
+#figure(
+  table(
+    columns: (auto, auto, auto, auto, auto, auto),
+    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],[*Sorties 2024 sur Steam*],
+    "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui", "1",
+    "GameMaker", "2007", "2D", "GML", "Non", "Non", "1120",
+    strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
+    "TODO idTech", "1996", "3D", "C/C++", "Non", "Non", "14",
+    "Löve", "2008", "2D", "Lua", "Oui", "Oui", "41",
+    "TODO PyGame", "2002", "2D", "Python", "Oui", "Oui", "870",
+    "Ren'Py", "2004", "2D(3D)", "Python", "Oui", "Oui", "839",
+    "TODO RPG Maker", "2000", "  2D", "Ruby", "Non", "Non", "704",
+    strong("Unity"), "2005", "2D/3D", "C#", "Non", "Partiellement", "12638",
+    strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui", "4707",
 
-#table(
-  columns: (23%, auto, auto, 20%, 13%, auto),
-  inset: 10pt,
-  align: horizon,
-  table.header(
-    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],
   ),
-  "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui",
-  "GameMaker", "2007", "2D", "GML", "Non", "Non",
-  strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui",
-  "Löve", "2008", "2D", "Lua", "Oui", "Oui",
-  "Ren'Py", "2004", "2D(3D)", "Python", "Oui", "Oui",
-  "Rogue Engine", "2020", "3D", "Js", "Oui", "Oui",
-  strong("Unity"), "2005", "2D/3D", "C#", "Non", "Partiellement",
-  strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui",
+  caption: "Liste non exhaustive de moteurs de jeux"
 )
+
+Les trois moteur de jeux les plus populaires en 2024 ont une étude approfondie ci-dessous.
+
+@steamdb
 
 === Godot
 
@@ -65,56 +69,62 @@ Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés po
 Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main.
 Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
 
+== Problèmes
+
+=== Overdraw
+
+Overdraw est le terme pour désigner le fait de rendre à l'écran un pixel plusieurs fois.
+Cela est, à grande échelle, une perte de performance massive car le GPU doit traiter plusieurs fois chaque pixel de l'écran.
+Cela peut être dû à des objets transparents, superposés, ou un maillage trop complexe, cf. LOD.
+
+=== Lumières
+
+Les lumières, et particulièrement les ombres, ont toujours été un problème dans la course au rendu réaliste 3D.
+Chaque lumière dynamique produisant une ombre doit effectuer un pass via un zbuffer pour chaque objet impacté par celle-ci.
+
+Bien qu'il existe des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées pour toutes les supports.
+
+=== Mémoire vidéo
+
+Les textures, meshes, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo, ou VRAM.
+Or, celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
+
 == Techniques
 
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour.
 Les trois moteurs de jeu les plus populaires détaillés précédemment permettent tous de couvrir ces techniques, au contraire de Ren'Py, par exemple.
 
-#table(
-  columns: (auto, auto, auto, auto),
-  inset: 10pt,
-  align: horizon,
-  table.header(
+#figure(
+  table(
+    columns: (auto, auto, auto, auto),
     [*Techniques*], [*Godot*], [*Unity*], [*Unreal Engine*],
+    "Frustum Culling", "Oui", "Oui", "Opt out",
+    "Occlusion Culling", "Opt in", "Opt in", "Opt in",
+    "Lightmap", "Opt in", "Opt in", "Opt in",
+    "LOD", "Opt in", "Opt in", "Opt in",
+    "Impostor", text(fill: gray,"Plugins"), text(fill: gray,"Plugins"), "Opt in",
+    "Digital Elevation Model", text(fill: gray,"Plugins"), "Opt in", "Opt in",
   ),
-  "Frustum Culling", "Oui", "Oui", "Opt out",
-  "Occlusion Culling", "Opt in", "Opt in", "Opt in",
-  "Lightmap", "Opt in", "Opt in", "Opt in",
-  "LOD", "Opt in", "Opt in", "Opt in",
-  "Impostor", text(fill: red,"Plugins"), text(fill: red,"Plugins"), "Opt in",
-  "Digital Elevation Model", text(fill: red,"Plugins"), "Opt in", "Opt in",
+  caption: "Techniques couvertes par les trois moteurs de jeux plus populaires"
 )
+
+=== Viewing-Frustum Culling
+
+Consiste à limiter l'affichage à ce qui est visible par la caméra.
+Ceci est aussi plus communément connu sous le nom de bounding box.
+Cette box contient un near clipping plane, un far clipping plane, et les bords de la caméra, consistant, ainsi, une boîte.
+Seuls les éléments présents dans celle-ci doivent être affichés, et cela représente une amélioration simple et implémentée par défaut dans les trois moteurs de jeux principaux.
+
+=== Hidden-surface determination (Occlusion culling)
+
+Consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'overdraw.
+Cette technique est très efficace dans les espaces intérieurs mais nécessite une mise en place particulière.
+En effet, pour pouvoir ne pas rendre des parties d'une scène, il faut que la scène soit divisée en plusieurs parties petites.
+De plus, les moteurs de jeux Godot et Unity demandent une mise en place additionnelle pour que la technique soit appliquée.§
 
 @godot-documentation
 @unity-documentation
 @unreal-documentation
-
-=== Viewing-Frustum Culling
-
-Consiste à ne pas afficher tout élément en dehors du champ de vision du rendu.
-
-TODO
-
-=== Hidden-surface determination (Occlusion culling)
-
-Consiste à ne pas afficher tout élément caché par un autre. 
-Très efficace dans les espaces intérieurs. 
-
-TODO
-
-=== Mipmaps
-
-Set de textures de résolutions plus petites que celle originale à afficher.
-Ces textures sont pré calculées et peuvent bien souvent être générées par un moteur de jeu.
-Similaires aux LODs, mais pour les textures.
-Une mipmap 0 serait de résolution 64x64 par exemple, une mipmap 1 de 32x32, 2 de 16x16, etc.
-La texture correspondant à la distance de la caméra est ensuite chargée.
-
-Une contrainte pour posséder des mipmaps, et de disposer de textures dont la taille sont des puissances de 2.
-Cette particularité est également utilisée par la Crunch Compression.
-Celle-ci permet une compression des assets très agressive pour le build tout en ayant de très bonnes performances en runtime.
-
-@unity-documentation
 
 === Lightmap
 
@@ -128,15 +138,83 @@ Cela s'effectue au prix de :
 - Espace mémoire utilisé pour stocker la texture.
 -  Impossibilité de changer la lumière dynamiquement.
 
-Certains moteurs de jeux, tels que Unity, permettent de mixer différents modes de rendus de lumière.
+Certains moteurs de jeux, tels que Unity, permettent de mélanger différents modes de rendus de lumière.
 Ainsi, un objet serait sensible à la lumière d'une lightmap, mais également à une lumière dynamique, afin d'ajouter, par exemple, un éclairage dramatique dans un endroit précis.
 
 Reste que la contrainte la plus importante des lightmaps est que pour une lumière globale, par exemple celle d'un soleil pour simuler un cycle jour-nuit, la technique de lightmap ne peut pas être utilisée.
 Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumière dynamique, tels que des intérieurs.
 
+@godot-documentation
+@unity-documentation
+@unreal-documentation
+
+=== Mipmaps
+
+Il s'agit de set de textures de résolutions plus petites que celle originale à afficher.
+Ces textures sont pré calculées et peuvent bien souvent être générées par un moteur de jeu.
+C'est une technique smilaires aux LODs, mais pour les textures.
+Une mipmap 0 serait de résolution 64x64 par exemple, une mipmap 1 de 32x32, 2 de 16x16, etc.
+La texture correspondant à la distance de la caméra est ensuite chargée.
+
+Cette technique possède plusieurs légers défauts néanmoins.
+- L'espace disque utilisé par les textures est doublé.
+  Le coût est minime, par rapport à la taille occupée par des modèles, mais reste un facteur à prendre en compte.
+- Chargement additionnel
+  - Espace mémoire limité.
+    L'alternative est de charger l'entiéreté de la mipmap, y compris la texture originale, en mémoire, tel un atlas de textures.
+    Le coût est double, tout comme pour celui sur le disque, mais ici il s'agit d'un contexte plus critique.
+  - Charger les textures n'est pas instantané.
+    Si l'on souhaite charger chaque mipmap texture au moment de son utilisation, un effet de popping peut être notable par l'utilisateur.
+
+Une contrainte pour posséder des mipmaps, et de disposer de textures dont la taille sont des puissances de 2.
+Cette particularité est également utilisée par la technique d'optimisation d'assets appellée Crunch Compression.
+Celle-ci permet une compression des assets très agressive pour l'espace disque du build tout en ayant de très bonnes performances en runtime.
+
+#figure(
+  image("../images/mipmaps.png", width: 80%),
+  caption: [
+    Exemples de différentes mipmaps par taille décroissante.
+  ],
+)
+
+@unity-documentation
+
 === Level of detail (LOD)
 
-TODO
+Lorsque des modèles au maillage complexe sont affichés à l'écran de manière distante, le GPU va devoir traiter pour chaque pixel tous les triangles se trouvant dans celui-ci.
+Cela est très coûteux en terme de performances et n'apporte pas une grande valeur au rendu graphique.
+Il s'agit d'un problème typique dû à l'overdraw, ici non pas de pixels exactement mais de triangles.
+
+Les LODs ou Level of Detail sont des modèles 3D de résolutions basses, qui, comme leur nom l'indique, possèdent plusieurs niveaux de détails.
+C'est une technique smilaires aux mipmaps, mais pour les modèles.
+Le niveau de détail original est LOD 0 tandis qu'un moins détaillé serait LOD 1 puis LOD 2, etc.
+Une autre amélioration est de supprimer les objets entièrements passés une certaine distance.
+Ceci est particulièrement utile pour des objets de petites tailles, dont leur absence ne sera pas visible par l'utilisateur passé une certaine distance.
+Cette technique a plusieurs coûts, néanmoins.
+- Espace disque. 
+  Plusieurs modèles pour un seul modèle 3D va accroître l'espace disque utilisé par l'application. 
+  Bien que ceci soit négligeable puisque les modèles LODs seront strictement plus légers que celui original, cela reste un coût à prendre en compte.
+- Travail de modélisation.
+  Modéliser ces LODs peut être réalisé de manière automatique, mais demandent tout de même un travail additionel via un logiciel d'édition 3D.
+  Pour une meilleure fidélité, cependant, il est préférable d'allouer plus de temps pour une modélisation manuelle de ces LODs.
+- Chargement additionel.
+  - Espace mémoire limité.
+    Il serait possible de charger l'entiéreté des LODs en mémoire, tel un atlas de modèles, mais ce coût est autrement plus conséquent que les mipmaps.
+  - Charger les modèles n'est pas instantané.
+    Il est possible, pour des modèles particulièrement lourds, que la transition entre les différents LODs soit trop soudaine ou que le chargement du modèle LOD requis soit trop longue.
+    Cela peut créer un effet de popping et peut nuire à l'expérience utilisateur.
+
+Pour pallier à ce dernier problème, il est possible d'effectuer une transition entre deux LODs via un effet de dithering.
+Le dithering est une technique de rendu graphique qui consiste à ajouter du bruit à une texture pour simuler un effet de transparence.
+Ici, le LOD disparaissant verra sa transparence progressivement augmenter via le dithering.
+Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre les deux LODs, l'un deux semi transparent.
+
+#figure(
+  image("../images/LOD0Image.png", width: 80%),
+  caption: [
+    Exemple de deux LODs d'un même modèle 3D.
+  ],
+)
 
 @lod-3d-graphics
 
@@ -172,11 +250,17 @@ Chacun des trois moteurs de jeu dispose de sa propre solution pour afficher un e
 Que ce soient les Landscapes dans Unreal Engine ou les Terrains dans Unity, ceux-ci remplissent la même fonction.
 À noter que Godot ne dispose pas de solution intégrée directement, mais plusieurs plugins permettent de pallier à ce manque.
 
+@unity-documentation
+@unreal-documentation
+@godot-terrain3D
+
 === Cesium
 
 Cesium est une plate-forme mettant différentes ressources à disposition pour le rendu géospatial.
 Cela inclue une large base de données de 3DTiles ou d'imageries satellites.
 Plusieurs implémentations existent, que ce soit pour le web avec CesiumJS, ou pour les moteurs de jeux avec Unreal et Unity.
+
+@cesium
 
 ==== 3DTiles
 
@@ -192,6 +276,8 @@ Plusieurs types de tiles existent :
   Ce format permet d'approximer la surface d'un objet 3D en représentant, dans l'espace, l'ensemble du nuage de points.
 - Tiles composites : Il est également possible de mélanger les différents types de tiles ensemble.
 
+@3D-tiles
+
 ==== glTF
 
 glTF, Graphics Library Transmission Format, est un standard développé par Khronos Group, aussi connu pour OpenXR, OpenGL, Vulkan et WebGL. 
@@ -205,6 +291,9 @@ Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un ren
 - Specular
 Ces propriétés sont présentes dans la plupart des moteurs de jeu et de logiciels de modélisation 3D mais ne suivent pas forcément les mêmes standards de nom ou de valeurs.
 Ce standard, en particulier le subset PBR, a été largement adopté par l'industrie du jeu vidéo.
+
+@gltf-khronos
+@pbr-khronos
 
 === Génération procédurale de terrain
 
@@ -229,6 +318,11 @@ D'autres mondes virtuels sont eux générés intégralement de manière procédu
 Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
 Leur taille, quant à elle, explose et est difficilement quantifiable, du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
+@world-machine
+@world-creator
+@gaea
+@houdini
+
 === Conclusion
 
 La solution Cesium est une solution très complète et puissante pour le rendu géospatial de notre planète.
@@ -237,5 +331,5 @@ Cette industrie préfère se tourner vers des solutions plus adaptées à leurs 
 Finalement, la complexité des outils ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
 En effet, Cesium for Unity implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
 
-En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de 64km².
-Celle-ci sera représenté par une heightmap de 8192x8192 pixels.
+En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de taille minimal de 64km².
+Celui-ci sera représenté par une heightmap de 8192x8192 pixels.
