@@ -2,10 +2,10 @@
 
 == Moteurs de jeux
 
-Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : programmation en temps réel, rendu graphique, gestion du son et des inputs utilisateur, intelligence artificielle, etc. 
+Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : programmation en temps réel, rendu graphique, gestion du son, plusieurs types d'inputs utilisateur, intelligence artificielle, etc. 
 
-Pour cette raison, les moteurs de jeux sont des solutions quasiment nécessaires pour un développement rapide.
-Utiliser des moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu exclusif à une compagnie, permet de réduire les potentiels bugs rencontrés, de bénéficier de plus nombreuses fonctionnalités, et de faciliter l'intégration de nouveaux employés, à la condition que ceux-ci soient déjà familiers avec ces outils.
+Les moteurs de jeux ont grandement évolué, incorporant de nombreuses fonctionnalités et outiles pour facilier le développement.
+L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu in-house exclusif à une compagnie, permet de disposer d'un large panel de fonctionnalités pour toutes sortes d'échelles et types de projets, L'intégration de nouveaux employés et le partage de connaissances est également simplifié, à la condition qu'ils soient familiers avec le moteur de jeu utilisé, bien entendu.
 
 #figure(
   table(
@@ -26,74 +26,85 @@ Utiliser des moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu
 )
 
 À noter que, pour le cas de Godot, le nombre de sorties a doublé depuis 2023.
-
-Les trois moteurs de jeux 3D les plus populaires sont Unity, Unreal Engine et Godot et ce sont ces trois moteurs qui auront une analyse détaillée dans la section suivante.
+C'est pour cette raison et du fait de sa plus grande popularité en tant que moteur de jeu open source 3D qu'il a été étudié ci-dessous, avec Unity et Unreal Engine.
 
 @steamdb
 
 === Godot
 
-Moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
+Godot est un moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
 
 Très léger et bien plus compact que les deux autres moteurs, il manque néanmoins de beaucoup de fonctionnalités.
-Très souvent, il est alors nécessaire de passer par des workarounds ou de développer soi-même les fonctionnalités manquantes, ce qui va dans le sens de la communité open source que ce moteur représente.
+Il est alors souvent nécessaire de passer par des workarounds ou de développer soi-même les fonctionnalités manquantes afin d'ensuite éventuellement en faire part le reste de la communité, ce qui s'inscrit dans la philosophie FOSS du projet.
 
 Les contributions par pull request sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de bugs, certaines ignorées jusqu'à une année.
+Le moteur présente néanmoins un certain manque de matûrité et les rares projets commerciaux ayant rencontré le succès sont des projets indépendants de petite envergure, pour le moment.
 
 === Unity
 
-Représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
-Moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
+Unity représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
+C'est un moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
 
-Facile à prendre en main et dispose d'une très large documentation malgré un code source partiellement indisponible.
-Ce code source peut être acheté par une entreprise, si besoin est.
+Des projets complexes open world live service tels que Genshin Impact ont été réalisés avec ce moteur et chaque année de nombreux projets commerciaux de moindre envergure rencontre le succès.
+Il est facile à prendre en main et d'une très large documentation malgré un code source partiellement indisponible, code source qui peut être acheté par une entreprise, au besoin.
 
-Malheureusement, Unity ne scale néanmoins pas très bien avec une grande quantité d'assets et de membres d'équipe.
-De plus, un grand nombre de fonctionnalités importantes, disponibles via des packages officiels externes, ne sont pas toujours bien intégrés, restant souvent en preview pendant de longues années.
+Malheureusement, Unity ne scale néanmoins pas très bien avec une grande quantité d'assets ainsi qu'une large équipe.
+De plus, un grand nombre de fonctionnalités importantes, disponibles via des packages officiels externes, ne sont pas toujours bien intégrés, restant souvent sans mises à jour ou en preview pendant de longues années.
+Pour ne rien arranger, la communication de Unity concernant certains changements majeurs de prix a laissé à désirer, entraînant perte de confiance et exode vers d'autres moteurs de jeux, tel que Godot.
 
 === Unreal Engine
 
-Représente \~30% des jeux sortis en 2024 sur la plateforme de vente Steam.
-Moteur axé 3D dont le rendu se veut principalement photoréaliste, et ce au travers de nombreuses techniques de rendu et d'optimisation.
+Unreal Engine représente \~30% des jeux sortis en 2024 sur la plateforme de vente Steam.
+C'est un moteur axé 3D dont le rendu se veut principalement photoréaliste, et ce au travers de nombreuses techniques de rendu et d'optimisation.
 
-Au contraire de Unity, il dispose de nombreux outils et une bien meilleure gestion des assets et des équipes, ce qui rend son utilisation bien plus aisée pour des projets pour de plus grande envergure.
-La raison principale à cela est que les fonctionnalités de celui-ci sont développées sur des projets de jeux vidéo existants, ce que Unity ne fait pas.
+Au contraire de Unity, il dispose de nombreux outils et une bien meilleure gestion des assets et des équipes, ce qui rend son utilisation bien plus aisée pour des projets à plus grande échelle.
+Epic Games, la société derrière Unreal Engine, travaille également sur des jeux vidéo, tels que Fortnite, et ajoutent au moteur les nombreuses fonctionnalités développées pour celui-ci.
 
 Malheureusement, Unreal Engine est plus difficile d'accès et demande souvent de modifier le code source quand les rares fonctionnalités prévues ne suffisent pas.
-Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré, bien plus souvent que pour Godot.
+Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré.
 De plus, en raison de la large complexité du moteur, la codebase est très grande et difficile à comprendre pour un nouveau venu.
 
 === Conclusion
 
-Chaque moteur dispose de forces et de faiblesses. Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité.
+Chaque moteur dispose de forces et de faiblesses.
+Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py pour les visual novels, tandis que d'autres permettent une plus grande flexibilité ou proposent des outils uniques, au prix d'une courbe d'aprentissage plus élevée.
 
-Pour un projet tel que pour un travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main.
-Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà très bien établi.
+Pour un projet tel que ce travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main.
+Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà bien établi.
+
+Pour ces raisons, il a été d'utiliser Unity pour le développement de ce projet.
 
 == Problèmes
 
+Cette section liste de manière succinte les principaux problèmes rencontrés dans le cadre du rendu 3D ou de la gestion de ressources pour un jeu vidéo.
+
 === Overdraw
 
-Overdraw est le terme pour désigner le fait de rendre à l'écran un pixel plusieurs fois.
+Overdraw est le terme désignant le fait de rendre à l'écran un pixel plusieurs fois.
 Cela est, à grande échelle, une perte de performance massive car le GPU doit traiter plusieurs fois chaque pixel de l'écran.
+Ce problème explose, bien évidemment en cas de résolution plus élevée.
+
 Cela peut être dû à des objets transparents, superposés, ou un maillage trop complexe, cf. LOD.
+En effet, chaque triangle d'un maillage va produire un appel au GPU pour calculer les pixels qu'il couvre.
 
 === Lumières
 
 Les lumières, et particulièrement les ombres, ont toujours été un problème dans la course au rendu réaliste 3D.
 Chaque lumière dynamique produisant une ombre doit effectuer un pass via un zbuffer pour chaque objet impacté par celle-ci.
 
-Bien qu'il existe des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées pour toutes les supports.
+Bien qu'il existe des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées par tout type de hardware.
 
 === Mémoire vidéo
 
-Les textures, meshes, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo, ou VRAM.
-Or, celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
+Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo, ou VRAM.
+Celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
+Il convient alors de faire un compromis entre fidélité graphique et temps de chargement ou performances.
 
 == Techniques
 
-Un grand nombre de techniques visant à améliorer les performances ont vues le jour.
-Les trois moteurs de jeu les plus populaires détaillés précédemment permettent tous de couvrir ces techniques, au contraire de Ren'Py, par exemple.
+Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
+Certaines sont devenues de facto standard tandis que d'autres possèdent encore un statut plus expérimental.
+Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom, tel que les megatexture, maintenant plus connues sous le nom de Streaming Virtual Texturing.
 
 #figure(
   table(
@@ -102,19 +113,26 @@ Les trois moteurs de jeu les plus populaires détaillés précédemment permette
     "Frustum Culling", "Oui", "Oui", "Opt out",
     "Occlusion Culling", "Opt in", "Opt in", "Opt in",
     "Lightmap", "Opt in", "Opt in", "Opt in",
+    "Streaming Virtual Texturing", "Non", "Experimental", "Opt in",
+    "Mesh Shader", "Non", "Non", "Opt in",
+    "Mipmaps", "Opt out", "Opt out", "Opt out",
     "LOD", "Opt in", "Opt in", "Opt in",
-    "Impostor", text(fill: gray,"Plugins"), text(fill: gray,"Plugins"), "Opt in",
-    "Digital Elevation Model", text(fill: gray,"Plugins"), "Opt in", "Opt in",
+    "Impostor", "Plugins", "Plugins", "Opt in",
+    "Digital Elevation Model", "Plugins", "Opt in", "Opt in",
   ),
   caption: "Techniques couvertes par les trois moteurs de jeux plus populaires"
 )
 
 === Viewing-Frustum Culling
 
-Consiste à limiter l'affichage à ce qui est visible par la caméra.
-Ceci est aussi plus communément connu sous le nom de bounding box.
-Cette box contient un near clipping plane, un far clipping plane, et les bords de la caméra, consistant, ainsi, une boîte.
-Seuls les éléments présents dans celle-ci doivent être affichés, et cela représente une amélioration simple et implémentée par défaut dans les trois moteurs de jeux principaux.
+Cette technique consiste à limiter l'affichage à ce qui est visible par la caméra dans un hexaèdre.
+Cet hexaèdre est plus communément connu sous le nom de bounding box.
+Cette box contient un near clipping plane, un far clipping plane, et les bords de la caméra, consistant, ainsi, une boîte à 6 faces.
+Seuls les éléments présents dans celle-ci vont être affichés, et cela représente une amélioration simple et efficace implémentée par défaut dans les trois moteurs de jeux principaux.
+
+Les valeurs telles que les bords de la caméra sont directement dépendantes de la caméra et du champ de vision, FOV, utilisé.
+Le near et far clipping plane sont des valeurs définies par l'utilisateur. 
+Des valeurs trop petites pour le near clipping plane créeraient des artefacts graphiques proches d'un modèle tandis que des valeurs trop grandes pour le far clipping plane nécessiterait de rendre des objets distants.
 
 @unity-documentation
 @godot-documentation
@@ -128,10 +146,12 @@ Seuls les éléments présents dans celle-ci doivent être affichés, et cela re
 
 === Hidden-surface determination (Occlusion culling)
 
-Consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'overdraw.
-Cette technique est très efficace dans les espaces intérieurs mais nécessite une mise en place particulière.
-En effet, pour pouvoir ne pas rendre des parties d'une scène, il faut que la scène soit divisée en plusieurs parties petites.
-De plus, les moteurs de jeux Godot et Unity demandent une mise en place additionnelle pour que la technique soit appliquée.
+Cette technique consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'overdraw.
+Cela est très efficace dans les espaces intérieurs mais nécessite une mise en place particulière dans la plupart des moteurs de jeux.
+En effet, pour pouvoir indiquer au moteur de jeu quelles parties omettre, ou non, il faut que la scène soit constituée de plusieurs éléments, plutôt que d'un seul modèle 3D.
+De plus, il faudra ensuite indiquer quels éléments peuvent déclencher une occlusion, un mur typiquement, et quels éléments seraient sujets à cela, des objets cachés derrière un mur, par exemple. 
+
+Unreal Engine permet, en outre, une utilisation dynamique de cette technique, qui peut néanmoins être désactivée.
 
 @godot-documentation
 @unity-documentation
@@ -146,42 +166,41 @@ De plus, les moteurs de jeux Godot et Unity demandent une mise en place addition
 
 === Lightmap
 
-Texture contenant les informations précalculées de l'éclairage et des ombres.
-Permet une excellente combinaison entre fidélité de rendu graphique et performances.
+Il s'agit d'une texture contenant les informations précalculées de l'éclairage et des ombres.
+Cette technique permet une excellente combinaison entre fidélité de rendu graphique et performances.
 Cela s'effectue au prix de :
 - En amont :
   - Mise en place de différents composants.
-  - Temps de calcul requis.
+  - Temps de calcul requis, bake.
 - En runtime :
-- Espace mémoire utilisé pour stocker la texture.
--  Impossibilité de changer la lumière dynamiquement.
+  - Espace mémoire utilisé pour stocker la texture.
+  -  Impossibilité de changer la lumière dynamiquement.
 
 Certains moteurs de jeux, tels que Unity, permettent de mélanger différents modes de rendus de lumière.
 Ainsi, un objet serait sensible à la lumière d'une lightmap, mais également à une lumière dynamique, afin d'ajouter, par exemple, un éclairage dramatique dans un endroit précis.
 
-Reste que la contrainte la plus importante des lightmaps est que pour une lumière globale, par exemple celle d'un soleil pour simuler un cycle jour-nuit, la technique de lightmap ne peut pas être utilisée.
+Néanmoins, la contrainte la plus importante des lightmaps rest que, pour une lumière globale comme un soleil pour simuler un cycle jour-nuit, la technique de lightmap ne peut pas être utilisée.
 Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumière dynamique, tels que des intérieurs.
 
 @godot-documentation
 @unity-documentation
 @unreal-documentation
 
-=== Virtual Textures
+=== Streaming Virtual Texturing
 
-Il s'agit d'une technique aussi connu sous le nom de Megatexture dans le moteur idTech, ou Streaming Virtual Texturing dans Unreal Engine.
+Il s'agit d'une technique aussi connu sous le nom de Megatexture dans le moteur idTech, pré-datant leurs implémentations modernes dans Unity et Unreal Engine.
 Elle consiste à disposer d'une seule grande texture avec des coordonnées UV pour l'indexer.
-En runtime, cette texture est ensuite streamée et cachée en mémoire selon les besoins.
-Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps
+En runtime, cette texture est ensuite streamée et mise en mémoire selon les besoins.
+Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps.
 
 @unreal-documentation
 
 === Mesh Shader
 
-TODO réécrire
-
-Cette technologie est connue dans le moteur Unreal Engine sous le nom de Nanite.
-Elle ne s'applique donc que pour ce qui ne bouge pas, typiquement un environnement fixe.
+Cette technologie n'a pour le moment qu'une implémentation dans le moteur Unreal Engine sous le nom de Nanite.
+Elle ne s'applique que pour les objets statiques, soit ce qui ne bouge pas, typiquement un environnement fixe.
 Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles.
+Cela permet l'affichage de modèles 3D très complexes et donc d'améliorer grandement la fidélité visuelle.
 
 @nvidia-mesh-shader
 @unreal-documentation
@@ -189,7 +208,7 @@ Les modèles sont analysés lors de l'import afin d'être streamé de manière e
 === Mipmaps
 
 Il s'agit de set de textures de résolutions plus petites que celle originale à afficher.
-Ces textures sont pré calculées et peuvent bien souvent être générées par un moteur de jeu.
+Ces textures sont pré-calculées et peuvent bien souvent être générées par un moteur de jeu.
 C'est une technique smilaires aux LODs, mais pour les textures.
 Une mipmap 0 serait de résolution 64x64 par exemple, une mipmap 1 de 32x32, 2 de 16x16, etc.
 La texture correspondant à la distance de la caméra est ensuite chargée.
@@ -219,22 +238,22 @@ Celle-ci permet une compression des assets très agressive pour l'espace disque 
 
 === Level of detail (LOD)
 
-Lorsque des modèles au maillage complexe sont affichés à l'écran de manière distante, le GPU va devoir traiter pour chaque pixel tous les triangles se trouvant dans celui-ci.
-Cela est très coûteux en terme de performances et n'apporte pas une grande valeur au rendu graphique.
+Lorsque des modèles au maillage complexe sont affichés à l'écran de manière distante, le GPU va devoir traiter pour chaque pixel tous les triangles à sa position.
+Afficher des modèles complexes distants est donc très coûteux en terme de performances et n'apporte pas une grande valeur au rendu graphique.
 Il s'agit d'un problème typique dû à l'overdraw, ici non pas de pixels exactement mais de triangles.
 
 Les LODs ou Level of Detail sont des modèles 3D de résolutions basses, qui, comme leur nom l'indique, possèdent plusieurs niveaux de détails.
-C'est une technique smilaires aux mipmaps, mais pour les modèles.
+La technique est similaire aux mipmaps, mais pour les modèles.
 Le niveau de détail original est LOD 0 tandis qu'un moins détaillé serait LOD 1 puis LOD 2, etc.
 Une autre amélioration est de supprimer les objets entièrements passés une certaine distance.
 Ceci est particulièrement utile pour des objets de petites tailles, dont leur absence ne sera pas visible par l'utilisateur passé une certaine distance.
+
 Cette technique a plusieurs coûts, néanmoins.
 - Espace disque. 
   Plusieurs modèles pour un seul modèle 3D va accroître l'espace disque utilisé par l'application. 
   Bien que ceci soit négligeable puisque les modèles LODs seront strictement plus légers que celui original, cela reste un coût à prendre en compte.
 - Travail de modélisation.
-  Modéliser ces LODs peut être réalisé de manière automatique, mais demandent tout de même un travail additionel via un logiciel d'édition 3D.
-  Pour une meilleure fidélité, cependant, il est préférable d'allouer plus de temps pour une modélisation manuelle de ces LODs.
+  Modéliser ces LODs peut être réalisé de manière automatique, mais pour une meilleure fidélité, il est préférable d'allouer plus de temps pour une modélisation manuelle de ces LODs.
 - Chargement additionel.
   - Espace mémoire limité.
     Il serait possible de charger l'entiéreté des LODs en mémoire, tel un atlas de modèles, mais ce coût est autrement plus conséquent que les mipmaps.
@@ -245,7 +264,7 @@ Cette technique a plusieurs coûts, néanmoins.
 Pour pallier à ce dernier problème, il est possible d'effectuer une transition entre deux LODs via un effet de dithering.
 Le dithering est une technique de rendu graphique qui consiste à ajouter du bruit à une texture pour simuler un effet de transparence.
 Ici, le LOD disparaissant verra sa transparence progressivement augmenter via le dithering.
-Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre les deux LODs, l'un deux semi transparent.
+Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre les deux LODs, l'un deux semi-transparent.
 
 @lod-3d-graphics
 
@@ -258,14 +277,14 @@ Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre le
 
 === Impostor
 
-Forme avancée de Billboards.
-Les Billboards sont des quads affichant une texture dont la rotation est ajustée pour toujours faire face à la caméra.
-Différentes variantes existent, certaines permettant aux billboards de figer la rotation d'un ou plusieurs axes afin de contraindre le billboard à n'être visible que depuis une vue panoramique.
+Les imposteurs sont une forme avancée de Billboards.
+Les Billboards affichent la texture pour un modèle distant sur des quads dont la rotation est ajustée pour toujours faire face à la caméra.
+Différentes variantes existent, certaines permettant aux billboards de figer la rotation d'un ou plusieurs axes.
 
 Les billboards ont comme particularité de représenter une image 2D dans un environnement 3D, ce qui est parfait pour des objets distants, mais cette solution comporte des limitations.
 Afin de rendre une image 3D dans un environnement 3D, il faut dessiner le modèle, selon l'angle requis et les conditions de lumière.
 Lorsque l'angle entre la caméra et l'objet est trop grand par rapport à celui-ci initial pour l'imposteur actuel, alors un second imposteur est dessiné.
-Les GPUs modernes disposent d'API permettant plus facilement de générer les imposteurs, en raison de la popularité de la technique.
+Les GPUs modernes disposent d'API facilitant la génération d'imposteurs, en raison de la popularité de la technique.
 
 Pour mettre à jour un imposteur deux possibilités existent :
 - Baked : Demande un espace de stockage pour l'atlas de textures générées. Un bon shader peut également ajouter des conditions de lumières, des ombres, etc.
@@ -281,7 +300,7 @@ Pour mettre à jour un imposteur deux possibilités existent :
     image("images/impostors_atlas.jpg", width: 90%)
   ),
   caption: [
-    À gauche: Placement des caméras pour un imposteur octahedral. À droite: Atlas de textures pour un imposteur Baked.
+    À gauche: Exemple de placement de caméras pour le rendu d'un imposteur octahedral. À droite: Atlas de textures pour un imposteur Baked.
   ],
 )
 
@@ -289,7 +308,7 @@ Pour mettre à jour un imposteur deux possibilités existent :
 
 Il s'agit de la manière de représenter la surface d'un environnement 3D, partitionné via une grille.
 Chaque case de cette grille représente un morceau de terrain, qui peuvent être mis bout à bout lorsque chargés consécutivement.
-Ces cases sont souvent appelées tiles, leur taille peut grandement varier, tout comme leur fonctionnalités.
+Ces cases, souvent appelées tiles, peuvent voir leur taille grandement varier, tout comme leurs fonctionnalités.
 Parmi lesquelles :
 - Une heightmap qui sert à dénoter l'élevation du terrain depuis un fichier de texture noir et blanc où les valeurs [0, 1] représentent les valeurs minimales et maximales du modèle.
 - Des textures qui sont appliquées sur le terrain, souvent en fonction de la hauteur, de la pente, ou d'autres critères.
@@ -308,6 +327,7 @@ Que ce soient les Landscapes dans Unreal Engine ou les Terrains dans Unity, ceux
 Cesium est une plate-forme mettant différentes ressources à disposition pour le rendu géospatial.
 Cela inclue une large base de données de 3DTiles ou d'imageries satellites.
 Plusieurs implémentations existent, que ce soit pour le web avec CesiumJS, ou pour les moteurs de jeux avec Unreal et Unity.
+Cet outil requière néanmoins une connexion internet pour streamer les données, et est donc dépendant d'un service tiers, ce qui n'est pas forcément souhaitable pour un jeu vidéo.
 
 @cesium
 
@@ -353,19 +373,17 @@ Ces outils permettent, entre autres, de simuler effets de météo tel que l'éro
 En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation.
 Le cas échéant, certaines fonctionnalitées restent indisponibles, limités aux tiers payants.
 
-L'échelle des mondes virtuels varie grandement :
+L'échelle des grands mondes virtuels varie grandement :
 - The Elder Scrolls V: Skyrim - 40km²
-- GTA V - 76km²
 - The Legend of Zelda : Breath of the Wild - 80km²
 - The Witcher 3 : 125 km²
-- The Elder Scrolls II: Daggerfall - 1 600 km²
 - The Crew - 5 200 km²
 - Fuel - 15 000 km²
 - Microsoft Flight Simulator - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
 
-D'autres mondes virtuels sont eux générés intégralement de manière procédurale.
+D'autres mondes virtuels sont eux générés intégralement de manière procédurale lors du lancement d'une partie.
 Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
-Leur taille, quant à elle, explose et est difficilement quantifiable, du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
+Leur taille, quant à elle, explose et est difficilement quantifiable, allant du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
 @world-machine
 @world-creator
@@ -374,10 +392,11 @@ Leur taille, quant à elle, explose et est difficilement quantifiable, du millia
 
 === Conclusion
 
-La solution Cesium est une solution très complète et puissante pour le rendu géospatial de notre planète.
-Ceci n'est malheureusement que rarement adapté dans le développement d'un jeu vidéo.
-Cette industrie préfère se tourner vers des solutions plus adaptées à leurs besoins, au travers des outils de génération procédurale mentionnés précédemment.
-Finalement, la complexité des outils ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
+La solution Cesium propose de nombreux outils et fonctionnalités très complets et puissants pour le rendu géospatial de planètes.
+Mais malheureusement elle n'est que rarement adapté dans le développement d'un jeu vidéo, sans compter que la fidélité graphique proposée ne correspond qu'à une faible portion d'expériences de jeu tels que les simulateurs de vol.
+
+La plupart des jeux vidéo préfèrent se tourner vers des solutions plus adaptées à leurs besoins, afin de créer des mondes virtuels, au travers de la génération procédurale.
+Ce travail fera de même, d'autant plus que la complexité des outils de Cesium ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
 En effet, Cesium for Unity implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
 
 En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de taille minimal de 64km².
