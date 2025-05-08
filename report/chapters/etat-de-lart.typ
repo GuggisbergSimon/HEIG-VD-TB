@@ -45,7 +45,7 @@ Le moteur présente néanmoins un certain manque de matûrité et les rares proj
 Unity représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
 C'est un moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
 
-Des projets complexes open world live service tels que Genshin Impact ont été réalisés avec ce moteur et chaque année de nombreux projets commerciaux de moindre envergure rencontre le succès.
+Des projets complexes open world live service tels que Genshin Impact ont été réalisés avec ce moteur et chaque année de nombreux projets commerciaux de moindre envergure rencontrent le succès.
 Il est facile à prendre en main et d'une très large documentation malgré un code source partiellement indisponible, code source qui peut être acheté par une entreprise, au besoin.
 
 Malheureusement, Unity ne scale néanmoins pas très bien avec une grande quantité d'assets ainsi qu'une large équipe.
