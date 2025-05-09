@@ -22,7 +22,7 @@ L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de
     "idTech", "1993", "3D", "C++", "Partiellement", "Partiellement", "14",
     "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui", "1",
   ),
-  caption: "Liste non exhaustive de moteurs de jeux, par nombre de sorties steam 2024, estimées par steamDB"
+  caption: "Liste non exhaustive de moteurs de jeux, par nombre de sorties steam 2024, estimées selon steamDB"
 )
 
 À noter que, pour le cas de Godot, le nombre de sorties a doublé depuis 2023.
@@ -74,9 +74,26 @@ Le premier manque malheureusement encore de fonctionnalités 3D et représente u
 
 Pour ces raisons, il a été d'utiliser Unity pour le développement de ce projet.
 
-== Problèmes
+== Contexte et Concepts
 
-Cette section liste de manière succinte les principaux problèmes rencontrés dans le cadre du rendu 3D ou de la gestion de ressources pour un jeu vidéo.
+Cette section liste de manière succinte plusieurs concepts importants dans le rendu 3d.
+
+=== glTF
+
+glTF, Graphics Library Transmission Format, est un standard développé par Khronos Group, aussi connu pour OpenXR, OpenGL, Vulkan et WebGL. 
+Il s'agit d'un standard de format de fichier 3D qui permet de transmettre de manière efficiente des modèles, scènes 3D, et animations.
+Le format est entre autres connu pour son standard de matériaux PBR (Physically Based Rendering).
+Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un rendu réaliste en implémentant différentes fonctionnalités telles que :
+- Emissive
+- Metallic
+- Normal
+- Roughness
+- Specular
+Ces propriétés sont présentes dans la plupart des moteurs de jeu et de logiciels de modélisation 3D mais ne suivent pas forcément les mêmes standards de nom ou de valeurs.
+Ce standard, en particulier le subset PBR, a été largement adopté par l'industrie du jeu vidéo.
+
+@gltf-khronos
+@pbr-khronos
 
 === Overdraw
 
@@ -84,26 +101,27 @@ Overdraw est le terme désignant le fait de rendre à l'écran un pixel plusieur
 Cela est, à grande échelle, une perte de performance massive car le GPU doit traiter plusieurs fois chaque pixel de l'écran.
 Ce problème explose, bien évidemment en cas de résolution plus élevée.
 
-Cela peut être dû à des objets transparents, superposés, ou un maillage trop complexe, cf. LOD.
-En effet, chaque triangle d'un maillage va produire un appel au GPU pour calculer les pixels qu'il couvre.
+Cela peut être dû à des objets transparents, superposés, ou un maillage trop complexe.
+En effet, chaque triangle visible d'un maillage va produire un appel au GPU pour calculer les pixels qu'il occupe à l'écran.
 
 === Lumières
 
 Les lumières, et particulièrement les ombres, ont toujours été un problème dans la course au rendu réaliste 3D.
-Chaque lumière dynamique produisant une ombre doit effectuer un pass via un zbuffer pour chaque objet impacté par celle-ci.
+Traditionellement, chaque lumière produisant une ombre doit effectuer un pass de rendu selon la résolution de ces ombres afin d'établir un zbuffer qui va pouvoir déterminer si des objets sont dans l'ombre, ou non.
+En cas d'ombres douces, cela est différent, mais la complexité du rendu ne fait que monter, et ce, pour chaque source de lumière.
 
-Bien qu'il existe des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées par tout type de hardware.
+Il existe également des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées par tout type de hardware.
 
 === Mémoire vidéo
 
-Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo, ou VRAM.
+Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo (VRAM) du GPU.
 Celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
 Il convient alors de faire un compromis entre fidélité graphique et temps de chargement ou performances.
 
 == Techniques
 
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
-Certaines sont devenues de facto standard tandis que d'autres possèdent encore un statut plus expérimental.
+Certaines sont devenues de facto standard tardent encore à être implémentées par les moteurs de jeux.
 Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom, tel que les megatexture, maintenant plus connues sous le nom de Streaming Virtual Texturing.
 
 #figure(
@@ -199,8 +217,10 @@ Cela a comme avantage visuel de bénéficier de textures uniques pour chaque sur
 
 Cette technologie n'a pour le moment qu'une implémentation dans le moteur Unreal Engine sous le nom de Nanite.
 Elle ne s'applique que pour les objets statiques, soit ce qui ne bouge pas, typiquement un environnement fixe.
-Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles.
-Cela permet l'affichage de modèles 3D très complexes et donc d'améliorer grandement la fidélité visuelle.
+Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles au niveau de détail requis.
+Cela permet l'affichage de modèles 3D très complexes, en s'affranchissant du nombre de polygones comme métrique de ralentissement, et donc d'améliorer grandement la fidélité visuelle.
+
+Une implémentation future de cette technique est en considération par Unity pour le moment.
 
 @nvidia-mesh-shader
 @unreal-documentation
@@ -304,7 +324,7 @@ Pour mettre à jour un imposteur deux possibilités existent :
   ],
 )
 
-== Digital Elevation Model
+== Terrain et Landscape
 
 Il s'agit de la manière de représenter la surface d'un environnement 3D, partitionné via une grille.
 Chaque case de cette grille représente un morceau de terrain, qui peuvent être mis bout à bout lorsque chargés consécutivement.
@@ -317,6 +337,18 @@ Parmi lesquelles :
 Chacun des trois moteurs de jeu dispose de sa propre solution pour afficher un environnement 3D.
 Que ce soient les Landscapes dans Unreal Engine ou les Terrains dans Unity, ceux-ci remplissent la même fonction.
 À noter que Godot ne dispose pas de solution intégrée directement, mais plusieurs plugins permettent de pallier à ce manque.
+
+L'échelle des mondes virtuels varie grandement :
+- The Elder Scrolls V: Skyrim - 40km²
+- The Legend of Zelda : Breath of the Wild - 80km²
+- The Witcher 3 : 125 km²
+- The Crew - 5 200 km²
+- Fuel - 15 000 km²
+- Microsoft Flight Simulator - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
+
+D'autres mondes virtuels sont eux générés intégralement de manière procédurale lors du lancement d'une partie.
+Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
+Leur taille, quant à elle, explose et est difficilement quantifiable, allant du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
 @unity-documentation
 @unreal-documentation
@@ -347,57 +379,20 @@ Plusieurs types de tiles existent :
 
 @3D-tiles
 
-==== glTF
-
-glTF, Graphics Library Transmission Format, est un standard développé par Khronos Group, aussi connu pour OpenXR, OpenGL, Vulkan et WebGL. 
-Il s'agit d'un standard de format de fichier 3D qui permet de transmettre de manière efficiente des modèles, scènes 3D, et animations.
-Le format est entre autre connu pour son standard de matériaux PBR (Physically Based Rendering).
-Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un rendu réaliste en implémentant différentes fonctionnalités telles que :
-- Emissive
-- Metallic
-- Normal
-- Roughness
-- Specular
-Ces propriétés sont présentes dans la plupart des moteurs de jeu et de logiciels de modélisation 3D mais ne suivent pas forcément les mêmes standards de nom ou de valeurs.
-Ce standard, en particulier le subset PBR, a été largement adopté par l'industrie du jeu vidéo.
-
-@gltf-khronos
-@pbr-khronos
-
 === Génération procédurale de terrain
 
 Il existe de nombreux outils de générations procédurale de terrains.
 Ceux-ci se présentent sous la forme de plugins dans un moteur de jeu ou en tant qu'outils externes.
 Parmi les outils externes, Gaea, Houdini et World Creator sont les plus importants pour l'état de l'art actuel.
 Ces outils permettent, entre autres, de simuler effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront utilisables par les moteurs de jeux.
+Ces outils utilisent l'édition via noeuds pour pouvoir et représenter chaque étape intermédiaire de manière intuitive pour les artistes, et permettre aux opérations de ne pas être destructives.
+
+[TODO] image Gaea
+
 En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation.
 Le cas échéant, certaines fonctionnalitées restent indisponibles, limités aux tiers payants.
-
-L'échelle des grands mondes virtuels varie grandement :
-- The Elder Scrolls V: Skyrim - 40km²
-- The Legend of Zelda : Breath of the Wild - 80km²
-- The Witcher 3 : 125 km²
-- The Crew - 5 200 km²
-- Fuel - 15 000 km²
-- Microsoft Flight Simulator - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
-
-D'autres mondes virtuels sont eux générés intégralement de manière procédurale lors du lancement d'une partie.
-Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
-Leur taille, quant à elle, explose et est difficilement quantifiable, allant du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
 @world-machine
 @world-creator
 @gaea
 @houdini
-
-=== Conclusion
-
-La solution Cesium propose de nombreux outils et fonctionnalités très complets et puissants pour le rendu géospatial de planètes.
-Mais malheureusement elle n'est que rarement adapté dans le développement d'un jeu vidéo, sans compter que la fidélité graphique proposée ne correspond qu'à une faible portion d'expériences de jeu tels que les simulateurs de vol.
-
-La plupart des jeux vidéo préfèrent se tourner vers des solutions plus adaptées à leurs besoins, afin de créer des mondes virtuels, au travers de la génération procédurale.
-Ce travail fera de même, d'autant plus que la complexité des outils de Cesium ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
-En effet, Cesium for Unity implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
-
-En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de taille minimal de 64km².
-Celui-ci sera représenté par une heightmap de 8192x8192 pixels.
