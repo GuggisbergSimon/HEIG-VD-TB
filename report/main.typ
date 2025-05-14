@@ -55,9 +55,9 @@
 
 #include "chapters/etat-de-lart.typ"
 
-#include "chapters/outils.typ"
-
 #include "chapters/architecture.typ"
+
+#include "chapters/outils.typ"
 
 #include "chapters/implementation.typ"
 
@@ -70,6 +70,7 @@
 = Annexes
 
 #include "template/_bibliography.typ"
+#include "template/_glossary.typ"
 #include "template/_figures.typ"
 #include "template/_tables.typ"
 

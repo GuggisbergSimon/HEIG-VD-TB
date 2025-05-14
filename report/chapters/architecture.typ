@@ -33,11 +33,9 @@ Leur utilisation, ici, profite du fait les données modifiées en tant que Scrip
 
 Maintenir une liste des chunks chargés permet de minimiser le nombre de chunks à charger.
 Pour déterminer quel chunk à charger, il est possible de procéder en fonction de la distance au joueur, ou, si l'on simplifie, de la distance à un chunk, celui-ci occupé par le joueur.
-Pour simplifier calculs de distances, il est possible d'enregistrer sous forme de matrice NxN, où N est impair, les chunks à charger.
+Pour simplifier les calculs de distances, il est possible d'enregistrer sous forme de matrice-filtre NxN, où N est impair, les chunks à charger.
 Cette matrice contiendra une valeur positive si il faut charger le chunk.
-Elle déterminera les positions des chunks en fonction de celle du joueur, en son centre.
-
-@unity-documentation
+Les positions dans le monde des chunks sont déterminées en fonction de celle du joueur, qui se trouve au centre de cette matrice-filtre.
 
 #figure(
   grid(
@@ -51,6 +49,20 @@ Elle déterminera les positions des chunks en fonction de celle du joueur, en so
   ],
 )
 
+Une autre complication concernant les chunks et l'ajout d'agents en dehors du joueur.
+Ceux-ci sont usuellement chargés avec une scène, ici un chunk.
+Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un chunk à l'autre.
+Une manière de résoudre ce problème est de créer un AgentManager qui tiendra à jour la liste des agents présents dans le monde et les chargera/déchargera en fonction des chunks chargés.
+Cette approche permet une permanence des agents ainsi qu'une consistence accrue mais ne permet pas de simuler des comportements en background, hors de vision du joueur.
+
+Pour arriver à un résultat pareil, il faudrait que l'AgentManager mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
+Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
+
+Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de bachelor et ne sera donc pas abordé plus en détail.
+
+@unity-documentation
+@rain-world-gdc
+
 == Structure de scène
 
 Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
@@ -58,7 +70,7 @@ Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo es
 Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
 Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
 
-Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au processus habituel, qu'il s'agisse d'un menu principal, ou droit au jeu.
+Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au jeu.
 
 #figure(
   image("images/boot_loading.png", width: 60%),
