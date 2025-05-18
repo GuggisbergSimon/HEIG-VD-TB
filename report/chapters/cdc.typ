@@ -79,7 +79,7 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
 - *Génération procédurale* de l'environnement :
   En raison de la nécessité d'un environnement suffisamment grand pour tester les fonctionnalités requises.
   La génération procédurale n'est pas le sujet principal de ce projet.
-  Elle ne devra donc, par conséquent, que bénéficier que d'une implémentation et documentation simple.
+  Elle ne devra donc, par conséquent, que bénéficier d'une implémentation et documentation simple.
 
 === Complémentaires _"nice-to-have"_
 

@@ -43,7 +43,7 @@ Unity possède plusieurs systèmes pour implémenter les imposteurs :
 - unity industry : pixyz
 - plugins : amplify
 
-@unity-documentation
+@unity-doc
 
 == Autres
 
@@ -51,7 +51,7 @@ La rédaction du rapport a été fait avec l'aide de Typst et en particulier d'u
 Celle-ci a été réalisée avec Visuel Studio Code et l'extension Tinymist pour l'édition Typst.
 La rédaction du code a été réalisé avec Jetbrains Rider et l'extension GiHub Copilot.
 
-Blender et l'extension `Level Of Detail Generator | Lods Maker` ont été utilisés pour l'édition de modèles et la génération de LODs.
+Pour l'édition de modèles 3D et la génération de LODs, plus particulièrement, bien qu'un simple modificateur decimate sous Blender aurait pu suffire, une extension tel que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche.
 
 Le logiciel GIMP a été utilisé pour l'édition d'images, qu'il s'agisse de textures ou d'images destinées au rapport.
 

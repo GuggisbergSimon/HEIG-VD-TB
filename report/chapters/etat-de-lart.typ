@@ -141,6 +141,8 @@ Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom
   caption: "Techniques couvertes par les trois moteurs de jeux plus populaires"
 )
 
+TODO add shader section
+
 === Viewing-Frustum Culling
 
 Cette technique consiste à limiter l'affichage à ce qui est visible par la caméra dans un hexaèdre.
@@ -152,8 +154,9 @@ Les valeurs telles que les bords de la caméra sont directement dépendantes de 
 Le near et far clipping plane sont des valeurs définies par l'utilisateur. 
 Des valeurs trop petites pour le near clipping plane créeraient des artefacts graphiques proches d'un modèle tandis que des valeurs trop grandes pour le far clipping plane nécessiterait de rendre des objets distants.
 
-@unity-documentation
-@godot-documentation
+@unity-doc-occlusion-culling
+@godot-doc-occlusion-culling
+@unreal-doc-visibility-culling
 
 #figure(
   image("images/frustum_culling.png", width: 60%),
@@ -171,9 +174,9 @@ De plus, il faudra ensuite indiquer quels éléments peuvent déclencher une occ
 
 Unreal Engine permet, en outre, une utilisation dynamique de cette technique, qui peut néanmoins être désactivée.
 
-@godot-documentation
-@unity-documentation
-@unreal-documentation
+@unity-doc-occlusion-culling
+@godot-doc-occlusion-culling
+@unreal-doc-visibility-culling
 
 #figure(
   image("images/occlusion_culling.png", width: 60%),
@@ -200,9 +203,9 @@ Ainsi, un objet serait sensible à la lumière d'une lightmap, mais également �
 Néanmoins, la contrainte la plus importante des lightmaps rest que, pour une lumière globale comme un soleil pour simuler un cycle jour-nuit, la technique de lightmap ne peut pas être utilisée.
 Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumière dynamique, tels que des intérieurs.
 
-@godot-documentation
-@unity-documentation
-@unreal-documentation
+@unity-doc-lightmap
+@godot-doc-lightmap
+@unreal-doc-lightmap
 
 === Streaming Virtual Texturing
 
@@ -211,7 +214,8 @@ Elle consiste à disposer d'une seule grande texture avec des coordonnées UV po
 En runtime, cette texture est ensuite streamée et mise en mémoire selon les besoins.
 Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps.
 
-@unreal-documentation
+@unity-doc-svt
+@unreal-doc-svt
 
 === Mesh Shader
 
@@ -223,7 +227,7 @@ Cela permet l'affichage de modèles 3D très complexes, en s'affranchissant du n
 Une implémentation future de cette technique est en considération par Unity pour le moment.
 
 @nvidia-mesh-shader
-@unreal-documentation
+@unreal-doc-nanite
 
 === Mipmaps
 
@@ -247,7 +251,7 @@ Une contrainte pour posséder des mipmaps, et de disposer de textures dont la ta
 Cette particularité est également utilisée par la technique d'optimisation d'assets appellée Crunch Compression.
 Celle-ci permet une compression des assets très agressive pour l'espace disque du build tout en ayant de très bonnes performances en runtime.
 
-@unity-documentation
+@unity-doc-mipmap
 
 #figure(
   image("images/mipmaps.png", width: 60%),
@@ -312,6 +316,7 @@ Pour mettre à jour un imposteur deux possibilités existent :
 
 @nvidia-true-impostors
 @medium-octahedral-impostors
+@unreal-doc-impostor
 
 #figure(
   grid(
@@ -350,8 +355,8 @@ D'autres mondes virtuels sont eux générés intégralement de manière procédu
 Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
 Leur taille, quant à elle, explose et est difficilement quantifiable, allant du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
-@unity-documentation
-@unreal-documentation
+@unity-doc-terrain
+@unreal-doc-landscape
 @godot-terrain3D
 
 === Cesium

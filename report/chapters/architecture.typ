@@ -16,7 +16,7 @@ L'élevation pour un mètre est donc donnée par un pixel de la heightmap, ce qu
 La disposition d'éléments dans le monde est réalisé en fonction de l'inclinaison de la pente de ce terrain.
 En raison de la complexité de la génération procédurale et des enjeux de ce travail de bachelor, il n'a pas été donné un soin plus particulier à la disposition procédurale des éléments du décor sur le terrain.
 
-@unity-documentation
+@unity-doc-terrain
 
 == Chunks
 
@@ -60,7 +60,7 @@ Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un
 
 Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de bachelor et ne sera donc pas abordé plus en détail.
 
-@unity-documentation
+@unity-doc-scenemanager
 @rain-world-gdc
 
 == Structure de scène
