@@ -1,6 +1,21 @@
 = Architecture <architecture>
 
-== Terrain monde
+== Prototype
+
+Comme cela a été discuté précédemment, l'échelle des mondes virtuels varie grandement.
+
+En raison des contraintes de ce projet, il a été décidé d'adopter une échelle de type véhicule avec un monde de taille humaine, servant de démonstration technique.
+
+Cette échelle laisse la plus grande liberté d'implémentation, tout en facilitant la création de contenu.
+En effet, le joueur ne sera représenté que par un véhicule, sans animation, et au vu de la taille des objets les joueurs seront plus à même de tolérer des défauts de comportement physique.
+
+Par souci de simplification, l'idée d'un hovercraft explorant des dunes d'un paysage post-apocalyptique a été retenue.
+Cette idée permet l'utilisation d'une grande variété d'assets existantes, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
+Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourraient être ajoutés, dans un second temps, si les imposteurs sont implémentés.
+
+Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, se déroule dans un monde désert que le joueur parcourt à bord d'un véhicule mais peut à tout moment débarquer à pied et explorer villages, ruines, et autres lieux d'intérêt.
+
+== Monde
 
 Parmi les solutions de représentations possibles, la solution Cesium propose de nombreux outils et fonctionnalités très complets et puissants pour le rendu géospatial de planètes.
 Malheureusement elle n'est que rarement adapté dans le développement d'un jeu vidéo, sans compter que la fidélité graphique proposée ne correspond qu'à une faible portion d'expériences de jeu tels que les simulateurs de vol.

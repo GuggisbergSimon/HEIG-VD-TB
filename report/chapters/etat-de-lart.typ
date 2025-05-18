@@ -142,6 +142,7 @@ Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom
 )
 
 TODO add shader section
+TODO add floating point section
 
 === Viewing-Frustum Culling
 
@@ -343,16 +344,33 @@ Chacun des trois moteurs de jeu dispose de sa propre solution pour afficher un e
 Que ce soient les Landscapes dans Unreal Engine ou les Terrains dans Unity, ceux-ci remplissent la même fonction.
 À noter que Godot ne dispose pas de solution intégrée directement, mais plusieurs plugins permettent de pallier à ce manque.
 
-L'échelle des mondes virtuels varie grandement :
-- The Elder Scrolls V: Skyrim - 40km²
-- The Legend of Zelda : Breath of the Wild - 80km²
-- The Witcher 3 : 125 km²
-- The Crew - 5 200 km²
-- Fuel - 15 000 km²
-- Microsoft Flight Simulator - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
+Bien que l'échelle des mondes virtuels varie grandement, il est possible de distinguer trois grandes catégories, ce qui n'empêche pas des titres ambitieux de vouloir couvrir plusieurs de ces échelles. :
+- Une échelle à taille humaine est la plus courante dans les jeux vidéo car elle est celle qui permet de faciliter l'immersion du joueur en incarnant directement un personnage.
+  Le personnage, de par sa contrainte d'échelle humaine, sera souvent contraint à des tailles, vitesses, humains.
+  Outre les mondes générés procéduralement, il est rare que des mondes pour cette échelle dépassent les 150km².
+  À noter que, malgré la popularité de cette échelle, elle comporte une charge de travail accru au niveau animation/modélisation de l'avatar, si celui-ci est visible.
+  
+  Jeux notables : 
+    - The Elder Scrolls V : Skyrim - 40km²
+    - The Legend of Zelda : Breath of the Wild - 80km²
+    - The Witcher 3 - 125 km²
+
+- Une échelle à taille véhicule est moins habituelle et dispose d'une grande variation.
+  En effet, cela peut autant couvrir la zone d'une ville, la surface d'un continent, voire même de la planète Terre entière.
+  Que ce soit voiture, hélicoptère, avion, le mode de transport choisi va grandement influencer la taille du monde virtuel.
+  Les assets pour cette échelle seront souvent moins détaillées puisque bien souvent celles-ci seront ou trop éloignées de la caméra, ou le joueur ne pourra pas les examiner attentivement en raison de la vitesse du véhicule.
+
+  Jeux notables : 
+    - The Crew - 5 200 km²
+    - Fuel - 15 000 km²
+    - Microsoft Flight Simulator - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
+
+- Une échelle à taille spatiale est tout ce qui se trouve au-delà, couvrant tant un système solaire que celui d'une galaxie entière.
+  Les unités pour ces mondes sont souvent quantifiées en unités astronomiques.
+  Souvent, en raison de ces tailles colossales, ces mondes sont représentés via de la génération procédurale, plutôt que d'avoir été méticuleusement designés par des artistes. À titre d'exemple, No Man's Sky dispose de 18 quintillions de planètes que les joueurs peuvent explorer à échelle humaine.
 
 D'autres mondes virtuels sont eux générés intégralement de manière procédurale lors du lancement d'une partie.
-Ceci permet un monde unique pour chaque utilisateur, variant à chaque génération.
+Ceci garantit un monde unique pour chaque utilisateur, variant à chaque génération.
 Leur taille, quant à elle, explose et est difficilement quantifiable, allant du milliard de km² jusqu'à des unités spatiales permettant de représenter notre galaxie.
 
 @unity-doc-terrain
