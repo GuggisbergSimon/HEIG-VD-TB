@@ -30,6 +30,8 @@ Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets 
 - HDRP - HD Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
   Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils supplémentaires.
 
+TODO update
+
 Parmi ces trois pipelines, URP est la plus adaptée pour le type de projet qu'est ce travail de bachelor.
 La performance est en effet au coeur de la problématique, disposer d'un rendu photoréaliste n'est pas nécessaire et la prise en main de cette pipeline représenterait un défi en plus.
 
@@ -39,11 +41,21 @@ En terme de rendu graphique, il existe deux espaces de couleur différents dans 
 Il s'agit de ce deuxième espace de couleur qui a été choisi.
 Ce choix n'impacte que le rendu graphique et pas les performances.
 
+TODO complete
+
 Unity possède plusieurs systèmes pour implémenter les imposteurs :
 - unity industry : pixyz
 - plugins : amplify
 
 @unity-doc
+
+=== Plugins
+
+TODO complete
+
+Cinemachine : contrôle de la caméra
+
+Terrain Tools : options de terrain avancées
 
 == Autres
 

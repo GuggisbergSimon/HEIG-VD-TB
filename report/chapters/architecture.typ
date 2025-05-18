@@ -11,11 +11,11 @@ En effet, le joueur ne sera représenté que par un véhicule, sans animation, e
 
 Par souci de simplification, l'idée d'un hovercraft explorant des dunes d'un paysage post-apocalyptique a été retenue.
 Cette idée permet l'utilisation d'une grande variété d'assets existantes, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
-Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourraient être ajoutés, dans un second temps, si les imposteurs sont implémentés.
+Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourront être ajoutés, dans un second temps, si les imposteurs sont implémentés.
 
 Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, se déroule dans un monde désert que le joueur parcourt à bord d'un véhicule mais peut à tout moment débarquer à pied et explorer villages, ruines, et autres lieux d'intérêt.
 
-== Monde
+== Représentation du monde
 
 Parmi les solutions de représentations possibles, la solution Cesium propose de nombreux outils et fonctionnalités très complets et puissants pour le rendu géospatial de planètes.
 Malheureusement elle n'est que rarement adapté dans le développement d'un jeu vidéo, sans compter que la fidélité graphique proposée ne correspond qu'à une faible portion d'expériences de jeu tels que les simulateurs de vol.
@@ -33,7 +33,35 @@ En raison de la complexité de la génération procédurale et des enjeux de ce 
 
 @unity-doc-terrain
 
-== Chunks
+== Structure
+
+=== Fichiers
+
+Les Assets seront stockées dans des dossiers correspondants à leur type.
+Le dossier Scripts contiendra des scripts C\#, dans celui Prefabs, des préfabs, etc.
+
+La seule exception à cela concerne les différentes assets provenant du Unity Asset Store ou de Fab.
+Leur propre structure sera conservée, afin de faciliter le réimport de celles-ci, au besoin.
+
+=== Scène
+
+Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
+
+Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
+Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
+
+Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au jeu.
+
+#figure(
+  image("images/boot_loading.png", width: 70%),
+  caption: [
+    Exemple de structure d'initialisation de scène.
+  ],
+)
+
+=== Monde
+
+Afin de représenter le monde manière plus légère qu'un seul fichier à charger en tout temps dans la mémoire vive, une solution très populaire est la division du monde en chunks.
 
 Chaque chunk se trouve dans un fichier scène séparé afin de pouvoir être chargé de manière additive, et asynchrone.
 De plus, chaque chunk doit connaître ses coordonnées mondes afin de pouvoir être chargé au bon endroit.
@@ -78,18 +106,19 @@ Malheureusement, la gestion des agents et une implémentation pareille sort du c
 @unity-doc-scenemanager
 @rain-world-gdc
 
-== Structure de scène
+== Test
 
-Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
+== Unitaire
 
-Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
-Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
+TODO complete
 
-Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au jeu.
+== Performance
 
-#figure(
-  image("images/boot_loading.png", width: 70%),
-  caption: [
-    Exemple de structure d'initialisation de scène.
-  ],
-)
+Pour s'assurer de la reproductibilité du test de performances, il faudrait privilégier une situation de stress test sans que le joueur n'ait aucun contrôle.
+
+TODO complete
+
+Unity propose différents utilitaires de suivis de performances.
+Ceux-ci vont du plus simple comme les statistiques visibles dans l'éditeur ou le profiler, aux plus complexes comme le Frame Debugger.
+
+Le profiler, et en particulier le Deep profiling, a comme désavantage d'ajouter de l'overhead aux mesures de performances.
