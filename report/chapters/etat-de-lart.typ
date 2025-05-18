@@ -118,6 +118,51 @@ Les textures, modèles, et autres ressources graphiques nécessaires pour le ren
 Celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
 Il convient alors de faire un compromis entre fidélité graphique et temps de chargement ou performances.
 
+=== Shaders
+
+Un shader est un programme qui est exécuté, souvent sur le GPU, pour effectuer le rendu de chaque partie d'un objet 3D.
+Ils permettent de décharger le CPU, en cas de bottleneck, pour le GPU, plus performant pour des calculs nombreux et répétés.
+Il est d'ailleurs possible d'instantier via GPU certains objets afin de davantage réduire la quantité de données échangées entre CPU et GPU, la source de bottleneck la plus commune.
+
+On distingue plusieurs catégories de shaders :
+- Vertex shader : 
+  Ce shader s'applique aux sommets d'un modèle 3D.
+  C'est aussi dans les points que les valeurs importantes sont sauvegardées, telles que les coordonnées UV.
+- Fragment shader :
+  Ce shader s'applique à chaque pixel d'un modèle 3D.
+  Comme la quantité de points est usuellement bien plus conséquente que les sommets, il convient de procéder par interpolation de données de chaque vertex pour déterminer celles du pixel concerné.
+  Ainsi la coordonnée précise d'une texture peut être déterminée, par interpolation entre trois autres connues.
+- Tessellation shader :
+  Ce shader permet de subdiviser de manière uniforme un maillage.
+  Cela permet d'ajouter des détails de manière dynamique.
+- Geometry shader :
+  Ce shader prend une primitive en paramètre et produit plusieurs primitives.
+  Il peut générer des triangles pour représenter des simples éléments 3D, tel qu'un brin d'herbe, par exemple.
+
+De plus, il est possible d'utiliser la base d'un shader complexe mais de l'altérer pour arriver à des résultats stylistiques différents, que ce soit un rendu stylisé tel celui d'un cartoon, ou via cel-shading.
+
+=== Précision floating point
+
+Les floats sont préférés par rapport aux doubles pour le développement de jeux vidéo en raison de leur taille moindre en mémoire au coût d'une précision moindre, qui n'est pas requise pour la plupart des calculs.
+Néanmoins, lorsque l'échelle des mondes virtuels atteint une taille très grande, ou trop petite, la précision des floats peut poser problème.
+Une manière commune de contourner ces problèmes et de changer la taille initiale du monde virtuel, par exemple, en le réduisant de 1000x, mais pour un monde virtuel possédant plusieurs échelles de grandeur à respecter, ceci n'est pas une solution viable.
+
+La manière dont un float 32 est encodé en mémoire est la suivante : 
+- 1 bit pour le signe
+- 8 bits pour l'exponent
+- 23 bits pour la fraction
+
+Un nombre float 32 est donné sous la forme : 
+$(-1)^{"signe"} dot 2^{"exponent"-127} dot (1 + "fraction")$
+
+La formule pour l'erreur est donnée sous la forme :
+$~2^(floor(log_2("distance"))-"fraction")$
+
+Ainsi, pour une valeur telle que le rayon de la terre, ~6378 km, la précision d'un float 32 est de \~0.5m.
+Pour une échelle humaine cela n'est plus tolérable et pourrait même être directement observable.
+
+@oracle-float
+
 == Techniques
 
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
@@ -140,9 +185,6 @@ Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom
   ),
   caption: "Techniques couvertes par les trois moteurs de jeux plus populaires"
 )
-
-TODO add shader section
-TODO add floating point section
 
 === Viewing-Frustum Culling
 
@@ -303,8 +345,9 @@ Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre le
 === Impostor
 
 Les imposteurs sont une forme avancée de Billboards.
-Les Billboards affichent la texture pour un modèle distant sur des quads dont la rotation est ajustée pour toujours faire face à la caméra.
+Les Billboards affichent la texture pour un modèle distant sur des quads dont la rotation peut être ajustée pour toujours faire face à la caméra.
 Différentes variantes existent, certaines permettant aux billboards de figer la rotation d'un ou plusieurs axes.
+Une utilisation commune de cette technique est pour représenter la végétation, que ce soit herbe ou arbres.
 
 Les billboards ont comme particularité de représenter une image 2D dans un environnement 3D, ce qui est parfait pour des objets distants, mais cette solution comporte des limitations.
 Afin de rendre une image 3D dans un environnement 3D, il faut dessiner le modèle, selon l'angle requis et les conditions de lumière.
@@ -410,7 +453,12 @@ Parmi les outils externes, Gaea, Houdini et World Creator sont les plus importan
 Ces outils permettent, entre autres, de simuler effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront utilisables par les moteurs de jeux.
 Ces outils utilisent l'édition via noeuds pour pouvoir et représenter chaque étape intermédiaire de manière intuitive pour les artistes, et permettre aux opérations de ne pas être destructives.
 
-[TODO] image Gaea
+#figure(
+  image("images/gaea_example.jpg", width: 100%),
+  caption: [
+    Interface de Gaea, avec un terrain généré en exemple.
+  ],
+)
 
 En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation.
 Le cas échéant, certaines fonctionnalitées restent indisponibles, limités aux tiers payants.

@@ -88,7 +88,7 @@ Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandi
 Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au jeu.
 
 #figure(
-  image("images/boot_loading.png", width: 60%),
+  image("images/boot_loading.png", width: 70%),
   caption: [
     Exemple de structure d'initialisation de scène.
   ],

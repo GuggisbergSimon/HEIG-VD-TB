@@ -1,5 +1,13 @@
 = Implémentation <implementation>
 
+== Workflow
+
+1. Terrain 8kx8k 
+2. split en chunks 500x500
+  - sauvegardés dans scènes séparées
+    - remplissage de chaque chunk par objets de manière aléatoire
+  - création de SO pour chaque chunk
+
 == Chunk Loading
 
 - Charger selong matrice 3x3
