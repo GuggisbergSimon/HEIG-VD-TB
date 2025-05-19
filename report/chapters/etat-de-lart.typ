@@ -120,9 +120,8 @@ Il convient alors de faire un compromis entre fidélité graphique et temps de c
 
 === Shaders
 
-Un shader est un programme qui est exécuté, souvent sur le GPU, pour effectuer le rendu de chaque partie d'un objet 3D.
+Un shader est un programme, souvent exécuté sur le GPU, pour effectuer le rendu de chaque partie d'un objet 3D.
 Ils permettent de décharger le CPU, en cas de bottleneck, pour le GPU, plus performant pour des calculs nombreux et répétés.
-Il est d'ailleurs possible d'instantier via GPU certains objets afin de davantage réduire la quantité de données échangées entre CPU et GPU, la source de bottleneck la plus commune.
 
 On distingue plusieurs catégories de shaders :
 - Vertex shader : 
@@ -140,6 +139,22 @@ On distingue plusieurs catégories de shaders :
   Il peut générer des triangles pour représenter des simples éléments 3D, tel qu'un brin d'herbe, par exemple.
 
 De plus, il est possible d'utiliser la base d'un shader complexe mais de l'altérer pour arriver à des résultats stylistiques différents, que ce soit un rendu stylisé tel celui d'un cartoon, ou via cel-shading.
+
+La limite des shaders, et leur bottleneck, consiste en leurs entrées et sorties.
+Ceux-ci ne connaissent que ce qu'ils reçoivent en entrée pour procéder au rendu graphique, et la sortie habituelle d'un shader est la production d'un visuel.
+Bien que les sorties puissent être détournées de différente manière, par exemple en écrivant en sortie une texture en mémoire, cela reste limité.
+Les shaders ne peuvent pas être utilisés pour affecter le comportement d'autres systèmes indépendants, tel qu'un moteur physique.
+Mais ils peuvent, en prenant un vecteur en entrée pour représenter le vent, par exemple, simuler l'impact de celui-ci sur des brins d'herbe.
+En raison de ce bottleneck entre l'échange de donnée CPU et GPU, il est possible d'optimiser ceux-ci via l'instanciation d'objets par shaders, au coût d'une mémoire vidéo plus importante.
+
+@opengl-khronos
+
+#figure(
+  image("images/shader_pipeline.png", width: 18%),
+  caption: [
+    Pipeline de rendu d'un shader OpenGL, les étapes bleues représentes celles programmables.
+  ],
+)
 
 === Précision floating point
 
