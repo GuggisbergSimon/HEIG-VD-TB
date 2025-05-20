@@ -11,8 +11,6 @@ Under the [formulation](/formulation/TB_first_formulation_OWP.typ) subfolder.
 
 ## Report
 
-- [ ] TODO detail instructions for Typst
-
 Report is written using Typst.
 A PDF export is available for each milestone of the project.
 

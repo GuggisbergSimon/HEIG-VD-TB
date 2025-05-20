@@ -1,5 +1,16 @@
 = Implémentation <implementation>
 
+== Prototype
+
+Des assets provenant du Unity Asset Store et de Fab ont été utilisées pour le prototype.
+Ces assets sont listées et leur license est détaillée dans le fichier se `unity/assets/CREDITS.md`
+
+Un premier contrôleur physique pour le joueur, assez sommaire, permet de facilement tester le chargement du monde.
+Un second contrôleur, plus abouti, concerne le hovercraft avec une physique plus complexe pour qu'il adhère à la surface du terrain.
+
+Un simple script de génération prend en paramètres plusieurs préfabs et en instancie un certain nombre de manière aléatoire par terrain.
+L'angle de ces préfabs sont ensuite ajustés pour correspondre à la pente du terrain.
+
 == Workflow
 
 1. Terrain 8kx8k 

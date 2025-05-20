@@ -2,9 +2,9 @@
 
 == Prototype
 
-Comme cela a été discuté précédemment, l'échelle des mondes virtuels varie grandement.
+Comme cela a été discuté lors de l'état de l'art, l'échelle des mondes virtuels varie grandement.
 
-En raison des contraintes de ce projet, il a été décidé d'adopter une échelle de type véhicule avec un monde de taille humaine, servant de démonstration technique.
+En raison des contraintes de ce projet, il a été décidé d'adopter une échelle de type véhicule avec un monde de taille réduite, servant de démonstration technique.
 
 Cette échelle laisse la plus grande liberté d'implémentation, tout en facilitant la création de contenu.
 En effet, le joueur ne sera représenté que par un véhicule, sans animation, et au vu de la taille des objets les joueurs seront plus à même de tolérer des défauts de comportement physique.
@@ -12,6 +12,7 @@ En effet, le joueur ne sera représenté que par un véhicule, sans animation, e
 Par souci de simplification, l'idée d'un hovercraft explorant des dunes d'un paysage post-apocalyptique a été retenue.
 Cette idée permet l'utilisation d'une grande variété d'assets existantes, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
 Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourront être ajoutés, dans un second temps, si les imposteurs sont implémentés.
+La caméra sera positionné à distance du véhicule et suivra celui-ci à la troisième personne.
 
 Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, se déroule dans un monde désert que le joueur parcourt à bord d'un véhicule mais peut à tout moment débarquer à pied et explorer villages, ruines, et autres lieux d'intérêt.
 
