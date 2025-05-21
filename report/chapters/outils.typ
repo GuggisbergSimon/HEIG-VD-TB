@@ -12,7 +12,7 @@ En effet, un fichier `.gitattributes` ne possède pas de notion de conditions qu
 Cela a comme conséquence que tous les fichiers binaires listés auraient été ajoutés au Git LFS, y compris ceux en dessous de 100MB.
 
 Un projet GitHub Project sous forme Kanban permet de suivre l'implémentation des tâches à réaliser.
-Les différents états de celui-ci sont les suivants : Backlog -> Ready -> In Progress -> Done.
+Les différents états de celui-ci sont les suivants : Backlog, Ready, In Progress, Done.
 
 @game-ci
 
@@ -30,32 +30,26 @@ Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets 
 - HDRP - HD Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
   Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils supplémentaires.
 
-TODO update
-
-Parmi ces trois pipelines, URP est la plus adaptée pour le type de projet qu'est ce travail de bachelor.
-La performance est en effet au coeur de la problématique, disposer d'un rendu photoréaliste n'est pas nécessaire et la prise en main de cette pipeline représenterait un défi en plus.
-
 En terme de rendu graphique, il existe deux espaces de couleur différents dans Unity, `Linear` et `Gamma`.
 `Linear` est celui-ci par défaut dans Unity mais n'est pas représentatif de la réalité.
 `Gamma` est plus proche de la réalité et est le standard actuel, aussi connu sous le nom sRGB.
 Il s'agit de ce deuxième espace de couleur qui a été choisi.
 Ce choix n'impacte que le rendu graphique et pas les performances.
 
-TODO complete
-
-Unity possède plusieurs systèmes pour implémenter les imposteurs :
-- unity industry : pixyz
-- plugins : amplify
-
 @unity-doc
 
-=== Plugins
+=== Packages
 
-TODO complete
+Cinemachine est un package officiel Unity qui permet de simplifier implémentation et contrôle d'une caméra.
+Le contrôle de la caméra, au même titre que beaucoup de composantes dans un jeu vidéo, est un élément central.
+Cinemachine offre, entre autres, la possibilité de contraindre la caméra à suivre des objets ou des chemins.
 
-Cinemachine : contrôle de la caméra
+@unity-cinemachine
 
-Terrain Tools : options de terrain avancées
+Terrain Tools est un package officiel Unity qui ajoute des fonctionnalités aux terrains.
+Ce package a pour vocation de faciliter la création, édition et gestion de terrains.
+
+@unity-terrain-tools
 
 == Autres
 

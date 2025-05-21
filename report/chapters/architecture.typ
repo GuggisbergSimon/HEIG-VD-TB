@@ -102,7 +102,7 @@ Cette approche permet une permanence des agents ainsi qu'une consistence accrue 
 Pour arriver à un résultat pareil, il faudrait que l'AgentManager mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
-Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de bachelor et ne sera donc pas abordé plus en détail.
+Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de bachelor et ne sera donc pas abordée plus en détail.
 
 @unity-doc-scenemanager
 @rain-world-gdc
@@ -111,15 +111,19 @@ Malheureusement, la gestion des agents et une implémentation pareille sort du c
 
 == Unitaire
 
-TODO complete
+TODO
 
 == Performance
 
-Pour s'assurer de la reproductibilité du test de performances, il faudrait privilégier une situation de stress test sans que le joueur n'ait aucun contrôle.
-
-TODO complete
+Pour s'assurer de la reproductibilité du test de performance, il faudrait privilégier une situation de stress test sans que le joueur n'ait aucun contrôle.
+C'est ce qu'un benchmark permet de faire, par exemple sous la forme d'un parcours dirigé de la caméra, avec plusieurs actions se déroulant lors de la durée de celui-ci pour mettre le système à l'épreuve.
 
 Unity propose différents utilitaires de suivis de performances.
 Ceux-ci vont du plus simple comme les statistiques visibles dans l'éditeur ou le profiler, aux plus complexes comme le Frame Debugger.
 
 Le profiler, et en particulier le Deep profiling, a comme désavantage d'ajouter de l'overhead aux mesures de performances.
+C'est pour cette raison que le Deep profiling ne sera utilisé que pour investiguer les problèmes de performance.
+
+Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du framerate, ou temps de calcul par frame, mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
+Ce qui compte n'est pas que la moyenne de framerate soit élevé mais que les outliers soient aussi faibles que possibles.
+Une chute brutale du framerate, en dehors des temps de chargement, est particulièrement désagréable comme expérience.

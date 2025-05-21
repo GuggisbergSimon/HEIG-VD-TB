@@ -373,9 +373,16 @@ Pour mettre à jour un imposteur deux possibilités existent :
 - Baked : Demande un espace de stockage pour l'atlas de textures générées. Un bon shader peut également ajouter des conditions de lumières, des ombres, etc.
 - Runtime : plus coûteux mais rend mieux les conditions de lumières, d'éventuelles animations procédurales, etc.
 
+Unity, au contraire de Unreal Engine, ne propose pas de solution facile d'accès pour les imposteurs.
+Une solution solution existe pour les utilisateurs souscrivant à Unity Industry seulement.
+Le package offrant cette option est Pixyz, un outil permettant l'import de modèles CAD sous plusieurs formes, telles qu'un nuage de points.
+
+Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, tel que Amplify Impostors, disponible sur Unity Asset Store.
+
 @nvidia-true-impostors
 @medium-octahedral-impostors
 @unreal-doc-impostor
+@unity-pixyz-impostor
 
 #figure(
   grid(
