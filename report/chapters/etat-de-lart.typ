@@ -11,13 +11,13 @@ L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de
   table(
     columns: (21%, auto, auto, auto, auto, auto, auto),
     [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],[*Sorties 2024*],
-    strong("Unity"), "2005", "2D/3D", "C#", "Non", "Partiellement", "12638",
-    strong("Unreal Engine"), "1998", "3D", "C++", "Non", "Oui", "4707",
-    strong("Godot"), "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
+    "Unity", "2005", "2D/3D", "C#", "Non", "Partiellement", "12638",
+    "Unreal Engine", "1998", "3D", "C++", "Non", "Oui", "4707",
+    "Godot", "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
     "GameMaker", "2007", "2D", "GML", "Non", "Non", "1120",
     "PyGame", "2000", "2D/3D", "Python", "Oui", "Oui", "870",
     "Ren'Py", "2004", "2D", "Python", "Oui", "Oui", "839",
-    "RPG Maker", "1992", "  2D", "Ruby/Js", "Non", "Non", "704",
+    "RPG Maker", "1992", "  2D", "Ruby Js", "Non", "Non", "704",
     "Löve", "2008", "2D", "Lua", "Oui", "Oui", "41",
     "idTech", "1993", "3D", "C++", "Partiellement", "Partiellement", "14",
     "CryEngine", "2002", "3D", "C++ C# Lua", "Non", "Oui", "1",
@@ -74,6 +74,8 @@ Le premier manque malheureusement encore de fonctionnalités 3D et représente u
 
 Pour ces raisons, il a été d'utiliser Unity pour le développement de ce projet.
 
+#pagebreak()
+
 == Contexte et Concepts
 
 Cette section liste de manière succinte plusieurs concepts importants dans le rendu 3d.
@@ -112,7 +114,7 @@ En cas d'ombres douces, cela est différent, mais la complexité du rendu ne fai
 
 Il existe également des méthodes plus modernes pour aboutir à une fidélité graphique plus élevée, telles que le raytracing ou le pathtracing, ces méthodes sont très coûteuses en termes de performances et ne sont pas supportées par tout type de hardware.
 
-=== Mémoire vidéo
+=== Stockage
 
 Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo (VRAM) du GPU.
 Celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
@@ -156,6 +158,35 @@ En raison de ce bottleneck entre l'échange de donnée CPU et GPU, il est possib
   ],
 )
 
+=== Textures
+
+Lorsqu'un pixel de l'écran couvre de nombreux pixels de texture, appelé texels, il est difficile de déterminer rapidement la couleur du pixel à afficher.
+La manière correcte revient à établir la moyenne de chaque texel présent dans le pixel, mais c'est une opération coûteuse pour n'afficher, au final, qu'un pixel pour un modèle distant.
+
+La technique des mipmaps consiste à pré-calculer un set de textures de résolutions plus petites que celle originale à afficher.
+La texture correspondant à la distance de la caméra est ensuite chargée, pour éviter ces problèmes de rendu visuel, tout en garantissant une bonne performance.
+Pour une texture originale de 64x64, la mipmap 0, alors les niveaux suivants seraient une mipmap 1 de 32x32, 2 de 16x16, 3 de 8x8, etc.
+
+Cette technique n'a pour défaut que l'augmentation de l'espace disque et vidéo utilisé par l'application.
+Ceci se fait au prix d'un facteur 4/3, soit 33% espace mémoire supplémentaire, ce qui reste minime pour une amélioration visuelle significative comme celle-ci.
+
+Une alternative aux mipmaps est un filtre anisotrope. 
+Celui-ci permet d'améliorer le rendu visuel dans les cas où la face d'un modèle est orientée de manière oblique à la caméra.
+Le prix pour cette technique est un facteur 4, soit 300% espace mémoire supplémentaire.
+
+Une contrainte pour ces deux techniques est de disposer de textures dont la taille sont des puissances de 2.
+Cette particularité est entre autres utilisée par la technique d'optimisation d'assets appelée Crunch Compression.
+Celle-ci permet une compression des assets très agressive pour l'espace disque du build tout en ayant de très bonnes performances en runtime.
+
+@unity-doc-mipmap
+
+#figure(
+  image("images/mipmaps.png", width: 60%),
+  caption: [
+    Exemples de différentes mipmaps par taille décroissante.
+  ],
+)
+
 === Précision floating point
 
 Les floats sont préférés par rapport aux doubles pour le développement de jeux vidéo en raison de leur taille moindre en mémoire au coût d'une précision moindre, qui n'est pas requise pour la plupart des calculs.
@@ -178,6 +209,8 @@ Pour une échelle humaine cela n'est plus tolérable et pourrait même être dir
 
 @oracle-float
 
+#pagebreak()
+
 == Techniques
 
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
@@ -193,10 +226,9 @@ Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom
     "Lightmap", "Opt in", "Opt in", "Opt in",
     "Streaming Virtual Texturing", "Non", "Experimental", "Opt in",
     "Mesh Shader", "Non", "Non", "Opt in",
-    "Mipmaps", "Opt out", "Opt out", "Opt out",
     "LOD", "Opt in", "Opt in", "Opt in",
     "Impostor", "Plugins", "Plugins", "Opt in",
-    "Digital Elevation Model", "Plugins", "Opt in", "Opt in",
+    "Terrain et Landscape", "Plugins", "Opt in", "Opt in",
   ),
   caption: "Techniques couvertes par les trois moteurs de jeux plus populaires"
 )
@@ -287,37 +319,6 @@ Une implémentation future de cette technique est en considération par Unity po
 @nvidia-mesh-shader
 @unreal-doc-nanite
 
-=== Mipmaps
-
-Il s'agit de set de textures de résolutions plus petites que celle originale à afficher.
-Ces textures sont pré-calculées et peuvent bien souvent être générées par un moteur de jeu.
-C'est une technique smilaires aux LODs, mais pour les textures.
-Une mipmap 0 serait de résolution 64x64 par exemple, une mipmap 1 de 32x32, 2 de 16x16, etc.
-La texture correspondant à la distance de la caméra est ensuite chargée.
-
-Cette technique possède plusieurs légers défauts néanmoins.
-- L'espace disque utilisé par les textures est doublé.
-  Le coût est minime, par rapport à la taille occupée par des modèles, mais reste un facteur à prendre en compte.
-- Chargement additionnel
-  - Espace mémoire limité.
-    L'alternative est de charger l'entiéreté de la mipmap, y compris la texture originale, en mémoire, tel un atlas de textures.
-    Le coût est double, tout comme pour celui sur le disque, mais ici il s'agit d'un contexte plus critique.
-  - Charger les textures n'est pas instantané.
-    Si l'on souhaite charger chaque mipmap texture au moment de son utilisation, un effet de popping peut être notable par l'utilisateur.
-
-Une contrainte pour posséder des mipmaps, et de disposer de textures dont la taille sont des puissances de 2.
-Cette particularité est également utilisée par la technique d'optimisation d'assets appellée Crunch Compression.
-Celle-ci permet une compression des assets très agressive pour l'espace disque du build tout en ayant de très bonnes performances en runtime.
-
-@unity-doc-mipmap
-
-#figure(
-  image("images/mipmaps.png", width: 60%),
-  caption: [
-    Exemples de différentes mipmaps par taille décroissante.
-  ],
-)
-
 === Level of detail (LOD)
 
 Lorsque des modèles au maillage complexe sont affichés à l'écran de manière distante, le GPU va devoir traiter pour chaque pixel tous les triangles à sa position.
@@ -395,7 +396,7 @@ Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, 
   ],
 )
 
-== Terrain et Landscape
+=== Terrain et Landscape
 
 Il s'agit de la manière de représenter la surface d'un environnement 3D, partitionné via une grille.
 Chaque case de cette grille représente un morceau de terrain, qui peuvent être mis bout à bout lorsque chargés consécutivement.
@@ -442,7 +443,7 @@ Leur taille, quant à elle, explose et est difficilement quantifiable, allant du
 @unreal-doc-landscape
 @godot-terrain3D
 
-=== Cesium
+==== Cesium
 
 Cesium est une plate-forme mettant différentes ressources à disposition pour le rendu géospatial.
 Cela inclue une large base de données de 3DTiles ou d'imageries satellites.
@@ -451,7 +452,7 @@ Cet outil requière néanmoins une connexion internet pour streamer les données
 
 @cesium
 
-==== 3DTiles
+===== 3DTiles
 
 3DTiles est un format de données 3D géospatial permettant l'affichage, streaming et partage de celles-ci.
 Le format est maintenu par Cesium et est particulièrement adapté pour le streaming de données massives en runtime.
@@ -467,7 +468,7 @@ Plusieurs types de tiles existent :
 
 @3D-tiles
 
-=== Génération procédurale de terrain
+==== Génération procédurale de terrain
 
 Il existe de nombreux outils de générations procédurale de terrains.
 Ceux-ci se présentent sous la forme de plugins dans un moteur de jeu ou en tant qu'outils externes.

@@ -16,6 +16,29 @@ La caméra sera positionné à distance du véhicule et suivra celui-ci à la tr
 
 Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, se déroule dans un monde désert que le joueur parcourt à bord d'un véhicule mais peut à tout moment débarquer à pied et explorer villages, ruines, et autres lieux d'intérêt.
 
+#figure(
+  image("images/maquette.jpg", width: 52%),
+  caption: [
+    Maquette du prototype.
+  ],
+)
+
+#figure(
+  table(
+    columns: (auto, auto, auto),
+    [*Contrôle*],[*Interaction Jeu*],[*Interaction menu*],
+    [`A`],[Tourner à gauche],[Naviguer vers la gauche],
+    [`D`],[Tourner à droite],[Naviguer vers la droite],
+    [`W`],[Accélérer],[Naviguer vers le haut],
+    [`S`],[Ralentir],[Naviguer vers le bas],
+    [`Space`],[Freiner],[Sélectionner],
+    [`Esc`],[Ouvrir le menu],[Revenir en arrière],
+    [`Mouse`],[Contrôle de la caméra],[Navigation libre],
+    [`Left Click`],[/],[Sélectionner],    
+  ),
+  caption: "Contrôle du prototype dans différents contextes."
+)
+
 == Représentation du monde
 
 Parmi les solutions de représentations possibles, la solution Cesium propose de nombreux outils et fonctionnalités très complets et puissants pour le rendu géospatial de planètes.
