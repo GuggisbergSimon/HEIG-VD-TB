@@ -30,6 +30,12 @@ Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets 
 - HDRP - HD Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
   Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils supplémentaires.
 
+Ce travail de bachelor a pour volonté d'implémenter les méthode de l'art du métier et donc d'utiliser une pipeline moderne, cela exclue la pipeline Standard.
+La pipeline HDRP possède de nombreuses assets photoréalistes tandis que URP tend vers la stylisation avec des assets moins lourdes, avec un compte de polygones moins élevé, pour un style souvent dénommé low poly.
+
+Un premier prototype a été réalisé avec URP lors de la première partie de ce travail de bachelor.
+Il a ensuite été porté vers HDRP, en utilisant d'autres assets, pour adhérer à la réalité du métier.
+
 En terme de rendu graphique, il existe deux espaces de couleur différents dans Unity, `Linear` et `Gamma`.
 `Linear` est celui-ci par défaut dans Unity mais n'est pas représentatif de la réalité.
 `Gamma` est plus proche de la réalité et est le standard actuel, aussi connu sous le nom sRGB.
@@ -54,7 +60,7 @@ Ce package a pour vocation de faciliter la création, édition et gestion de ter
 == Autres
 
 La rédaction du rapport a été fait avec l'aide de Typst et en particulier d'un template pour les travaux de bachelor HEIG-VD.
-Celle-ci a été réalisée avec Visuel Studio Code et l'extension Tinymist pour l'édition Typst.
+La rédaction en elle-même a été réalisée avec Visuel Studio Code et l'extension Tinymist pour l'affichage et export Typst en local.
 La rédaction du code a été réalisé avec Jetbrains Rider et l'extension GiHub Copilot.
 
 Pour l'édition de modèles 3D et la génération de LODs, plus particulièrement, bien qu'un simple modificateur decimate sous Blender aurait pu suffire, une extension tel que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche.
