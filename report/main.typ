@@ -55,9 +55,9 @@
 
 #include "chapters/etat-de-lart.typ"
 
-#include "chapters/architecture.typ"
-
 #include "chapters/outils.typ"
+
+#include "chapters/architecture.typ"
 
 #include "chapters/implementation.typ"
 

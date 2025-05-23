@@ -132,11 +132,11 @@ Malheureusement, la gestion des agents et une implémentation pareille sort du c
 
 == Test
 
-== Unitaire
+=== Unitaire
 
 TODO
 
-== Performance
+=== Performance
 
 Pour s'assurer de la reproductibilité du test de performance, il faudrait privilégier une situation de stress test sans que le joueur n'ait aucun contrôle.
 C'est ce qu'un benchmark permet de faire, par exemple sous la forme d'un parcours dirigé de la caméra, avec plusieurs actions se déroulant lors de la durée de celui-ci pour mettre le système à l'épreuve.

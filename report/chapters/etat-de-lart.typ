@@ -452,8 +452,6 @@ Cet outil requière néanmoins une connexion internet pour streamer les données
 
 @cesium
 
-===== 3DTiles
-
 3DTiles est un format de données 3D géospatial permettant l'affichage, streaming et partage de celles-ci.
 Le format est maintenu par Cesium et est particulièrement adapté pour le streaming de données massives en runtime.
 3DTiles utilise le format glTF pour les tiles.

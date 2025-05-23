@@ -78,6 +78,9 @@
   show heading: set block(above: 1.4em, below: 1em)
   
   show heading.where(level:1): set text(size: 25pt)
+  show heading.where(level:2): set text(size: 16pt)
+  show heading.where(level:3): set text(size: 14pt) 
+  show heading.where(level:4): set text(size: 11pt, style: "italic")
 
   body
 }
