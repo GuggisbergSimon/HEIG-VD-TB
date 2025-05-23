@@ -85,7 +85,7 @@ Pour s'assurer qu'un GameManager soit présent dans une scène, une structure si
 
 === Monde
 
-Afin de représenter le monde manière plus légère qu'un seul fichier à charger en tout temps dans la mémoire vive, une solution très populaire est la division du monde en chunks.
+Une solution très populaire pour charger en mémoire un monde virtuel par parties, plutôt que dans son ensemble, est de le diviser en chunks.
 
 Chaque chunk se trouve dans un fichier scène séparé afin de pouvoir être chargé de manière additive, et asynchrone.
 De plus, chaque chunk doit connaître ses coordonnées mondes afin de pouvoir être chargé au bon endroit.
@@ -147,6 +147,6 @@ Ceux-ci vont du plus simple comme les statistiques visibles dans l'éditeur ou l
 Le profiler, et en particulier le Deep profiling, a comme désavantage d'ajouter de l'overhead aux mesures de performances.
 C'est pour cette raison que le Deep profiling ne sera utilisé que pour investiguer les problèmes de performance.
 
-Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du framerate, ou temps de calcul par frame, mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
-Ce qui compte n'est pas que la moyenne de framerate soit élevé mais que les outliers soient aussi faibles que possibles.
+Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du framerate mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
+Mettre en évidence ceci permet de suivre les chutes de performances.
 Une chute brutale du framerate, en dehors des temps de chargement, est particulièrement désagréable comme expérience.

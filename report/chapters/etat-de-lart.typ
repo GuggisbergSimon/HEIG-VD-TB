@@ -74,8 +74,6 @@ Le premier manque malheureusement encore de fonctionnalités 3D et représente u
 
 Pour ces raisons, il a été d'utiliser Unity pour le développement de ce projet.
 
-#pagebreak()
-
 == Contexte et Concepts
 
 Cette section liste de manière succinte plusieurs concepts importants dans le rendu 3d.
@@ -116,29 +114,37 @@ Il existe également des méthodes plus modernes pour aboutir à une fidélité 
 
 === Stockage
 
-Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo (VRAM) du GPU.
-Celle-ci étant limitée, il n'est pas forcément possible de charger toutes les ressources avec leur qualité maximale.
-Il convient alors de faire un compromis entre fidélité graphique et temps de chargement ou performances.
+On distingue plusieurs catégories de stockage.
+- Mémoire vive (RAM)
+- Mémoire vidéo (VRAM)
+- Mémoire de stockage (SSD, HDD)
+
+Les deux derniers types de mémoire sont ceux impactant principalement le rendu graphique.
+Les textures, modèles, et autres ressources graphiques nécessaires pour le rendu sont stockées dans la mémoire vidéo du GPU.
+Bien que le GPU soit très rapide pour traiter de larges quantités de données, il est limité par la vitesse de transfert entre mémoire de stockage et lui-même.
+Il n'est pas non plus possible de tout stocker sur le GPU en raison de la taille de mémoire vidéo limitée, bien plus que celle de stockage.
+
+Il convient alors de faire un compromis entre fidélité graphique, temps de chargement et performances.
 
 === Shaders
 
 Un shader est un programme, souvent exécuté sur le GPU, pour effectuer le rendu de chaque partie d'un objet 3D.
-Ils permettent de décharger le CPU, en cas de bottleneck, pour le GPU, plus performant pour des calculs nombreux et répétés.
+Ils permettent de déplacer une charge de travail répétitive depuis le CPU jusqu'au GPU, plus performant pour des calculs nombreux et répétés.
 
 On distingue plusieurs catégories de shaders :
 - Vertex shader : 
   Ce shader s'applique aux sommets d'un modèle 3D.
-  C'est aussi dans les points que les valeurs importantes sont sauvegardées, telles que les coordonnées UV.
+  C'est aussi dans ces points que les valeurs importantes sont sauvegardées, telles que les coordonnées UV.
 - Fragment shader :
   Ce shader s'applique à chaque pixel d'un modèle 3D.
   Comme la quantité de points est usuellement bien plus conséquente que les sommets, il convient de procéder par interpolation de données de chaque vertex pour déterminer celles du pixel concerné.
   Ainsi la coordonnée précise d'une texture peut être déterminée, par interpolation entre trois autres connues.
 - Tessellation shader :
   Ce shader permet de subdiviser de manière uniforme un maillage.
-  Cela permet d'ajouter des détails de manière dynamique.
+  Cela permet d'ajouter des détails de manière dynamique à un modèle, par exemple lorsque la caméra s'en approche.
 - Geometry shader :
   Ce shader prend une primitive en paramètre et produit plusieurs primitives.
-  Il peut générer des triangles pour représenter des simples éléments 3D, tel qu'un brin d'herbe, par exemple.
+  Il peut générer des triangles pour représenter des simples éléments 3D, tel qu'un brin d'herbe.
 
 De plus, il est possible d'utiliser la base d'un shader complexe mais de l'altérer pour arriver à des résultats stylistiques différents, que ce soit un rendu stylisé tel celui d'un cartoon, ou via cel-shading.
 
@@ -208,8 +214,6 @@ Ainsi, pour une valeur telle que le rayon de la terre, ~6378 km, la précision d
 Pour une échelle humaine cela n'est plus tolérable et pourrait même être directement observable.
 
 @oracle-float
-
-#pagebreak()
 
 == Techniques
 
