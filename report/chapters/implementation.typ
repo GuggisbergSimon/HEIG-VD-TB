@@ -28,7 +28,14 @@ En effet, garder en mémoire les chunks chargés afin de pouvoir les décharger 
 
 == Recentrer le joueur au centre du monde
 
-TODO
+Garder le joueur au centre du monde demande, à un intervalle donné, de déplacer le monde entier et les acteurs, joueur compris, dans la direction opposée à son déplacement.
+Un intervalle approprié, au vu de l'utilisation de chunks pour ce projet, est à chaque passage d'un chunk à un autre.
+Ainsi, pour un déplacement du joueur d'un chunk A à B, nous avons un déplacement vectoriel de celui-ci sous la forme $delta d = arrow("AB")$.
+Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
+
+Cela pose néanmoins problème avec l'implémentation initiale du loading des chunks, qui prend en compte la position du joueur.
+En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, est de la forme : $(0, 0) arrow arrow("AB") arrow (0, 0)$.
+Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les chunks correspondants.
 
 == LOD
 
