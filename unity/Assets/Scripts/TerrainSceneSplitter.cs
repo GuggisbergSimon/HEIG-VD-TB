@@ -24,7 +24,7 @@ public class TerrainSceneSplitter : MonoBehaviour {
 
     private void GenerateObjectsFromScenes(GameObject terrainObject) {
         TerrainScriptableObject terrainSO = ScriptableObject.CreateInstance<TerrainScriptableObject>();
-        terrainSO.name = terrainObject.name;
+        terrainSO.sceneName = terrainObject.name;
         terrainSO.coords = new Vector2Int(
             int.Parse(terrainObject.name.Split('_')[1]),
             int.Parse(terrainObject.name.Split('_')[2])
