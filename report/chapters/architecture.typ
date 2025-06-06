@@ -150,3 +150,29 @@ C'est pour cette raison que le Deep profiling ne sera utilisé que pour investig
 Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du framerate mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
 Mettre en évidence ceci permet de suivre les chutes de performances.
 Une chute brutale du framerate, en dehors des temps de chargement, est particulièrement désagréable comme expérience.
+
+En raison de la nature du projet, il est difficile d'implémenter des outils tels que Cinemachine et Timeline pour tester le chargement des chunks, en particulier à cause du recentrage automatique du joueur, ce qui est contraire à l'idée d'un parcours dirigé.
+Mais puisque ce prototype ne contient aucunes fonctionnalités avancées, il est possible de rationaliser les différents types de tests à effectuer.
+Ainsi on distingue deux types d'interactions principales, se déplacer et contrôler la caméra.
+
+#figure(
+  table(
+    columns: (auto, auto, auto),
+    [*Type*], [*Situation*], [*Fréquence attendue lors d'une séance habituelle de gameplay*],
+    "Mouvement", "", "",
+    "", "Lent", "fréquent",
+    "", "Rapide", "inattendu",
+    "", "Téléportation", "ponctuel",
+    "", "Aller-retour d'un chunk à un autre", "ponctuel",
+    "Caméra", "", "",
+    "", "Vue fixe", "fréquent",
+    "", "Rotation lente", "fréquent",
+    "", "Rotation rapide", "fréquent",
+  ),
+  caption: "List des types d'interactions à tester."
+)
+
+Les outils de Unity permettant de réaliser ces tests sont :
+- Unity Test Framework pour effectuer des tests unitaires en Play Mode.
+- Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet.
+- Input Testing est disponible pour Input System et permet de simuler des entrées uttilisateur.
