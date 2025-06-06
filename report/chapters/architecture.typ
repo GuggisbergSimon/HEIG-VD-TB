@@ -12,7 +12,7 @@ En effet, le joueur ne sera représenté que par un véhicule, sans animation, e
 Par souci de simplification, l'idée d'un hovercraft explorant des dunes d'un paysage post-apocalyptique a été retenue.
 Cette idée permet l'utilisation d'une grande variété d'assets existantes, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
 Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourront être ajoutés, dans un second temps, si les imposteurs sont implémentés.
-La caméra sera positionné à distance du véhicule et suivra celui-ci à la troisième personne.
+La caméra sera positionnée à distance du véhicule et suivra celui-ci à la troisième personne.
 
 Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, se déroule dans un monde désert que le joueur parcourt à bord d'un véhicule mais peut à tout moment débarquer à pied et explorer villages, ruines, et autres lieux d'intérêt.
 
@@ -51,30 +51,54 @@ En effet, Cesium for Unity implémente déjà le streaming de données du terrai
 En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de taille minimal de 64km².
 En effet, Unity ne supporte que l'import d'une heightmap de taille maximale de 8192x8192 pixels.
 L'élevation pour un mètre est donc donnée par un pixel de la heightmap, ce qui correspond à un compromis acceptable entre taille et précision du terrain.
+La résolution de la heightmap est donc de environ 1 pixel par mètre.
 
 La disposition d'éléments dans le monde est réalisé en fonction de l'inclinaison de la pente de ce terrain.
-En raison de la complexité de la génération procédurale et des enjeux de ce travail de bachelor, il n'a pas été donné un soin plus particulier à la disposition procédurale des éléments du décor sur le terrain.
+En raison de la complexité de la génération procédurale et des enjeux de ce travail de bachelor, il n'a pas été donné un soin plus particulier à la réflexion de la disposition procédurale des éléments du décor sur le terrain.
 
 @unity-doc-terrain
 
 == Structure
 
+Unity possède de nombreuses structures permettant le développement de jeux vidéo.
+Maintenir une bonne structure dès le début est essentiel.
+
 === Fichiers
 
-Les Assets seront stockées dans des dossiers correspondants à leur type.
-Le dossier Scripts contiendra des scripts C\#, dans celui Prefabs, des préfabs, etc.
+Tout fichier de ressource, qu'il s'agisse d'un script C\#, d'un modèle 3D, d'une texture, est appelé une Asset.
 
-La seule exception à cela concerne les différentes assets provenant du Unity Asset Store ou de Fab.
+Les Assets seront stockées dans le dossier `Assets` et plus spécifiquement dans les sous-dossiers correspondants à leur type.
+Ainsi, le dossier `Scripts` contiendra des scripts C\#, dans celui `Prefabs`, des préfabs, etc.
+
+La seule exception à cela concerne les différentes assets provenant du Unity Asset Store ou de Fab, deux grandes ressources d'assets pour Unity.
 Leur propre structure sera conservée, afin de faciliter le réimport de celles-ci, au besoin.
 
-=== Scène
+=== Scènes
+
+Unity charge différents environnements, appelés Scenes.
+Cela peut être réalisé de manière additive, ou en remplaçant complètement l'environnement précédent.
+
+Ces scènes contiennent toutes sortes d'instances d'objets, appelés GameObjects.
+Ces GameObjects peuvent représenter des éléements visuels 3D, de la lumière, une caméra, contenir des scripts, etc.
+Ceci est déterminé par les composants attachés à chacun de ces GameObjects.
+Le composant par défaut, pour les objets 3D, est le Transform, qui détermine position, rotation et échelle d'un objet.
+Chaque GameObject peut posséder plusieurs composants, dont certains qui peuvent être attachés au runtime à un objet.
+De plus, chaque GameObject peut contenir plusieurs enfants GameObjects afin d'aider à structurer une Scène.
+
+Il est possible de sauvegarder un GameObject et ses enfants en tant qu'Asset, afin de facilement pouvoir le réutiliser dans d'autres Scènes et synchroniser certains changements dans l'éditeur Unity.
+Ce type d'Asset est appelé Prefab, la forme raccourcie de préfabriqué.
+Les Prefabs ont le rôle d'un template puisque deux instances d'un même préfab auront des comportements indépendants.
+
+==== GameManager
 
 Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
 
 Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
 Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
 
-Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au jeu.
+Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés dans une scène dédiée avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au au jeu.
+
+Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être fait de manière additive lors d'un écran de chargement, afin d'éviter que l'application soit immobilisée lors du chargement initial.
 
 #figure(
   image("images/boot_loading.png", width: 70%),
@@ -85,14 +109,16 @@ Pour s'assurer qu'un GameManager soit présent dans une scène, une structure si
 
 === Monde
 
-Une solution très populaire pour charger en mémoire un monde virtuel par parties, plutôt que dans son ensemble, est de le diviser en chunks.
+Une solution très populaire pour charger en mémoire un monde virtuel par élément, plutôt que dans son ensemble, est de le diviser en parties, appelées chunks.
 
-Chaque chunk se trouve dans un fichier scène séparé afin de pouvoir être chargé de manière additive, et asynchrone.
-De plus, chaque chunk doit connaître ses coordonnées mondes afin de pouvoir être chargé au bon endroit.
-Un terrain de 8000x8000 et donc divisé en chunks de 500x500 formant une sous grille de 16x16.
+Chaque chunk correspond à un fichier scène séparé de Unity afin de pouvoir être chargé de manière additive, et asynchrone.
+Ceci permet aux chunks de posséder moults objets, appelés GameObjects dans Unity, qui peuvent représenter toutes sortes d'éléments du décor.
+Un terrain de 8000x8000 peut être divisé en chunks de 500x500 formant une sous grille de 16x16.
 
-Pour enregistrer les coordonnées de chaque chunk et les charger au bon endroit, il faut créer un objet Chunk contenant ces informations.
-Unity propose des ScriptableObjects qui permettent de stocker des données sans être des GameObjects.
+Pour enregistrer les coordonnées de chaque chunk et les charger au bon endroit dans l'espace 3D monde, il faut ajouter des méta informations aux chunks.
+En raison de limitations de Unity, les scènes, et par extension les chunks, ne peuvent pas offrir ces informations en lecture sans être chargées.
+Heureusement, Unity propose la structure de fichier ScriptableObjects qui permettent de stocker toutes sortes de données.
+Il suffit alors de créer un ScriptableObject pour chaque chunk, contenant toutes les méta informations nécessaires pour ceux-ci.
 
 Les ScriptableObjects ont comme avantage principal de pouvoir stocker des larges quantités de données et de les partager entre objets à faible coût.
 Leur utilisation, ici, profite du fait les données modifiées en tant que ScriptableObject dans l'éditeur Unity sont conservées en tant qu'asset.
@@ -101,7 +127,7 @@ Leur utilisation, ici, profite du fait les données modifiées en tant que Scrip
 Maintenir une liste des chunks chargés permet de minimiser le nombre de chunks à charger.
 Pour déterminer quel chunk à charger, il est possible de procéder en fonction de la distance au joueur, ou, si l'on simplifie, de la distance à un chunk, celui-ci occupé par le joueur.
 Pour simplifier les calculs de distances, il est possible d'enregistrer sous forme de matrice-filtre NxN, où N est impair, les chunks à charger.
-Cette matrice contiendra une valeur positive si il faut charger le chunk.
+Cette matrice contiendra une valeur positive s'il faut charger le chunk.
 Les positions dans le monde des chunks sont déterminées en fonction de celle du joueur, qui se trouve au centre de cette matrice-filtre.
 
 #figure(
@@ -116,12 +142,12 @@ Les positions dans le monde des chunks sont déterminées en fonction de celle d
   ],
 )
 
-Une autre complication concernant les chunks et l'ajout d'agents en dehors du joueur.
+Une autre complication concernant les chunks et l'ajout d'agents en dehors du joueur, ceux-ci incluent toutes formes d'objets capables de mouvement.
 Ceux-ci sont usuellement chargés avec une scène, ici un chunk.
 Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un chunk à l'autre.
+
 Une manière de résoudre ce problème est de créer un AgentManager qui tiendra à jour la liste des agents présents dans le monde et les chargera/déchargera en fonction des chunks chargés.
 Cette approche permet une permanence des agents ainsi qu'une consistence accrue mais ne permet pas de simuler des comportements en background, hors de vision du joueur.
-
 Pour arriver à un résultat pareil, il faudrait que l'AgentManager mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
@@ -169,10 +195,11 @@ Ainsi on distingue deux types d'interactions principales, se déplacer et contr�
     "", "Rotation lente", "fréquent",
     "", "Rotation rapide", "fréquent",
   ),
-  caption: "List des types d'interactions à tester."
+  caption: "Liste des types d'interactions à tester."
 )
 
 Les outils de Unity permettant de réaliser ces tests sont :
 - Unity Test Framework pour effectuer des tests unitaires en Play Mode.
 - Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet.
-- Input Testing est disponible pour Input System et permet de simuler des entrées uttilisateur.
+- Input Testing est disponible pour Input System et permet de simuler des entrées utilisateur.
+
