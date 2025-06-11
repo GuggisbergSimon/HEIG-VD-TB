@@ -5,8 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
 
-    public GameObject Player;
-    public ChunkManager ChunkManager;
+    public ChunkManager ChunkManager { get; private set; }
 
     private void Awake() {
         if (Instance == null) {
@@ -15,12 +14,6 @@ public class GameManager : MonoBehaviour {
         }
         else {
             Destroy(gameObject);
-            return;
-        }
-
-        Player = GameObject.FindGameObjectWithTag("Player");
-        if (Player == null) {
-            Debug.LogError("No player found with tag 'Player'");
             return;
         }
 

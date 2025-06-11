@@ -9,6 +9,8 @@ public class ChunkManager : MonoBehaviour {
     [SerializeField, Min(1)] private int viewDistance = 3;
     [SerializeField] private float yOffset = 0f;
     
+    public Player Player { get; set; }
+    
     private string[][] _sortedScenes;
     private List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
@@ -43,12 +45,15 @@ public class ChunkManager : MonoBehaviour {
         }
         
         // Player and Chunks
-        _playerGridPos = GetGridPosition(GameManager.Instance.Player.transform.position);
+        _playerGridPos = GetGridPosition(Player.transform.position);
         UpdateLoadedChunks();
     }
     
     private void Update() {
-        Vector3 playerPos = GameManager.Instance.Player.transform.position;
+        if (Player == null) {
+            return;
+        }
+        Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
         if (currentGridPos != gridOffset) {
             Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}");
@@ -65,7 +70,7 @@ public class ChunkManager : MonoBehaviour {
             
             // Move player
             playerPos -= worldOffset;
-            GameManager.Instance.Player.transform.position = playerPos;
+            Player.transform.position = playerPos;
 
             _playerGridPos += diff;
             UpdateLoadedChunks();
