@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        ChunkManager = GetComponent<ChunkManager>();
+        //TODO fix, scan for eventual chunk manager at each loaded scene
+        ChunkManager = GameObject.Find("ChunkManager").GetComponent<ChunkManager>();
     }
 
     public void QuitGame() {

@@ -51,8 +51,9 @@ public class TerrainPopulator : MonoBehaviour {
                         clusterCenter.z + offset.y
                     );
 
-                    position.y = GetTerrainHeight(terrain, position.x, position.z) + yOffset +
-                                 terrain.transform.position.y;
+                    //TODO adjust offset based on prefab. or adjust prefab to match 0 as terrain height
+                    position.y = GetTerrainHeight(terrain, position.x, position.z) + 
+                                 yOffset + terrain.transform.position.y;
 
                     Quaternion rotation =
                         Quaternion.FromToRotation(Vector3.up, GetTerrainNormal(terrainData,
