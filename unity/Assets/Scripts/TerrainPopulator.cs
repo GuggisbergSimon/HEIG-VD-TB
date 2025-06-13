@@ -1,14 +1,34 @@
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+using System.IO;
+#endif
 
 public class TerrainPopulator : MonoBehaviour {
+    [SerializeField] private int seed = 42;
+    [SerializeField] private string chunksDirectory = "Assets/Scenes/Chunks";
     [SerializeField] private GameObject[] buildingPrefabs;
     [SerializeField] private float yOffset = -5f;
     [SerializeField] private int buildingCountPerTerrain = 50;
     [SerializeField] private int clusterCount = 5;
     [SerializeField] private float clusterSize = 50;
 
-    [ContextMenu("Place Buildings")]
+    [ContextMenu("Place and Save Buildings")]
     private void PlaceBuildings() {
+#if UNITY_EDITOR
+        string[] sceneFiles = Directory.GetFiles(chunksDirectory, "*.unity");
+
+        foreach (string sceneFile in sceneFiles) {
+            EditorSceneManager.OpenScene(sceneFile, OpenSceneMode.Single);
+            PlaceBuildingsInActiveTerrains();
+            EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+        }
+#endif
+    }
+
+    [ContextMenu("Place Buildings")]
+    private void PlaceBuildingsInActiveTerrains() {
+        Random.InitState(seed);
         foreach (var terrain in Terrain.activeTerrains) {
             TerrainData terrainData = terrain.terrainData;
             for (int i = terrain.transform.childCount - 1; i >= 0; i--) {
