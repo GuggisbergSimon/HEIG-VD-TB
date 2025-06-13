@@ -45,14 +45,12 @@ public class ChunkManager : MonoBehaviour {
         }
         
         // Player and Chunks
+        Player = GameObject.FindWithTag("Player").GetComponent<Player>();
         _playerGridPos = GetGridPosition(Player.transform.position);
         UpdateLoadedChunks();
     }
     
     private void Update() {
-        if (Player == null) {
-            return;
-        }
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
         if (currentGridPos != gridOffset) {
