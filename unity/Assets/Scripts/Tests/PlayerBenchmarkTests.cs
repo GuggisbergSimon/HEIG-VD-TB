@@ -1,5 +1,6 @@
 using System.Collections;
 using NUnit.Framework;
+using Unity.Cinemachine;
 using Unity.PerformanceTesting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,8 @@ namespace Tests {
         private int _moveDistance = 1;
         private int _moveFastDistance = 5;
         private int _teleportDistance = 700;
+        private float _horizontalPanSpeed = 2f;
+        private float _fastHorizontalPanSpeed = 45.0f;
 
         [OneTimeSetUp]
         public void OneTimeSetup() {
@@ -71,6 +74,38 @@ namespace Tests {
                 else {
                     GameManager.Instance.ChunkManager.Player.transform.position -= Vector3.up * _teleportDistance;
                 }
+            });
+        }
+
+        private CinemachinePanTilt GetPanTilt() {
+            var playerCamera = GameObject.Find("PlayerCamera");
+            if (playerCamera != null) {
+                return playerCamera.GetComponent<CinemachinePanTilt>();
+            }
+            return null;
+        }
+        
+        [UnityTest, Performance]
+        public IEnumerator HorizontalPan() {
+            var panTilt = GetPanTilt();
+            if (panTilt == null) {
+                return null;
+            }
+
+            return RunPerformanceTest(i => {
+                panTilt.PanAxis.Value += _horizontalPanSpeed;
+            });
+        }
+        
+        [UnityTest, Performance]
+        public IEnumerator FastHorizontalPan() {
+            var panTilt = GetPanTilt();
+            if (panTilt == null) {
+                return null;
+            }
+
+            return RunPerformanceTest(i => {
+                panTilt.PanAxis.Value += _horizontalPanSpeed;
             });
         }
     }

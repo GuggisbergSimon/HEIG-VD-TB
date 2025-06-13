@@ -40,11 +40,6 @@ public class Player : MonoBehaviour {
         _rb.linearVelocity = velocity;
     }
     
-    public void SetMovementSpeed(float speed, float acceleration) {
-        moveMaxSpeed = speed;
-        moveMaxAcceleration = acceleration;
-    }
-    
     private void OnMenu() {
         GameManager.Instance.QuitGame();
     }
