@@ -32,6 +32,11 @@ namespace Tests {
             yield return WaitForSceneLoad();
             // Reset player
             GameManager.Instance.ChunkManager.Player.transform.position = Vector3.zero;
+            var panTilt = GetPanTilt();
+            if (panTilt == null) {
+                yield return null;
+            }
+            panTilt.PanAxis.Value = 0;
 
             using (Measure.Frames()
                        .WarmupCount(_warmUpCount)
