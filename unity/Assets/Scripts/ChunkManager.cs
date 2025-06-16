@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -85,17 +85,21 @@ public class ChunkManager : MonoBehaviour {
     private void UpdateLoadedChunks() {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
 
-        // Find chunks outside the 3x3 grid
+        // Find chunks outside of ChunksToLoad
         foreach (var coords in _chunksLoaded) {
-            if (Mathf.Abs(coords.x - _playerGridPos.x) <= 1 &&
-                Mathf.Abs(coords.y - _playerGridPos.y) <= 1) {
+            int relX = coords.x - _playerGridPos.x;
+            int relY = coords.y - _playerGridPos.y;
+    
+            // Skip if within view distance and in the chunksToLoad pattern
+            if (Mathf.Abs(relX) <= viewDistance && Mathf.Abs(relY) <= viewDistance && 
+                _chunksToLoad[relX + viewDistance, relY + viewDistance]) {
                 continue;
             }
-
+    
             chunksToUnload.Add(coords);
         }
 
-        // Unload chunks outside the 3x3 grid
+        // Unload chunks outside of ChunksToLoad
         foreach (var coords in chunksToUnload) {
             SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
             _chunksLoaded.Remove(coords);
