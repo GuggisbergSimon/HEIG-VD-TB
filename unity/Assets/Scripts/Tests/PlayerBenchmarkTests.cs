@@ -111,7 +111,7 @@ namespace Tests {
             }
 
             return RunPerformanceTest(i => {
-                panTilt.PanAxis.Value += _horizontalPanSpeed;
+                panTilt.PanAxis.Value += _fastHorizontalPanSpeed;
             });
         }
     }
