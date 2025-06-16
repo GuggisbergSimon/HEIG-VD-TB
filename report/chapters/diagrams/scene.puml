@@ -1,0 +1,34 @@
+@startuml
+
+package Compositing.ChunkManager {
+
+}
+
+class ScriptableObject {
+  Vector2 coordinates
+  String sceneName
+}
+
+package Prefab {
+  class Component {
+    val value
+  }
+}
+
+package Scene.InstantiatedPrefab {
+  class Component {
+    val derivedValue
+  }
+}
+
+package Scene.Terrain {
+  class Terrain
+}
+
+ChunkManager --> ScriptableObject
+
+ScriptableObject --> Scene
+
+Prefab --> InstantiatedPrefab
+
+@enduml

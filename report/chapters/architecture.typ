@@ -89,6 +89,8 @@ Il est possible de sauvegarder un GameObject et ses enfants en tant qu'Asset, af
 Ce type d'Asset est appelé Prefab, la forme raccourcie de préfabriqué.
 Les Prefabs ont le rôle d'un template puisque deux instances d'un même préfab auront des comportements indépendants.
 
+TODO image démontrant architecture et composants
+
 ==== GameManager
 
 Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
