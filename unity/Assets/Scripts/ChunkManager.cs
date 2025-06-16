@@ -116,12 +116,13 @@ public class ChunkManager : MonoBehaviour {
 
         // Unload chunks outside of ChunksToLoad
         foreach (var coords in chunksToUnload) {
-            SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
-            
             AsyncOperation unloadOperation =
                 SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
             if (unloadOperation != null) {
-                unloadOperation.completed += operation => { _chunksLoaded.Remove(coords); };
+                unloadOperation.completed += operation => 
+                {
+                    _chunksLoaded.Remove(coords);
+                };
             }
         }
     }
