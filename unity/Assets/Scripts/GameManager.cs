@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance;
 
     public ChunkManager ChunkManager { get; private set; }
+    public UIManager UIManager { get; private set; }
 
     private void Awake() {
         if (Instance == null) {
@@ -17,8 +18,9 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        //TODO fix, scan for eventual chunk manager at each loaded scene
+        //TODO fix, scan for eventual manager at each loaded scene
         ChunkManager = GameObject.Find("ChunkManager").GetComponent<ChunkManager>();
+        UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
     public void QuitGame() {

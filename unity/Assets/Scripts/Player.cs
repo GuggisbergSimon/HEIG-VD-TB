@@ -41,6 +41,6 @@ public class Player : MonoBehaviour {
     }
     
     private void OnMenu() {
-        GameManager.Instance.QuitGame();
+        GameManager.Instance.UIManager.TogglePause();
     }
 }

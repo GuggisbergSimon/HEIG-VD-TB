@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -165,6 +165,10 @@ public class ChunkManager : MonoBehaviour {
                     (coords.y - _playerGridPos.y) * gridSize.y
                 );
 
+                // TODO add structure with (AsyncOperation, xCoord, yCoord, chunkPosition)
+                // TODO unsubscribe to complete operation if cancelled and subscribe to complete operation to unload the scene asynchronously
+                // TODO subscribe to 
+                
                 AsyncOperation loadOperation =
                     SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
                 if (loadOperation != null)
