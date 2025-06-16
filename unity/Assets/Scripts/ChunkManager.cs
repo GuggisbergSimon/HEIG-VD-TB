@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -44,10 +45,17 @@ public class ChunkManager : MonoBehaviour {
             _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
         
-        // Player and Chunks
+        StartCoroutine(LoadInitialChunk());
+    }
+    
+    private IEnumerator LoadInitialChunk()
+    {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
         _playerGridPos = GetGridPosition(Player.transform.position);
-        UpdateLoadedChunks();
+        float initialTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
+        yield return LoadChunks();
+        Time.timeScale = initialTimeScale;
     }
     
     private void Update() {
@@ -82,7 +90,14 @@ public class ChunkManager : MonoBehaviour {
         );
     }
 
-    private void UpdateLoadedChunks() {
+    private void UpdateLoadedChunks()
+    {
+        UnloadChunks();
+        StartCoroutine(LoadChunks());
+    }
+
+    private void UnloadChunks()
+    {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
 
         // Find chunks outside of ChunksToLoad
@@ -102,11 +117,19 @@ public class ChunkManager : MonoBehaviour {
         // Unload chunks outside of ChunksToLoad
         foreach (var coords in chunksToUnload) {
             SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
-            _chunksLoaded.Remove(coords);
+            
+            AsyncOperation unloadOperation =
+                SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
+            if (unloadOperation != null) {
+                unloadOperation.completed += operation => { _chunksLoaded.Remove(coords); };
+            }
         }
-
-        // Load new chunks based on the chunksToLoad pattern
+    }
+    
+    private IEnumerator LoadChunks()
+    {
         int gridLength = _sortedScenes.Length;
+        List<AsyncOperation> loadOperations = new List<AsyncOperation>();
         for (int x = -viewDistance; x <= viewDistance; x++) {
             int xCoord = _playerGridPos.x + x;
             if (xCoord < 0 || xCoord >= gridLength) {
@@ -135,8 +158,6 @@ public class ChunkManager : MonoBehaviour {
                     continue;
                 }
 
-                _chunksLoaded.Add(coords);
-
                 Vector3 chunkPosition = new Vector3(
                     (coords.x - _playerGridPos.x) * gridSize.x,
                     yOffset,
@@ -145,13 +166,27 @@ public class ChunkManager : MonoBehaviour {
 
                 AsyncOperation loadOperation =
                     SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
-                loadOperation.completed += operation => {
-                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
-                    foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
-                        rootObj.transform.position = chunkPosition;
-                    }
-                };
+                if (loadOperation != null)
+                {
+                    loadOperation.completed += operation =>
+                    {
+                        Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
+                        foreach (GameObject rootObj in loadedScene.GetRootGameObjects())
+                        {
+                            rootObj.transform.position = chunkPosition;
+                        }
+
+                        _chunksLoaded.Add(coords);
+                    };
+                    loadOperations.Add(loadOperation);
+                }
             }
+            
+        }
+        
+        foreach (var operation in loadOperations)
+        {
+            yield return operation;
         }
     }
 }
