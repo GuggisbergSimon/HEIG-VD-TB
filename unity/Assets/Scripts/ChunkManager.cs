@@ -10,7 +10,7 @@ public class ChunkManager : MonoBehaviour {
     [SerializeField, Min(1)] private int viewDistance = 3;
     [SerializeField] private float yOffset = 0f;
 
-    public Player Player { get; set; }
+    public HovercraftController Player { get; set; }
 
     private string[][] _sortedScenes;
     private List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
@@ -49,7 +49,7 @@ public class ChunkManager : MonoBehaviour {
     }
 
     private IEnumerator LoadInitialChunk() {
-        Player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        Player = GameObject.FindWithTag("Player").GetComponent<HovercraftController>();
         _playerGridPos = GetGridPosition(Player.transform.position);
         GameManager.Instance.UIManager.ToggleLoadingPanel();
         yield return LoadChunks();
