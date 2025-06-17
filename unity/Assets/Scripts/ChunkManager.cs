@@ -9,13 +9,13 @@ public class ChunkManager : MonoBehaviour {
     [SerializeField] private Vector2Int gridOffset = Vector2Int.one * 8;
     [SerializeField, Min(1)] private int viewDistance = 3;
     [SerializeField] private float yOffset = 0f;
-    
+
     public Player Player { get; set; }
-    
+
     private string[][] _sortedScenes;
     private List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
-    private bool[,] _chunksToLoad; 
+    private bool[,] _chunksToLoad;
 
     private void Start() {
         // ChunksToLoad
@@ -27,7 +27,7 @@ public class ChunkManager : MonoBehaviour {
                 }
             }
         }
-        
+
         // SortedScenes
         int length = (int)Mathf.Sqrt(scenes.Length);
         _sortedScenes = new string[length][];
@@ -44,20 +44,18 @@ public class ChunkManager : MonoBehaviour {
 
             _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
-        
+
         StartCoroutine(LoadInitialChunk());
     }
-    
-    private IEnumerator LoadInitialChunk()
-    {
+
+    private IEnumerator LoadInitialChunk() {
         Player = GameObject.FindWithTag("Player").GetComponent<Player>();
         _playerGridPos = GetGridPosition(Player.transform.position);
-        float initialTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
+        GameManager.Instance.UIManager.ToggleLoadingPanel();
         yield return LoadChunks();
-        Time.timeScale = initialTimeScale;
+        GameManager.Instance.UIManager.ToggleLoadingPanel();
     }
-    
+
     private void Update() {
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
@@ -73,7 +71,7 @@ public class ChunkManager : MonoBehaviour {
                     rootObj.transform.position -= worldOffset;
                 }
             }
-            
+
             // Move player
             playerPos -= worldOffset;
             Player.transform.position = playerPos;
@@ -82,7 +80,7 @@ public class ChunkManager : MonoBehaviour {
             UpdateLoadedChunks();
         }
     }
-    
+
     private Vector2Int GetGridPosition(Vector3 worldPosition) {
         return new Vector2Int(
             Mathf.FloorToInt(worldPosition.x / gridSize.x + gridOffset.x),
@@ -90,27 +88,25 @@ public class ChunkManager : MonoBehaviour {
         );
     }
 
-    private void UpdateLoadedChunks()
-    {
+    private void UpdateLoadedChunks() {
         UnloadChunks();
         StartCoroutine(LoadChunks());
     }
 
-    private void UnloadChunks()
-    {
+    private void UnloadChunks() {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
 
         // Find chunks outside of ChunksToLoad
         foreach (var coords in _chunksLoaded) {
             int relX = coords.x - _playerGridPos.x;
             int relY = coords.y - _playerGridPos.y;
-    
+
             // Skip if within view distance and in the chunksToLoad pattern
-            if (Mathf.Abs(relX) <= viewDistance && Mathf.Abs(relY) <= viewDistance && 
+            if (Mathf.Abs(relX) <= viewDistance && Mathf.Abs(relY) <= viewDistance &&
                 _chunksToLoad[relX + viewDistance, relY + viewDistance]) {
                 continue;
             }
-    
+
             chunksToUnload.Add(coords);
         }
 
@@ -119,16 +115,12 @@ public class ChunkManager : MonoBehaviour {
             AsyncOperation unloadOperation =
                 SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
             if (unloadOperation != null) {
-                unloadOperation.completed += operation => 
-                {
-                    _chunksLoaded.Remove(coords);
-                };
+                unloadOperation.completed += _ => { _chunksLoaded.Remove(coords); };
             }
         }
     }
-    
-    private IEnumerator LoadChunks()
-    {
+
+    private IEnumerator LoadChunks() {
         int gridLength = _sortedScenes.Length;
         List<AsyncOperation> loadOperations = new List<AsyncOperation>();
         for (int x = -viewDistance; x <= viewDistance; x++) {
@@ -145,10 +137,12 @@ public class ChunkManager : MonoBehaviour {
                 if (!_chunksToLoad[arrayX, arrayY]) {
                     continue;
                 }
+
                 int yCoord = _playerGridPos.y + y;
                 if (yCoord < 0 || yCoord >= gridLength) {
                     continue;
                 }
+
                 Vector2Int coords = new Vector2Int(xCoord, yCoord);
                 if (_chunksLoaded.Contains(coords)) {
                     continue;
@@ -165,19 +159,12 @@ public class ChunkManager : MonoBehaviour {
                     (coords.y - _playerGridPos.y) * gridSize.y
                 );
 
-                // TODO add structure with (AsyncOperation, xCoord, yCoord, chunkPosition)
-                // TODO unsubscribe to complete operation if cancelled and subscribe to complete operation to unload the scene asynchronously
-                // TODO subscribe to 
-                
                 AsyncOperation loadOperation =
                     SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
-                if (loadOperation != null)
-                {
-                    loadOperation.completed += operation =>
-                    {
+                if (loadOperation != null) {
+                    loadOperation.completed += _ => {
                         Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
-                        foreach (GameObject rootObj in loadedScene.GetRootGameObjects())
-                        {
+                        foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
                             rootObj.transform.position = chunkPosition;
                         }
 
@@ -186,11 +173,9 @@ public class ChunkManager : MonoBehaviour {
                     loadOperations.Add(loadOperation);
                 }
             }
-            
         }
-        
-        foreach (var operation in loadOperations)
-        {
+
+        foreach (var operation in loadOperations) {
             yield return operation;
         }
     }

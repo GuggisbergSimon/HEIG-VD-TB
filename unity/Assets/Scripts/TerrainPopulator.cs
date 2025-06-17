@@ -52,7 +52,7 @@ public class TerrainPopulator : MonoBehaviour {
                     );
 
                     //TODO adjust offset based on prefab. or adjust prefab to match 0 as terrain height
-                    position.y = GetTerrainHeight(terrain, position.x, position.z) + 
+                    position.y = GetTerrainHeight(terrain, position.x, position.z) +
                                  yOffset + terrain.transform.position.y;
 
                     Quaternion rotation =

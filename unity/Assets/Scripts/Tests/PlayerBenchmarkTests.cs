@@ -37,6 +37,7 @@ namespace Tests {
             if (panTilt == null) {
                 yield return null;
             }
+
             panTilt.PanAxis.Value = 0;
 
             using (Measure.Frames()
@@ -54,7 +55,7 @@ namespace Tests {
 
         [UnityTest, Performance]
         public IEnumerator MoveForward_PerformanceTest() {
-            return RunPerformanceTest(i => 
+            return RunPerformanceTest(i =>
                 GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * _moveDistance);
         }
 
@@ -67,7 +68,7 @@ namespace Tests {
 
         [UnityTest, Performance]
         public IEnumerator Teleport_PerformanceTest() {
-            return RunPerformanceTest(i => 
+            return RunPerformanceTest(i =>
                 GameManager.Instance.ChunkManager.Player.transform.position += Random.onUnitSphere * _teleportDistance);
         }
 
@@ -88,9 +89,10 @@ namespace Tests {
             if (playerCamera != null) {
                 return playerCamera.GetComponent<CinemachinePanTilt>();
             }
+
             return null;
         }
-        
+
         [UnityTest, Performance]
         public IEnumerator HorizontalPan() {
             var panTilt = GetPanTilt();
@@ -98,11 +100,9 @@ namespace Tests {
                 return null;
             }
 
-            return RunPerformanceTest(i => {
-                panTilt.PanAxis.Value += _horizontalPanSpeed;
-            });
+            return RunPerformanceTest(i => { panTilt.PanAxis.Value += _horizontalPanSpeed; });
         }
-        
+
         [UnityTest, Performance]
         public IEnumerator FastHorizontalPan() {
             var panTilt = GetPanTilt();
@@ -110,9 +110,7 @@ namespace Tests {
                 return null;
             }
 
-            return RunPerformanceTest(i => {
-                panTilt.PanAxis.Value += _fastHorizontalPanSpeed;
-            });
+            return RunPerformanceTest(i => { panTilt.PanAxis.Value += _fastHorizontalPanSpeed; });
         }
     }
 }

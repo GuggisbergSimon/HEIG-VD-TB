@@ -3,10 +3,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
+    [SerializeField] private string firstSceneName = "MainMenu";
+    [SerializeField] private UIManager uIManager;
     public static GameManager Instance;
 
     public ChunkManager ChunkManager { get; private set; }
-    public UIManager UIManager { get; private set; }
+
+    public UIManager UIManager => uIManager;
 
     private void Awake() {
         if (Instance == null) {
@@ -18,9 +21,32 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        //TODO fix, scan for eventual manager at each loaded scene
-        ChunkManager = GameObject.Find("ChunkManager").GetComponent<ChunkManager>();
-        UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        FindChunkManager();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void Start() {
+        UIManager.ToggleLoadingPanel();
+        UIManager.ToggleMenu();
+        AsyncOperation operation = SceneManager.LoadSceneAsync(firstSceneName);
+        if (operation != null) {
+            operation.completed += _ => { UIManager.ToggleLoadingPanel(); };
+        }
+    }
+
+    private void OnDestroy() {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        FindChunkManager();
+    }
+
+    private void FindChunkManager() {
+        ChunkManager chunkManager = GameObject.Find("ChunkManager")?.GetComponent<ChunkManager>();
+        if (chunkManager != null) {
+            ChunkManager = chunkManager;
+        }
     }
 
     public void QuitGame() {

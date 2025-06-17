@@ -102,7 +102,7 @@ MonoBehaviour:
       m_Value: 0
     altitude:
       m_OverrideState: 1
-      m_Value: 0
+      m_Value: 1
     rotation:
       m_OverrideState: 0
       m_Value: 0
@@ -113,22 +113,22 @@ MonoBehaviour:
       m_OverrideState: 0
       m_Value: 0
     distortionMode:
-      m_OverrideState: 0
-      m_Value: 0
+      m_OverrideState: 1
+      m_Value: 1
     scrollOrientation:
-      m_OverrideState: 0
+      m_OverrideState: 1
       m_Value:
-        mode: 1
+        mode: 2
         customValue: 0
-        additiveValue: 0
+        additiveValue: -180
         multiplyValue: 1
     scrollSpeed:
-      m_OverrideState: 0
+      m_OverrideState: 1
       m_Value:
-        mode: 1
-        customValue: 100
-        additiveValue: 0
-        multiplyValue: 1
+        mode: 0
+        customValue: 1
+        additiveValue: 1
+        multiplyValue: 100
     flowmap:
       m_OverrideState: 0
       m_Value: {fileID: 0}
@@ -281,16 +281,6 @@ MonoBehaviour:
   includeSunInBaking:
     m_OverrideState: 0
     m_Value: 0
-  m_SkyVersion: 3
-  m_ObsoleteEarthPreset:
-    m_OverrideState: 0
-    m_Value: 1
-  planetaryRadius:
-    m_OverrideState: 0
-    m_Value: 6378100
-  planetCenterPosition:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: -6378100, z: 0}
   type:
     m_OverrideState: 0
     m_Value: 1
@@ -381,6 +371,16 @@ MonoBehaviour:
   horizonZenithShift:
     m_OverrideState: 0
     m_Value: 0
+  m_SkyVersion: 3
+  m_ObsoleteEarthPreset:
+    m_OverrideState: 0
+    m_Value: 1
+  planetaryRadius:
+    m_OverrideState: 0
+    m_Value: 6378100
+  planetCenterPosition:
+    m_OverrideState: 0
+    m_Value: {x: 0, y: -6378100, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +451,6 @@ MonoBehaviour:
   m_Name: VisualEnvironment
   m_EditorClassIdentifier: 
   active: 1
-  m_Version: 1
   skyType:
     m_OverrideState: 1
     m_Value: 4
@@ -482,6 +481,7 @@ MonoBehaviour:
   fogType:
     m_OverrideState: 0
     m_Value: 0
+  m_Version: 1
 --- !u!114 &7391319092446245454
 MonoBehaviour:
   m_ObjectHideFlags: 3
