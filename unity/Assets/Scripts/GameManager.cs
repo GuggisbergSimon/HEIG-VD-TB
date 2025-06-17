@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private string firstSceneName = "MainMenu";
+    [SerializeField] private bool startsWithMenu = true;
     [SerializeField] private UIManager uIManager;
     public static GameManager Instance;
 
@@ -27,7 +28,9 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         UIManager.ToggleLoadingPanel();
-        UIManager.ToggleMenu();
+        if (startsWithMenu) {
+            UIManager.ToggleMenu();
+        }
         AsyncOperation operation = SceneManager.LoadSceneAsync(firstSceneName);
         if (operation != null) {
             operation.completed += _ => { UIManager.ToggleLoadingPanel(); };
