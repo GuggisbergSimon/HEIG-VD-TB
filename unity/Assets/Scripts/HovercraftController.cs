@@ -13,13 +13,7 @@ public class HovercraftController : MonoBehaviour {
 
     private Rigidbody _rb;
     private InputAction _moveAction;
-
-    // Debug visualization
-    private Vector3 _propulsionForce;
-    private Vector3 _torqueForce;
-    private List<Vector3> _springForces = new List<Vector3>();
-    private List<Vector3> _springPositions = new List<Vector3>();
-    private Vector3 _dampingForce;
+    private bool _isRepositioning;
 
     private void Start() {
         _rb = GetComponent<Rigidbody>();
@@ -28,23 +22,19 @@ public class HovercraftController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        // Clear previous forces
-        _springForces.Clear();
-        _springPositions.Clear();
+        if (_isRepositioning) {
+            return;
+        }
 
+        // Propulsion and torque
         Vector2 moveValue = _moveAction.ReadValue<Vector2>();
+        Vector3 propulsionForce = transform.TransformDirection(Vector3.forward) *
+                                  (Time.fixedDeltaTime * moveValue.y * propulsionForceMultiplier);
+        _rb.AddForceAtPosition(propulsionForce, propulsion.transform.position);
+        Vector3 torqueForce = transform.TransformDirection(Vector3.up) *
+                              (Time.fixedDeltaTime * moveValue.x * torqueForceMultiplier);
+        _rb.AddTorque(torqueForce);
 
-        // Propulsion force
-        _propulsionForce = transform.TransformDirection(Vector3.forward) *
-                           (Time.fixedDeltaTime * moveValue.y * propulsionForceMultiplier);
-        _rb.AddForceAtPosition(_propulsionForce, propulsion.transform.position);
-
-        // Torque force
-        _torqueForce = transform.TransformDirection(Vector3.up) *
-                       (Time.fixedDeltaTime * moveValue.x * torqueForceMultiplier);
-        _rb.AddTorque(_torqueForce);
-
-        // Spring forces
         foreach (var spring in springs) {
             if (!Physics.Raycast(spring.transform.position, transform.TransformDirection(Vector3.down),
                     out var hit, 3f)) {
@@ -53,54 +43,34 @@ public class HovercraftController : MonoBehaviour {
 
             Vector3 springForce = transform.TransformDirection(Vector3.up) *
                 (Time.fixedDeltaTime * Mathf.Pow(3f - hit.distance, 2)) / 3f * springForceMultiplier;
-            _springForces.Add(springForce);
-            _springPositions.Add(spring.transform.position);
-
             _rb.AddForceAtPosition(springForce, spring.transform.position);
         }
 
         // Damping force
-        _dampingForce = transform.TransformVector(Vector3.right) *
-                        (-Time.fixedDeltaTime * transform.InverseTransformVector(_rb.linearVelocity).x *
-                         dampingForceMultiplier);
-        _rb.AddForce(_dampingForce);
+        Vector2 dampingForce = transform.TransformVector(Vector3.right) *
+                               (-Time.fixedDeltaTime * transform.InverseTransformVector(_rb.linearVelocity).x *
+                                dampingForceMultiplier);
+        _rb.AddForce(dampingForce);
     }
 
     private void OnMenu() {
         GameManager.Instance.UIManager.TogglePause();
     }
+    
+    private void OnReset() {
+        _rb.rotation = Quaternion.identity;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+    }
 
-    private void OnDrawGizmos() {
-        // Draw key points
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(propulsion.transform.position, 0.2f);
+    public void MoveToPosition(Vector3 position) {
+        _isRepositioning = true;
+        _rb.position = position;
+        StartCoroutine(ClearRepositioningFlag());
+    }
 
-        Gizmos.color = Color.green;
-        foreach (var spring in springs) {
-            Gizmos.DrawWireSphere(spring.transform.position, 0.2f);
-        }
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(centerOfMass.transform.position, 0.3f);
-
-        if (!Application.isPlaying || _rb == null) return;
-
-        // Draw propulsion force
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(propulsion.transform.position, _propulsionForce.normalized * 2f);
-
-        // Draw torque
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(transform.position, _torqueForce.normalized * 2f);
-
-        // Draw spring forces
-        Gizmos.color = Color.green;
-        for (int i = 0; i < _springForces.Count; i++) {
-            Gizmos.DrawRay(_springPositions[i], _springForces[i].normalized * 2f);
-        }
-
-        // Draw damping force
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, _dampingForce.normalized * 2f);
+    private System.Collections.IEnumerator ClearRepositioningFlag() {
+        yield return new WaitForFixedUpdate();
+        _isRepositioning = false;
     }
 }

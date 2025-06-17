@@ -74,7 +74,7 @@ public class ChunkManager : MonoBehaviour {
 
             // Move player
             playerPos -= worldOffset;
-            Player.transform.position = playerPos;
+            Player.MoveToPosition(playerPos);
 
             _playerGridPos += diff;
             UpdateLoadedChunks();
