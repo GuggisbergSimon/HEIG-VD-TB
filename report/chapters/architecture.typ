@@ -94,6 +94,7 @@ TODO image démontrant architecture et composants
 ==== GameManager
 
 Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
+Ce singleton aura le rôle de chef d'orchestre, s'assurant des bonnes communications entre les différents composants.
 
 Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
 Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
@@ -202,6 +203,6 @@ Ainsi on distingue deux types d'interactions principales, se déplacer et contr�
 
 Les outils de Unity permettant de réaliser ces tests sont :
 - Unity Test Framework pour effectuer des tests unitaires en Play Mode.
-- Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet.
-- Input Testing est disponible pour Input System et permet de simuler des entrées utilisateur.
+- Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet sur plusieurs frames.
+- Input System met à disposition des manières pour simuler des entrées utilisateur.
 
