@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private bool startsWithMenu = true;
     [SerializeField] private UIManager uIManager;
     public static GameManager Instance;
 
@@ -20,12 +19,13 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        FindChunkManager();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start() {
-        UIManager.LoadMenu();
+        if (ChunkManager == null) {
+            UIManager.LoadMenu();
+        }
     }
 
     private void OnDestroy() {

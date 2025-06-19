@@ -27,8 +27,6 @@ public class UIManager : MonoBehaviour {
 
     public void LoadMenu() {
         ToggleLoadingPanel();
-        //TODO unload all loaded scenes
-        Debug.Log(SceneManager.GetActiveScene().name);
         ToggleMenu();
         AsyncOperation operation = SceneManager.LoadSceneAsync(menuSceneName);
         if (operation != null) {

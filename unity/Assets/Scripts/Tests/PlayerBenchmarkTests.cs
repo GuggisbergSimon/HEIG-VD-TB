@@ -20,7 +20,7 @@ namespace Tests {
 
         [OneTimeSetUp]
         public void OneTimeSetup() {
-            SceneManager.LoadScene("Compositing");
+            SceneManager.LoadScene("Compositing 2");
         }
 
         private IEnumerator WaitForSceneLoad() {
