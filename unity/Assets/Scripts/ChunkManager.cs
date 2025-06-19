@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ChunkManager : MonoBehaviour {
+    [SerializeField] private bool recenterChunks = true;
     [SerializeField] private TerrainScriptableObject[] scenes;
     [SerializeField] private Vector2 gridSize = Vector2.one * 500f;
     [SerializeField] private Vector2Int gridOffset = Vector2Int.one * 8;
@@ -48,35 +49,46 @@ public class ChunkManager : MonoBehaviour {
         StartCoroutine(LoadInitialChunk());
     }
 
+    private void OnDestroy() {
+        //Unload all scenes
+        foreach (var coords in _chunksLoaded) {
+            SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
+        }
+    }
+
     private IEnumerator LoadInitialChunk() {
         Player = GameObject.FindWithTag("Player").GetComponent<HovercraftController>();
         _playerGridPos = GetGridPosition(Player.transform.position);
         GameManager.Instance.UIManager.ToggleLoadingPanel();
-        yield return LoadChunks();
+        yield return LoadChunks(FindChunksToLoad());
         GameManager.Instance.UIManager.ToggleLoadingPanel();
     }
 
     private void Update() {
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
-        if (currentGridPos != gridOffset) {
-            Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}");
+        if (recenterChunks && currentGridPos != gridOffset || currentGridPos != _playerGridPos) {
+            Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}, ");
             Vector2Int diff = currentGridPos - gridOffset;
             Vector3 worldOffset = new Vector3(diff.x * gridSize.x, 0, diff.y * gridSize.y);
 
-            // Reposition all loaded chunks
-            foreach (var coords in _chunksLoaded) {
-                Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
-                foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
-                    rootObj.transform.position -= worldOffset;
+            if (recenterChunks) {
+                // Reposition all loaded chunks
+                foreach (var coords in _chunksLoaded) {
+                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
+                    foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
+                        rootObj.transform.position -= worldOffset;
+                    }
                 }
+
+                // Move player
+                playerPos -= worldOffset;
+                Player.MoveToPosition(playerPos);
+                _playerGridPos += diff;
+            } else {
+                _playerGridPos = currentGridPos;
             }
 
-            // Move player
-            playerPos -= worldOffset;
-            Player.MoveToPosition(playerPos);
-
-            _playerGridPos += diff;
             UpdateLoadedChunks();
         }
     }
@@ -90,7 +102,7 @@ public class ChunkManager : MonoBehaviour {
 
     private void UpdateLoadedChunks() {
         UnloadChunks();
-        StartCoroutine(LoadChunks());
+        StartCoroutine(LoadChunks(FindChunksToLoad()));
     }
 
     private void UnloadChunks() {
@@ -120,9 +132,10 @@ public class ChunkManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator LoadChunks() {
+    private List<Vector2Int> FindChunksToLoad() {
         int gridLength = _sortedScenes.Length;
-        List<AsyncOperation> loadOperations = new List<AsyncOperation>();
+        List<Vector2Int> chunksToLoad = new List<Vector2Int>();
+
         for (int x = -viewDistance; x <= viewDistance; x++) {
             int xCoord = _playerGridPos.x + x;
             if (xCoord < 0 || xCoord >= gridLength) {
@@ -149,29 +162,42 @@ public class ChunkManager : MonoBehaviour {
                 }
 
                 if (string.IsNullOrEmpty(_sortedScenes[xCoord][yCoord])) {
-                    Debug.LogWarning($"No scene defined for coordinates {coords}");
+                    //Debug.LogWarning($"No scene defined for coordinates {coords}");
                     continue;
                 }
 
-                Vector3 chunkPosition = new Vector3(
-                    (coords.x - _playerGridPos.x) * gridSize.x,
-                    yOffset,
-                    (coords.y - _playerGridPos.y) * gridSize.y
-                );
+                chunksToLoad.Add(coords);
+            }
+        }
 
-                AsyncOperation loadOperation =
-                    SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
-                if (loadOperation != null) {
-                    loadOperation.completed += _ => {
-                        Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
-                        foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
-                            rootObj.transform.position = chunkPosition;
-                        }
+        return chunksToLoad;
+    }
 
-                        _chunksLoaded.Add(coords);
-                    };
-                    loadOperations.Add(loadOperation);
-                }
+    private IEnumerator LoadChunks(List<Vector2Int> chunksToLoad) {
+        List<AsyncOperation> loadOperations = new List<AsyncOperation>();
+
+        foreach (Vector2Int coords in chunksToLoad) {
+            int xCoord = coords.x;
+            int yCoord = coords.y;
+
+            Vector3 chunkPosition = new Vector3(
+                (coords.x - (recenterChunks ? _playerGridPos.x : gridOffset.x)) * gridSize.x,
+                yOffset,
+                (coords.y - (recenterChunks ? _playerGridPos.y : gridOffset.y)) * gridSize.y
+            );
+
+            AsyncOperation loadOperation =
+                SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
+            if (loadOperation != null) {
+                loadOperation.completed += _ => {
+                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
+                    foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
+                        rootObj.transform.position = chunkPosition;
+                    }
+
+                    _chunksLoaded.Add(coords);
+                };
+                loadOperations.Add(loadOperation);
             }
         }
 

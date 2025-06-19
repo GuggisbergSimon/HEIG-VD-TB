@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour {
+    [SerializeField] private string menuSceneName = "MainMenu";
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject loadingPanel;
@@ -10,11 +10,22 @@ public class UIManager : MonoBehaviour {
     private bool _isLoading = false;
     private bool _isPaused = false;
 
-    public void LoadGame() {
+    public void LoadGame(int number) {
         ToggleLoadingPanel();
         ToggleMenu();
         SceneManager.UnloadSceneAsync("MainMenu");
-        AsyncOperation operation = SceneManager.LoadSceneAsync("Compositing");
+        AsyncOperation operation = SceneManager.LoadSceneAsync("Compositing " + number);
+        if (operation != null) {
+            operation.completed += _ => { ToggleLoadingPanel(); };
+        }
+    }
+
+    public void LoadMenu() {
+        ToggleLoadingPanel();
+        //TODO unload all loaded scenes
+        Debug.Log(SceneManager.GetActiveScene().name);
+        ToggleMenu();
+        AsyncOperation operation = SceneManager.LoadSceneAsync(menuSceneName);
         if (operation != null) {
             operation.completed += _ => { ToggleLoadingPanel(); };
         }
