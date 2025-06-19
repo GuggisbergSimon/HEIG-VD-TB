@@ -108,7 +108,7 @@ public class ChunkManager : MonoBehaviour {
     private void UnloadChunks() {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
 
-        // Find chunks outside of ChunksToLoad
+        // Find chunks outside ChunksToLoad
         foreach (var coords in _chunksLoaded) {
             int relX = coords.x - _playerGridPos.x;
             int relY = coords.y - _playerGridPos.y;
@@ -122,7 +122,7 @@ public class ChunkManager : MonoBehaviour {
             chunksToUnload.Add(coords);
         }
 
-        // Unload chunks outside of ChunksToLoad
+        // Unload chunks outside ChunksToLoad
         foreach (var coords in chunksToUnload) {
             AsyncOperation unloadOperation =
                 SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);

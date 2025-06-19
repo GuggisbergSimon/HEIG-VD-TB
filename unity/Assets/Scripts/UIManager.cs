@@ -20,6 +20,11 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public void ClosePauseAndLoadMenu() {
+        TogglePause();
+        LoadMenu();
+    }
+
     public void LoadMenu() {
         ToggleLoadingPanel();
         //TODO unload all loaded scenes
