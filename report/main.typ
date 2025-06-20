@@ -22,7 +22,7 @@
 #let TBsupervisor = "Prof. Bertil Chapuis"
 
 #let TBresumePubliable = [
-  TODO résumé publiable
+  #include "chapters/resume.typ"
 ]
 
 /*

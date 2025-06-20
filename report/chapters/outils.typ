@@ -3,7 +3,7 @@
 == Git et GitHub
 
 Une GitHub Action de GameCI permet d'automatiser tests unitaires et builds de Unity.
-Bien que cela ne soit pas requis dans ce projet, cela reste une bonne pratique.
+Bien que cela ne soit pas requis dans ce projet, cela reste une bonne pratique et permet une rapide itération pour corriger des problèmes avant que ceux-ci ne prennent trop d'ampleur.
 
 En cas de fichier conséquent de plus de 100MB, limite d'upload de GitHub, Git LFS sera utilisé.
 Malheureusement, GitHub LFS a grand nombre de limitations par rapport à une solution self-hosted et ne sera donc utilisé qu'au besoin, plutôt que pour tout type de fichier binaire.
@@ -13,6 +13,8 @@ Cela a comme conséquence que tous les fichiers binaires listés auraient été 
 
 Un projet GitHub Project sous forme Kanban permet de suivre l'implémentation des tâches à réaliser.
 Les différents états de celui-ci sont les suivants : Backlog, Ready, In Progress, Done.
+Les différents labels sont les suivants : bug, documentation, required, essential, nice to have.
+Des tâches seront créées selon les bugs rencontrés ou en cas de subdivision de tâches plus importantes via une Tasklist.
 
 @game-ci
 
@@ -67,6 +69,7 @@ TODO eventually use
 https://typst.app/universe/package/glossarium/
 https://typst.app/universe/package/codly/
 
-Le logiciel GIMP a été utilisé pour l'édition d'images, qu'il s'agisse de textures ou d'images destinées au rapport.
+Le logiciel GIMP a été utilisé pour la création ou l'édition d'images, qu'il s'agisse de sprites, textures ou d'images destinées au rapport.
+PlantUML a été utilisé pour la création de quelques diagrammes.
 
 @typst-template

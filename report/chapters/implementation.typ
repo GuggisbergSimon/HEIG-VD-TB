@@ -26,12 +26,11 @@ Ceux-ci contiennent les coordonnées de chaque chunk, afin de connaître quelle 
 
 == Chunk Loading
 
-Une autre considération à prendre en compte concernant les chunks est la gestion de la concurrence puisque chaque opération de chargement additif est asynchrone.
-En effet, garder en mémoire les chunks chargés afin de pouvoir les décharger lorsque ceux-ci ne sont plus requis demande de garder une liste de ceux-ci.
-Et puisque celle-ci peut être altérée de manière concurrente, il faut s'assurer que les accès à cette liste soient faits de manière protégée.
+Charger les chunks est une opération qui s'effectue de manière asynchrone pour éviter de bloquer la thread principale de Unity.
+Ceci implique la gestion de la concurrence en cas de modification d'une ressource partagée, ici, la listes des chunks chargés, afin de pouvoir les décharger par la suite.
 
 Une première modification consiste à n'ajouter et à supprimer dans la liste des chunks chargés que lorsque ceux-ci sont effectivement chargés ou déchargés.
-Ceci est fait via une écoute de l'événement confirmant l'opération de chargement ou déchargement du chunk.
+Ceci est fait via une écoute de l'événement confirmant la fin de l'opération de chargement ou déchargement du chunk.
 
 ```cs
 AsyncOperation unloadOperation =
@@ -43,8 +42,14 @@ if (unloadOperation != null) {
 
 === Distance d'affichage
 
-Puisque les terrains dans Unity sont des plans plutôt que des sphères et puisqu'il est impossible de modéliser un terrain s'étirant à l'infini, il est nécessaire de marquer une coupure entre le monde modélisé et le l'espace vide.
+Les terrains dans Unity représentent des plans 3D.
+Représenter un vrai monde, sous forme de sphère, est donc impossible.
+Cette contrainte implique la nécessité, également, de marquer la coupure entre le monde modélisé et l'espace vide.
 Une approche habituelle consiste à ajouter du brouillard distant, qui permet une transition douce entre ces deux.
+Unity propose une telle option au travers du framework de Volume, qui offre toutes sortes d'options graphiques HDRP, dont le brouillard.
+
+@unity-doc-hdrp-volume
+@unity-doc-hdrp-fog
 
 Quant à la matrice filtre de chunks à charger, elle est représentée par un tableau double dimension de booléens.
 Une manière simple de la remplir est de définir une distance de vue qui détermine le rayon du cercle de chunks à charger autour du joueur.
@@ -69,7 +74,7 @@ Elle est ajustée de concert avec la distance de vue des chunks à charger et la
 
 == Recentrer le joueur au centre du monde
 
-Garder le joueur au centre du monde demande, à un intervalle donné, de déplacer le monde entier et les acteurs, joueur compris, dans la direction opposée à son déplacement.
+Garder le joueur au centre du monde, à un intervalle donné, demande de déplacer le monde entier et les acteurs, joueur compris, dans la direction opposée à son déplacement.
 Un intervalle approprié, au vu de l'utilisation de chunks pour ce projet, est à chaque passage d'un chunk à un autre.
 Ainsi, pour un déplacement du joueur d'un chunk A à B, nous avons un déplacement vectoriel de celui-ci sous la forme $delta d = arrow("AB")$.
 Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
@@ -77,6 +82,32 @@ Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
 Cette implémentation pose néanmoins problème avec celle du chargement des chunks, qui prend en compte la position du joueur.
 En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, est de la forme : $(0, 0) arrow arrow("AB") arrow (0, 0)$.
 Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les chunks correspondants.
+
+```cs
+[SerializeField] private Vector2Int gridOffset = Vector2Int.one * 8;
+//...
+Vector3 playerPos = Player.transform.position;
+Vector2Int currentGridPos = GetGridPosition(playerPos);
+if (currentGridPos != gridOffset)) {
+    Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}, ");
+    Vector2Int diff = currentGridPos - gridOffset;
+    Vector3 worldOffset = new Vector3(diff.x * gridSize.x, 0, diff.y * gridSize.y);
+
+    foreach (var coords in _chunksLoaded) {
+        Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
+        foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
+            rootObj.transform.position -= worldOffset;
+        }
+    }
+
+    playerPos -= worldOffset;
+    Player.MoveToPosition(playerPos);
+    _playerGridPos += diff;
+    UpdateLoadedChunks();
+}
+```
+
+Quant à la logique de charger et décharger les chunks, 
 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
 Les calculs physiques se produisent lors de l'étape FixedUpdate, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape Update, qui est exécutée autant que possible, jusqu'à cappage du framerate.
