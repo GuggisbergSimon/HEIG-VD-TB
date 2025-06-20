@@ -11,10 +11,10 @@ public class ChunkManager : MonoBehaviour {
     [SerializeField, Min(1)] private int viewDistance = 3;
     [SerializeField] private float yOffset = 0f;
 
-    public HovercraftController Player { get; set; }
+    public HovercraftController Player { get; private set; }
 
     private string[][] _sortedScenes;
-    private List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
+    private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
     private bool[,] _chunksToLoad;
 

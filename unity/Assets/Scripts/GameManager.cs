@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour {
     private void FindChunkManager() {
         ChunkManager chunkManager = GameObject.Find("ChunkManager")?.GetComponent<ChunkManager>();
         if (chunkManager != null) {
+            UIManager.ToggleCursor(false);
             ChunkManager = chunkManager;
         }
     }
