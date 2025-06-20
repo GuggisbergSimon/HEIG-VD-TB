@@ -67,7 +67,8 @@ public class ChunkManager : MonoBehaviour {
     private void Update() {
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
-        if (recenterChunks && currentGridPos != gridOffset || currentGridPos != _playerGridPos) {
+        if ((recenterChunks && currentGridPos != gridOffset) ||
+            (!recenterChunks && currentGridPos != _playerGridPos)) {
             Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}, ");
             Vector2Int diff = currentGridPos - gridOffset;
             Vector3 worldOffset = new Vector3(diff.x * gridSize.x, 0, diff.y * gridSize.y);
