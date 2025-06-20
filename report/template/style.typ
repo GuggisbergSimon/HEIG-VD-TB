@@ -1,6 +1,11 @@
 #import "macros.typ": *
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.1": *
 
 #let TBStyle(TBauthor, confidential, body) = {
+  codly(languages: codly-languages)
+  show: codly-init.with()
+  
   set heading(numbering: none)
 
   // Move all 1 level headings to new odd page

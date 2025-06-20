@@ -1,5 +1,8 @@
 = Implémentation <implementation>
 
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.1": *
+
 == Prototype
 
 Des assets provenant du Unity Asset Store et de Fab ont été utilisées pour le prototype.
@@ -11,7 +14,7 @@ Un second contrôleur, plus abouti, concerne le hovercraft avec une physique plu
 Un simple script de génération prend en paramètres plusieurs préfabs et en instancie un certain nombre de manière aléatoire par terrain.
 L'angle de ces préfabs sont ensuite ajustés pour correspondre à la pente du terrain.
 
-== Workflow
+== Monde
 
 La heightmap est importée dans un Terrain Unity, permettant tout de suite d'avoir une courbure du terrain, pour 8000x8000m.
 Les Terrain Tools séparent ensuite cette heightmap en plusieurs morceaux, ici en chunks de 500x500m.
@@ -24,7 +27,45 @@ Ceux-ci contiennent les coordonnées de chaque chunk, afin de connaître quelle 
 == Chunk Loading
 
 Une autre considération à prendre en compte concernant les chunks est la gestion de la concurrence puisque chaque opération de chargement additif est asynchrone.
-En effet, garder en mémoire les chunks chargés afin de pouvoir les décharger lorsque ceux-ci ne sont plus requis demande de garder une liste de ceux-ci, et puisque celle-ci peut être altérée de manière concurrente, il faut s'assurer que les accès à cette liste soient faits de manière protégée.
+En effet, garder en mémoire les chunks chargés afin de pouvoir les décharger lorsque ceux-ci ne sont plus requis demande de garder une liste de ceux-ci.
+Et puisque celle-ci peut être altérée de manière concurrente, il faut s'assurer que les accès à cette liste soient faits de manière protégée.
+
+Une première modification consiste à n'ajouter et à supprimer dans la liste des chunks chargés que lorsque ceux-ci sont effectivement chargés ou déchargés.
+Ceci est fait via une écoute de l'événement confirmant l'opération de chargement ou déchargement du chunk.
+
+```cs
+AsyncOperation unloadOperation =
+    SceneManager.UnloadSceneAsync(_sortedScenes[coords.x][coords.y]);
+if (unloadOperation != null) {
+    unloadOperation.completed += _ => { _chunksLoaded.Remove(coords); };
+}
+```
+
+=== Distance d'affichage
+
+Puisque les terrains dans Unity sont des plans plutôt que des sphères et puisqu'il est impossible de modéliser un terrain s'étirant à l'infini, il est nécessaire de marquer une coupure entre le monde modélisé et le l'espace vide.
+Une approche habituelle consiste à ajouter du brouillard distant, qui permet une transition douce entre ces deux.
+
+Quant à la matrice filtre de chunks à charger, elle est représentée par un tableau double dimension de booléens.
+Une manière simple de la remplir est de définir une distance de vue qui détermine le rayon du cercle de chunks à charger autour du joueur.
+
+```cs
+[SerializeField, Min(1)] private int viewDistance = 3;
+private bool[,] _chunksToLoad;
+//...
+_chunksToLoad = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
+for (int x = -viewDistance; x <= viewDistance; x++) {
+    for (int y = -viewDistance; y <= viewDistance; y++) {
+        if (x * x + y * y <= viewDistance * viewDistance) {
+            _chunksToLoad[x + viewDistance, y + viewDistance] = true;
+        }
+    }
+}
+```
+
+Une autre considération à prendre en compte est la distance d'affichage de la caméra, ou far clipping plane.
+Afin de disposer d'une mesure homogène entre la situation de test et celle du prototype, cette distance doit être la même.
+Elle est ajustée de concert avec la distance de vue des chunks à charger et la distance du brouillard, pour un rendu cohérent entre les trois paramètres.
 
 == Recentrer le joueur au centre du monde
 
@@ -33,9 +74,15 @@ Un intervalle approprié, au vu de l'utilisation de chunks pour ce projet, est �
 Ainsi, pour un déplacement du joueur d'un chunk A à B, nous avons un déplacement vectoriel de celui-ci sous la forme $delta d = arrow("AB")$.
 Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
 
-Cela pose néanmoins problème avec l'implémentation initiale du loading des chunks, qui prend en compte la position du joueur.
+Cette implémentation pose néanmoins problème avec celle du chargement des chunks, qui prend en compte la position du joueur.
 En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, est de la forme : $(0, 0) arrow arrow("AB") arrow (0, 0)$.
 Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les chunks correspondants.
+
+Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
+Les calculs physiques se produisent lors de l'étape FixedUpdate, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape Update, qui est exécutée autant que possible, jusqu'à cappage du framerate.
+Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriété physiques que lors des frames FixedUpdate.
+
+@unity-doc-script-execution-order
 
 == LOD
 
@@ -51,7 +98,8 @@ Ce Cross Fade est implémenté via transparence ou via screen space dithering.
 
 Quant à la génération de LODs, puisque ceux-ci possèdent une topologie différente des modèles 3D originaux, il n'est pas possible de conserver les textures existantes pour ceux-ci, puisque le mappage UV ne correspondra plus.
 Pour des modèles non texturés, bien qu'un simple modificateur decimate sous Blender pourrait suffire, une extension tel que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche.
-C'est pour cette raison, l'incompatibilité des textures entre les LODs, que des assets existantes contenant environ 3 niveaux de détails ont été utilisées pour ce projet.
+C'est pour cette raison, l'incompatibilité des textures entre les LODs, que des assets existantes ont été utilisées pour ce projet.
+Ces assets contiennent 2 ou 3 niveau de détails.
 
 @blender-lod-maker
 
@@ -68,9 +116,6 @@ TODO
 L'implémentation de tests à l'aide de Unity Test Framework requière des annotations spécifiques sur les méthodes de test afin de spécifier les conditions dans lesquelles elles seront exécutées.
 L'annotation [TestFixture] est utilisée pour une classe de test tandis que celle [Test] pour les fonctions signifie que celle-ci est un test.
 On différencie les tests en mode Edit, en mode Play, ou via un Player pour simuler différentes plate-formes.
-
-#import "@preview/codly:1.3.0": *
-#import "@preview/codly-languages:0.1.1": *
 
 #codly(languages: codly-languages)
 ```cs
