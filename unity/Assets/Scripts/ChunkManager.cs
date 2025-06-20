@@ -19,7 +19,7 @@ public class ChunkManager : MonoBehaviour {
     private bool[,] _chunksToLoad;
 
     private void Start() {
-        // ChunksToLoad
+        // ChunksToLoad, circular pattern with viewDistance as radius
         _chunksToLoad = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
         for (int x = -viewDistance; x <= viewDistance; x++) {
             for (int y = -viewDistance; y <= viewDistance; y++) {
@@ -64,7 +64,7 @@ public class ChunkManager : MonoBehaviour {
         GameManager.Instance.UIManager.ToggleLoadingPanel();
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
         if ((recenterChunks && currentGridPos != gridOffset) ||

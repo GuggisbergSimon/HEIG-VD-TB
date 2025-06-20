@@ -13,7 +13,6 @@ public class HovercraftController : MonoBehaviour {
 
     private Rigidbody _rb;
     private InputAction _moveAction;
-    private bool _isRepositioning;
 
     private void Start() {
         _rb = GetComponent<Rigidbody>();
@@ -22,10 +21,6 @@ public class HovercraftController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (_isRepositioning) {
-            return;
-        }
-
         // Propulsion and torque
         Vector2 moveValue = _moveAction.ReadValue<Vector2>();
         Vector3 propulsionForce = transform.TransformDirection(Vector3.forward) *
@@ -64,13 +59,6 @@ public class HovercraftController : MonoBehaviour {
     }
 
     public void MoveToPosition(Vector3 position) {
-        _isRepositioning = true;
         _rb.position = position;
-        StartCoroutine(ClearRepositioningFlag());
-    }
-
-    private System.Collections.IEnumerator ClearRepositioningFlag() {
-        yield return new WaitForFixedUpdate();
-        _isRepositioning = false;
     }
 }
