@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private UIManager uIManager;
+    [Tooltip("The UI Manager located as a child of the Game Manager."), SerializeField] private UIManager uIManager;
     public static GameManager Instance;
 
     public ChunkManager ChunkManager { get; private set; }

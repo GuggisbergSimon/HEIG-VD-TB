@@ -4,12 +4,25 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ChunkManager : MonoBehaviour {
-    [SerializeField] private bool recenterChunks = true;
-    [SerializeField] private TerrainScriptableObject[] scenes;
-    [SerializeField] private Vector2 gridSize = Vector2.one * 500f;
-    [SerializeField] private Vector2Int gridOffset = Vector2Int.one * 8;
-    [SerializeField, Min(1)] private int viewDistance = 3;
-    [SerializeField] private float yOffset = 0f;
+    [Tooltip("Whether the chunks shall be recentered to origin of the world when moving to another chunk, or not."),
+     SerializeField]
+    private bool recenterChunks = true;
+
+    [Tooltip("Unsorted list of scenes to load as chunks. The expected format is Terrain_x_y_id.unity"), SerializeField]
+    private TerrainScriptableObject[] scenes;
+
+    [Tooltip("Dimensions of one chunk"), SerializeField]
+    private Vector2 gridSize = Vector2.one * 500f;
+
+    [Tooltip("Grid offset for original instantiation. Must be positive."), SerializeField]
+    private Vector2Int gridOffset = Vector2Int.one * 8;
+
+    [Tooltip("It represents the radius of a circular pattern centered on the player's chunk. " +
+             "A distance of 1 means only the chunk where the player is will be loaded. "), SerializeField, Min(1)]
+    private int viewDistance = 3;
+
+    [Tooltip("Offset to load chunks at proper height."), SerializeField]
+    private float yOffset = 0f;
 
     public HovercraftController Player { get; private set; }
 
@@ -102,11 +115,11 @@ public class ChunkManager : MonoBehaviour {
     }
 
     private void UpdateLoadedChunks() {
-        UnloadChunks();
+        UnloadNonRequiredChunks();
         StartCoroutine(LoadChunks(FindChunksToLoad()));
     }
 
-    private void UnloadChunks() {
+    private void UnloadNonRequiredChunks() {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
 
         // Find chunks outside ChunksToLoad

@@ -2,10 +2,20 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
-    [SerializeField] private string menuSceneName = "MainMenu";
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject loadingPanel;
+    [Tooltip("The name of the scene to load as a main menu. Must be included in the build settings."), SerializeField]
+    private string menuSceneName = "MainMenu";
+
+    [Tooltip("The name of scenes to load as compositing scenes. The expected format is 'name n'"), SerializeField]
+    private string compositingSceneName = "Compositing";
+
+    [Tooltip("The panel containing the pause menu"), SerializeField]
+    private GameObject pausePanel;
+
+    [Tooltip("The panel containing the main menu"), SerializeField]
+    private GameObject menuPanel;
+
+    [Tooltip("The panel containing the loading screen"), SerializeField]
+    private GameObject loadingPanel;
 
     private bool _isLoading = false;
     private bool _isPaused = false;
@@ -14,12 +24,12 @@ public class UIManager : MonoBehaviour {
         Cursor.lockState = isUIMode ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isUIMode;
     }
-    
-    public void LoadGame(int number) {
+
+    public void LoadScene(int number) {
         ToggleLoadingPanel();
         ToggleMenu();
-        SceneManager.UnloadSceneAsync("MainMenu");
-        AsyncOperation operation = SceneManager.LoadSceneAsync("Compositing " + number);
+        SceneManager.UnloadSceneAsync(menuSceneName);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName + " " + number);
         if (operation != null) {
             operation.completed += _ => { ToggleLoadingPanel(); };
         }
@@ -38,7 +48,7 @@ public class UIManager : MonoBehaviour {
             operation.completed += _ => { ToggleLoadingPanel(); };
         }
     }
-    
+
     public void TogglePause() {
         if (_isLoading) {
             return;
@@ -53,7 +63,7 @@ public class UIManager : MonoBehaviour {
         ToggleCursor(true);
         menuPanel.SetActive(!menuPanel.activeSelf);
     }
-    
+
     public void ToggleLoadingPanel() {
         _isLoading = !_isLoading;
         loadingPanel.SetActive(_isLoading);

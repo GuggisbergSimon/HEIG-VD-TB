@@ -3,13 +3,24 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class HovercraftController : MonoBehaviour {
-    [SerializeField] private List<GameObject> springs;
-    [SerializeField] private GameObject propulsion;
-    [SerializeField] private GameObject centerOfMass;
-    [SerializeField] private float propulsionForceMultiplier = 400f;
-    [SerializeField] private float torqueForceMultiplier = 300f;
-    [SerializeField] private float springForceMultiplier = 250f;
-    [SerializeField] private float dampingForceMultiplier = 5f;
+    [Tooltip("The location of the springs located around the hovercraft to push back when meeting ground."),
+     SerializeField]
+    private List<GameObject> springs;
+
+    [Tooltip("The location of the propulsion engine to push forward."), SerializeField]
+    private GameObject propulsion;
+
+    [Tooltip("The location of the center of mass of the engine to replace the Rigidbody one."), SerializeField]
+    private GameObject centerOfMass;
+
+    [Tooltip("A multiplier applied to the propulsion force."), SerializeField]
+    private float propulsionForceMultiplier = 400f;
+
+    [Tooltip("A multiplier applied to the torque force."), SerializeField]
+    private float torqueForceMultiplier = 300f;
+
+    [Tooltip("A multiplier applied to the spring force applied on each spring."), SerializeField] private float springForceMultiplier = 250f;
+    [Tooltip("A multiplier applied to the damping force to reduce oscillation."), SerializeField] private float dampingForceMultiplier = 5f;
 
     private Rigidbody _rb;
     private InputAction _moveAction;
@@ -51,7 +62,7 @@ public class HovercraftController : MonoBehaviour {
     private void OnMenu() {
         GameManager.Instance.UIManager.TogglePause();
     }
-    
+
     private void OnReset() {
         _rb.rotation = Quaternion.identity;
         _rb.linearVelocity = Vector3.zero;
