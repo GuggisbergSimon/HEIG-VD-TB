@@ -62,9 +62,7 @@ public class ChunkManager : MonoBehaviour {
         for (int i = 0; i < length; i++) {
             _sortedScenes[i] = new string[length];
         }
-
-        //TODO implement LOD toggle
-
+        
         foreach (var scene in scenes) {
             if (scene.coords.x < 0 || scene.coords.x >= length ||
                 scene.coords.y < 0 || scene.coords.y >= length) {
@@ -75,6 +73,7 @@ public class ChunkManager : MonoBehaviour {
             _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
 
+        enableLOD = gameSettings.EnableLOD;
         recenterChunks = gameSettings.RecenterChunks;
         StartCoroutine(LoadInitialChunk());
     }
@@ -222,12 +221,25 @@ public class ChunkManager : MonoBehaviour {
             if (loadOperation != null) {
                 loadOperation.completed += _ => {
                     Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
-                    foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
-                        rootObj.transform.position = chunkPosition;
+                    foreach (GameObject terrainObj in loadedScene.GetRootGameObjects()) {
+                        terrainObj.transform.position = chunkPosition;
+
+                        if (!enableLOD) {
+                            // Objects/Props
+                            foreach (LODGroup lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
+                                lodGroup.ForceLOD(0);
+                            }
+                            
+                            // Terrains
+                            Terrain terrain = terrainObj.GetComponent<Terrain>();
+                            terrain.heightmapPixelError = 1;
+                            terrain.detailObjectDistance *= 2;
+                        }
                     }
 
                     _chunksLoaded.Add(coords);
                 };
+                loadOperations.Add(loadOperation);
                 loadOperations.Add(loadOperation);
             }
         }

@@ -52,10 +52,8 @@ public class GameManager : MonoBehaviour {
             UIManager.ToggleCursor(false);
             ChunkManager = chunkManager;
             if (_gameSettings.IsInitialized) {
-                Debug.Log("GameManager: Setting up ChunkManager with GameSettings.");
                 chunkManager.Setup(_gameSettings);
             } else {
-                Debug.Log("GameManager: Setting up ChunkManager with whatever.");
                 chunkManager.Setup();
             }
         }
