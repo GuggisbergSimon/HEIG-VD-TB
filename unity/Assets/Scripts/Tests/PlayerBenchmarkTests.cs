@@ -10,17 +10,36 @@ using UnityEngine.TestTools;
 namespace Tests {
     [TestFixture]
     public class PlayerBenchmarkTests {
-        private int _warmUpCount = 30;
-        private int _measurementCount = 200;
-        private int _moveDistance = 1;
-        private int _moveFastDistance = 5;
-        private int _teleportDistance = 700;
-        private float _horizontalPanSpeed = 2f;
-        private float _fastHorizontalPanSpeed = 45.0f;
+        private const int WarmUpCount = 30;
+        private const int MeasurementCount = 200;
+        private const int MoveDistance = 1;
+        private const int MoveFastDistance = 5;
+        private const int TeleportDistance = 700;
+        private const float HorizontalPanSpeed = 2f;
+        private const float FastHorizontalPanSpeed = 45.0f;
 
         [OneTimeSetUp]
         public void OneTimeSetup() {
-            SceneManager.LoadScene("Compositing 2");
+            SceneManager.LoadScene("Boot");
+        }
+
+        [SetUp]
+        public void Setup() {
+            LoadSettings(true, true, true);
+            SceneManager.LoadScene("Compositing");
+        }
+
+        [TearDown]
+        public void TearDown() {
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        private void LoadSettings(bool recenterChunks, bool loadingChunks, bool enableLOD) {
+            GameManager.Instance.LoadSettings(new GameSettings {
+                RecenterChunks = recenterChunks,
+                LoadingChunks = loadingChunks,
+                EnableLOD = enableLOD
+            });
         }
 
         private IEnumerator WaitForSceneLoad() {
@@ -41,10 +60,10 @@ namespace Tests {
             panTilt.PanAxis.Value = 0;
 
             using (Measure.Frames()
-                       .WarmupCount(_warmUpCount)
-                       .MeasurementCount(_measurementCount)
+                       .WarmupCount(WarmUpCount)
+                       .MeasurementCount(MeasurementCount)
                        .Scope()) {
-                for (int i = 0; i < _measurementCount; i++) {
+                for (int i = 0; i < MeasurementCount; i++) {
                     movementAction(i);
                     yield return null;
                 }
@@ -56,30 +75,30 @@ namespace Tests {
         [UnityTest, Performance]
         public IEnumerator MoveForward_PerformanceTest() {
             return RunPerformanceTest(i =>
-                GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * _moveDistance);
+                GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveDistance);
         }
 
         [UnityTest, Performance]
         public IEnumerator MoveFast_PerformanceTest() {
             return RunPerformanceTest(
-                i => GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * _moveFastDistance
+                i => GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveFastDistance
             );
         }
 
         [UnityTest, Performance]
         public IEnumerator Teleport_PerformanceTest() {
             return RunPerformanceTest(i =>
-                GameManager.Instance.ChunkManager.Player.transform.position += Random.onUnitSphere * _teleportDistance);
+                GameManager.Instance.ChunkManager.Player.transform.position += Random.onUnitSphere * TeleportDistance);
         }
 
         [UnityTest, Performance]
         public IEnumerator BackAndForth_PerformanceTest() {
             return RunPerformanceTest(i => {
                 if (i % 2 == 0) {
-                    GameManager.Instance.ChunkManager.Player.transform.position += Vector3.up * _teleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position += Vector3.up * TeleportDistance;
                 }
                 else {
-                    GameManager.Instance.ChunkManager.Player.transform.position -= Vector3.up * _teleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position -= Vector3.up * TeleportDistance;
                 }
             });
         }
@@ -100,7 +119,7 @@ namespace Tests {
                 return null;
             }
 
-            return RunPerformanceTest(i => { panTilt.PanAxis.Value += _horizontalPanSpeed; });
+            return RunPerformanceTest(i => { panTilt.PanAxis.Value += HorizontalPanSpeed; });
         }
 
         [UnityTest, Performance]
@@ -110,7 +129,7 @@ namespace Tests {
                 return null;
             }
 
-            return RunPerformanceTest(i => { panTilt.PanAxis.Value += _fastHorizontalPanSpeed; });
+            return RunPerformanceTest(i => { panTilt.PanAxis.Value += FastHorizontalPanSpeed; });
         }
     }
 }
