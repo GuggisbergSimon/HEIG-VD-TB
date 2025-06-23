@@ -43,13 +43,15 @@ public class ChunkManager : MonoBehaviour {
     }
 
     public void Setup(GameSettings gameSettings) {
+        if (!gameSettings.LoadingChunks) {
+            viewDistance = 50;
+        }
         // ChunksToLoad, circular pattern with viewDistance as radius
-        int distance = gameSettings.LoadingChunks ? viewDistance : 50;
-        _chunksToLoad = new bool[distance * 2 + 1, distance * 2 + 1];
-        for (int x = -distance; x <= distance; x++) {
-            for (int y = -distance; y <= distance; y++) {
-                if (x * x + y * y <= distance * distance) {
-                    _chunksToLoad[x + distance, y + distance] = true;
+        _chunksToLoad = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
+        for (int x = -viewDistance; x <= viewDistance; x++) {
+            for (int y = -viewDistance; y <= viewDistance; y++) {
+                if (x * x + y * y <= viewDistance * viewDistance) {
+                    _chunksToLoad[x + viewDistance, y + viewDistance] = true;
                 }
             }
         }
