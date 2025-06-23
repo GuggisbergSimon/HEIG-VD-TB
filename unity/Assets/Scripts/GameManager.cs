@@ -1,20 +1,30 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public struct GameSettings {
+    public bool RecenterChunks;
+    public bool LoadingChunks;
+    public bool EnableLOD;
+    public bool IsInitialized;
+}
+
 public class GameManager : MonoBehaviour {
-    [Tooltip("The UI Manager located as a child of the Game Manager."), SerializeField] private UIManager uIManager;
+    [Tooltip("The UI Manager located as a child of the Game Manager."), SerializeField]
+    private UIManager uIManager;
+
     public static GameManager Instance;
 
     public ChunkManager ChunkManager { get; private set; }
 
     public UIManager UIManager => uIManager;
 
+    private GameSettings _gameSettings;
+
     private void Awake() {
         if (Instance == null) {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-        else {
+        } else {
             Destroy(gameObject);
             return;
         }
@@ -38,10 +48,22 @@ public class GameManager : MonoBehaviour {
 
     private void FindChunkManager() {
         ChunkManager chunkManager = GameObject.Find("ChunkManager")?.GetComponent<ChunkManager>();
-        if (chunkManager != null) {
+        if (ChunkManager == null && chunkManager != null) {
             UIManager.ToggleCursor(false);
             ChunkManager = chunkManager;
+            if (_gameSettings.IsInitialized) {
+                Debug.Log("GameManager: Setting up ChunkManager with GameSettings.");
+                chunkManager.Setup(_gameSettings);
+            } else {
+                Debug.Log("GameManager: Setting up ChunkManager with whatever.");
+                chunkManager.Setup();
+            }
         }
+    }
+
+    public void LoadSettings(GameSettings gameSettings) {
+        _gameSettings = gameSettings;
+        _gameSettings.IsInitialized = true;
     }
 
     public void QuitGame() {

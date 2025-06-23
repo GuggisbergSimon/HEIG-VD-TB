@@ -488,7 +488,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -550,6 +550,9 @@ MonoBehaviour:
   pausePanel: {fileID: 4652930678622808410}
   menuPanel: {fileID: 7852413681735055921}
   loadingPanel: {fileID: 3182406333801083297}
+  loadingChunkToggle: {fileID: 410800085523436577}
+  recenterWorldToggle: {fileID: 1668793228521257822}
+  lodToggle: {fileID: 2466917345777537489}
 --- !u!1 &4303447134709344646
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,7 +1254,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3624015473152104693, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Name
-      value: Text (2)
+      value: LOD
       objectReference: {fileID: 0}
     - target: {fileID: 3804231647210351668, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Pivot.x
@@ -1799,7 +1802,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3624015473152104693, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Name
-      value: Text (1)
+      value: Recenter world
       objectReference: {fileID: 0}
     - target: {fileID: 3804231647210351668, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Pivot.x
@@ -1949,7 +1952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5478629267636053509, guid: 94d845191a2c5486a9035cc33aea93eb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5478629267636053509, guid: 94d845191a2c5486a9035cc33aea93eb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2435,7 +2438,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696077645740779602, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_Name
-      value: Toggle
+      value: LOD
       objectReference: {fileID: 0}
     - target: {fileID: 5747703368880073493, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2466,6 +2469,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84994a34d6e581049b48246da552816e, type: 3}
+--- !u!114 &2466917345777537489 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8008759810827645852, guid: 84994a34d6e581049b48246da552816e, type: 3}
+  m_PrefabInstance: {fileID: 5555353816911553101}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4909963972469037593 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 665168134627670100, guid: 84994a34d6e581049b48246da552816e, type: 3}
@@ -2719,7 +2733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696077645740779602, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_Name
-      value: Toggle
+      value: Loading chunks
       objectReference: {fileID: 0}
     - target: {fileID: 5747703368880073493, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2750,6 +2764,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84994a34d6e581049b48246da552816e, type: 3}
+--- !u!114 &410800085523436577 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8008759810827645852, guid: 84994a34d6e581049b48246da552816e, type: 3}
+  m_PrefabInstance: {fileID: 7680783739351033789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7182263910307291113 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 665168134627670100, guid: 84994a34d6e581049b48246da552816e, type: 3}
@@ -2765,7 +2790,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3624015473152104693, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Name
-      value: Text
+      value: Loading chunks
       objectReference: {fileID: 0}
     - target: {fileID: 3804231647210351668, guid: 502c611df045391b5958922caf83d9a8, type: 3}
       propertyPath: m_Pivot.x
@@ -3157,7 +3182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4696077645740779602, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_Name
-      value: Toggle
+      value: Recenter world
       objectReference: {fileID: 0}
     - target: {fileID: 5747703368880073493, guid: 84994a34d6e581049b48246da552816e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3188,6 +3213,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84994a34d6e581049b48246da552816e, type: 3}
+--- !u!114 &1668793228521257822 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8008759810827645852, guid: 84994a34d6e581049b48246da552816e, type: 3}
+  m_PrefabInstance: {fileID: 8650405550126287042}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8158073779092484246 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 665168134627670100, guid: 84994a34d6e581049b48246da552816e, type: 3}

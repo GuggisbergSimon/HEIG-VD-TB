@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
     [Tooltip("The name of the scene to load as a main menu. Must be included in the build settings."), SerializeField]
@@ -17,6 +18,10 @@ public class UIManager : MonoBehaviour {
     [Tooltip("The panel containing the loading screen"), SerializeField]
     private GameObject loadingPanel;
 
+    [SerializeField] private Toggle loadingChunkToggle;
+    [SerializeField] private Toggle recenterWorldToggle;
+    [SerializeField] private Toggle lodToggle;
+
     private bool _isLoading = false;
     private bool _isPaused = false;
 
@@ -25,11 +30,17 @@ public class UIManager : MonoBehaviour {
         Cursor.visible = isUIMode;
     }
 
-    public void LoadScene(int number) {
+    public void LoadScene() {
         ToggleLoadingPanel();
         ToggleMenu();
+        GameSettings gameSettings = new GameSettings {
+            RecenterChunks = recenterWorldToggle.isOn,
+            LoadingChunks = loadingChunkToggle.isOn,
+            EnableLOD = lodToggle.isOn
+        };
+        GameManager.Instance.LoadSettings(gameSettings);
         SceneManager.UnloadSceneAsync(menuSceneName);
-        AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName + " " + number);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName);
         if (operation != null) {
             operation.completed += _ => { ToggleLoadingPanel(); };
         }

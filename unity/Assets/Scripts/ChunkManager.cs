@@ -8,6 +8,8 @@ public class ChunkManager : MonoBehaviour {
      SerializeField]
     private bool recenterChunks = true;
 
+    [SerializeField] private bool enableLOD = true;
+
     [Tooltip("Unsorted list of scenes to load as chunks. The expected format is Terrain_x_y_id.unity"), SerializeField]
     private TerrainScriptableObject[] scenes;
 
@@ -31,13 +33,23 @@ public class ChunkManager : MonoBehaviour {
     private Vector2Int _playerGridPos;
     private bool[,] _chunksToLoad;
 
-    private void Start() {
+    public void Setup() {
+        GameSettings settings = new GameSettings {
+            RecenterChunks = recenterChunks,
+            LoadingChunks = true,
+            EnableLOD = enableLOD
+        };
+        Setup(settings);
+    }
+
+    public void Setup(GameSettings gameSettings) {
         // ChunksToLoad, circular pattern with viewDistance as radius
-        _chunksToLoad = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
-        for (int x = -viewDistance; x <= viewDistance; x++) {
-            for (int y = -viewDistance; y <= viewDistance; y++) {
-                if (x * x + y * y <= viewDistance * viewDistance) {
-                    _chunksToLoad[x + viewDistance, y + viewDistance] = true;
+        int distance = gameSettings.LoadingChunks ? viewDistance : 50;
+        _chunksToLoad = new bool[distance * 2 + 1, distance * 2 + 1];
+        for (int x = -distance; x <= distance; x++) {
+            for (int y = -distance; y <= distance; y++) {
+                if (x * x + y * y <= distance * distance) {
+                    _chunksToLoad[x + distance, y + distance] = true;
                 }
             }
         }
@@ -49,6 +61,8 @@ public class ChunkManager : MonoBehaviour {
             _sortedScenes[i] = new string[length];
         }
 
+        //TODO implement LOD toggle
+
         foreach (var scene in scenes) {
             if (scene.coords.x < 0 || scene.coords.x >= length ||
                 scene.coords.y < 0 || scene.coords.y >= length) {
@@ -59,6 +73,7 @@ public class ChunkManager : MonoBehaviour {
             _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
 
+        recenterChunks = gameSettings.RecenterChunks;
         StartCoroutine(LoadInitialChunk());
     }
 
