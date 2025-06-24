@@ -1,6 +1,8 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
 using System.IO;
@@ -19,8 +21,10 @@ public class TerrainPopulator : MonoBehaviour {
     [SerializeField] private int buildingCountPerTerrain = 50;
     [SerializeField] private float densityPower = 2.5f;
     [SerializeField] private Vector2Int[] citiesCoords;
-    [SerializeField] private int cityDensityFactor = 10;
+    [SerializeField] private int citySampleFactor = 10;
+    [SerializeField] private float cityDensityFactor = 3f;
     [SerializeField] private float cityBuildingScaleFactor = 4f;
+    [SerializeField] private float randomMinScale = 0.8f, randomMaxScale = 1.2f;
 
     [ContextMenu("Place and Save Buildings")]
     private void PlaceBuildings() {
@@ -39,6 +43,7 @@ public class TerrainPopulator : MonoBehaviour {
     private void PlaceBuildingsInActiveTerrains() {
         Random.InitState(seed);
         foreach (var terrain in Terrain.activeTerrains) {
+            terrain.gameObject.isStatic = false;
             TerrainData terrainData = terrain.terrainData;
             for (int i = terrain.transform.childCount - 1; i >= 0; i--) {
                 DestroyImmediate(terrain.transform.GetChild(i).gameObject);
@@ -61,10 +66,7 @@ public class TerrainPopulator : MonoBehaviour {
                     }
                 }
             }
-
-            // Use a multiplier for cities to increase building density
-            int densityMultiplier = isCity ? cityDensityFactor : 1;
-
+            
             // Get Min/Max heights
             float minHeight = float.MaxValue;
             float maxHeight = float.MinValue;
@@ -78,6 +80,7 @@ public class TerrainPopulator : MonoBehaviour {
             }
 
             float heightRange = maxHeight - minHeight;
+            int densityMultiplier = isCity ? citySampleFactor : 1;
             int samplePoints = buildingCountPerTerrain * sampleFactor * densityMultiplier;
             Vector3 terrainCenter = new Vector3(
                 terrain.transform.position.x + terrainData.size.x / 2,
@@ -90,29 +93,22 @@ public class TerrainPopulator : MonoBehaviour {
                     0,
                     Random.Range(posZ, posZ + terrainData.size.z)
                 );
-
-                float terrainHeight = GetTerrainHeight(terrain, position.x, position.z);
-
+                
                 // Lower height = higher density
+                float terrainHeight = GetTerrainHeight(terrain, position.x, position.z);
                 float heightFactor = 1f - Mathf.Clamp01((terrainHeight - minHeight) / heightRange);
-
-                // Density function - exponential falloff with height
-                // Very dense at low heights, almost nothing at high points
                 float density = Mathf.Pow(heightFactor, densityPower);
 
-                // Increase probability for cities
                 if (isCity) {
-                    density = Mathf.Min(1.0f, density * 3.0f); // Further increase density chance
+                    density = Mathf.Min(1.0f, density * cityDensityFactor);
                 }
 
                 // Buildings placement
                 if (Random.value < density) {
-                    // Adjust height and rotation base on terrain
                     position.y = terrainHeight + yOffsetBuilding + terrain.transform.position.y;
 
                     Quaternion rotation;
                     if (isCity) {
-                        // For cities, keep buildings upright (independent of terrain normal)
                         rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
                     } else {
                         // For non-city areas, align with terrain normal
@@ -126,7 +122,6 @@ public class TerrainPopulator : MonoBehaviour {
                     GameObject instance = Instantiate(building, position, rotation, terrain.transform);
 
                     if (isCity) {
-                        // Calculate normalized distance from center (0 = center, 1 = edge)
                         float distanceToCenter =
                             Vector3.Distance(new Vector3(position.x, 0, position.z), terrainCenter);
                         float maxDistance = Mathf.Sqrt(terrainData.size.x * terrainData.size.x +
@@ -135,19 +130,14 @@ public class TerrainPopulator : MonoBehaviour {
 
                         // Scale factor is higher in the center (inverse relationship with distance)
                         float centerScaleFactor = Mathf.Lerp(1.5f, 0.7f, normalizedDistance);
-
-                        // Add randomness (±20%)
-                        float randomFactor = Random.Range(0.8f, 1.2f);
-
-                        // Apply the combined scale factors
+                        float randomFactor = Random.Range(randomMinScale, randomMaxScale);
                         instance.transform.localScale *= cityBuildingScaleFactor * centerScaleFactor * randomFactor;
                     }
                 }
 
-                // Clutter placement - also increased for cities
+                // Clutter placement
                 float clutterDensity = clutterDensityFactor * (heightFactor + clutterDensityAugment);
                 if (Random.value < clutterDensity) {
-                    // Adjust height and rotation base on terrain
                     position.y = terrainHeight + yOffsetClutter + terrain.transform.position.y;
                     Quaternion rotation =
                         Quaternion.FromToRotation(Vector3.up, GetTerrainNormal(terrainData,
