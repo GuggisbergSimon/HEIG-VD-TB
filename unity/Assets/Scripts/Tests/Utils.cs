@@ -1,15 +1,11 @@
-#if UNITY_EDITOR
-using System.Collections;
-using NUnit.Framework;
+﻿using System.Collections;
 using Unity.Cinemachine;
 using Unity.PerformanceTesting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 
 namespace Tests {
-    [TestFixture]
-    public class PlayerBenchmarkTests {
+    public static class Utils {
         private const int WarmUpCount = 30;
         private const int MeasurementCount = 200;
         private const int MoveDistance = 1;
@@ -18,23 +14,19 @@ namespace Tests {
         private const float HorizontalPanSpeed = 2f;
         private const float FastHorizontalPanSpeed = 45.0f;
 
-        [OneTimeSetUp]
-        public void OneTimeSetup() {
+        public static void OneTimeSetup() {
             SceneManager.LoadScene("Boot");
         }
 
-        [SetUp]
-        public void Setup() {
-            LoadSettings(true, true, true);
+        public static void Setup() {
             SceneManager.LoadScene("Compositing");
         }
 
-        [TearDown]
-        public void TearDown() {
+        public static void TearDown() {
             SceneManager.LoadScene("MainMenu");
         }
 
-        private void LoadSettings(bool recenterChunks, bool loadingChunks, bool enableLOD) {
+        public static void LoadSettings(bool recenterChunks, bool loadingChunks, bool enableLOD) {
             GameManager.Instance.LoadSettings(new GameSettings {
                 RecenterChunks = recenterChunks,
                 LoadingChunks = loadingChunks,
@@ -42,13 +34,22 @@ namespace Tests {
             });
         }
 
-        private IEnumerator WaitForSceneLoad() {
+        private static IEnumerator WaitForSceneLoad() {
             while (!SceneManager.GetActiveScene().isLoaded) {
                 yield return null;
             }
         }
 
-        private IEnumerator RunPerformanceTest(System.Action<int> movementAction) {
+        private static CinemachinePanTilt GetPanTilt() {
+            var playerCamera = GameObject.Find("PlayerCamera");
+            if (playerCamera != null) {
+                return playerCamera.GetComponent<CinemachinePanTilt>();
+            }
+
+            return null;
+        }
+
+        private static IEnumerator RunPerformanceTest(System.Action<int> movementAction) {
             yield return WaitForSceneLoad();
             // Reset player
             GameManager.Instance.ChunkManager.Player.transform.position = Vector3.zero;
@@ -72,48 +73,33 @@ namespace Tests {
             yield return null;
         }
 
-        [UnityTest, Performance]
-        public IEnumerator MoveForward_PerformanceTest() {
+        public static IEnumerator MoveForward() {
             return RunPerformanceTest(i =>
                 GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveDistance);
         }
 
-        [UnityTest, Performance]
-        public IEnumerator MoveFast_PerformanceTest() {
+        public static IEnumerator MoveFast() {
             return RunPerformanceTest(
                 i => GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveFastDistance
             );
         }
 
-        [UnityTest, Performance]
-        public IEnumerator Teleport_PerformanceTest() {
+        public static IEnumerator Teleport() {
             return RunPerformanceTest(i =>
                 GameManager.Instance.ChunkManager.Player.transform.position += Random.onUnitSphere * TeleportDistance);
         }
 
-        [UnityTest, Performance]
-        public IEnumerator BackAndForth_PerformanceTest() {
+        public static IEnumerator BackAndForth() {
             return RunPerformanceTest(i => {
                 if (i % 2 == 0) {
                     GameManager.Instance.ChunkManager.Player.transform.position += Vector3.up * TeleportDistance;
-                }
-                else {
+                } else {
                     GameManager.Instance.ChunkManager.Player.transform.position -= Vector3.up * TeleportDistance;
                 }
             });
         }
 
-        private CinemachinePanTilt GetPanTilt() {
-            var playerCamera = GameObject.Find("PlayerCamera");
-            if (playerCamera != null) {
-                return playerCamera.GetComponent<CinemachinePanTilt>();
-            }
-
-            return null;
-        }
-
-        [UnityTest, Performance]
-        public IEnumerator HorizontalPan() {
+        public static IEnumerator HorizontalPan() {
             var panTilt = GetPanTilt();
             if (panTilt == null) {
                 return null;
@@ -122,8 +108,7 @@ namespace Tests {
             return RunPerformanceTest(i => { panTilt.PanAxis.Value += HorizontalPanSpeed; });
         }
 
-        [UnityTest, Performance]
-        public IEnumerator FastHorizontalPan() {
+        public static IEnumerator FastHorizontalPan() {
             var panTilt = GetPanTilt();
             if (panTilt == null) {
                 return null;
@@ -133,4 +118,3 @@ namespace Tests {
         }
     }
 }
-#endif
