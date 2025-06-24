@@ -62,7 +62,7 @@ public class ChunkManager : MonoBehaviour {
         for (int i = 0; i < length; i++) {
             _sortedScenes[i] = new string[length];
         }
-        
+
         foreach (var scene in scenes) {
             if (scene.coords.x < 0 || scene.coords.x >= length ||
                 scene.coords.y < 0 || scene.coords.y >= length) {
@@ -210,17 +210,16 @@ public class ChunkManager : MonoBehaviour {
             int xCoord = coords.x;
             int yCoord = coords.y;
 
-            Vector3 chunkPosition = new Vector3(
-                (coords.x - (recenterChunks ? _playerGridPos.x : gridOffset.x)) * gridSize.x,
-                yOffset,
-                (coords.y - (recenterChunks ? _playerGridPos.y : gridOffset.y)) * gridSize.y
-            );
-
             AsyncOperation loadOperation =
                 SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
             if (loadOperation != null) {
                 loadOperation.completed += _ => {
                     Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
+                    Vector3 chunkPosition = new Vector3(
+                        (coords.x - (recenterChunks ? _playerGridPos.x : gridOffset.x)) * gridSize.x,
+                        yOffset,
+                        (coords.y - (recenterChunks ? _playerGridPos.y : gridOffset.y)) * gridSize.y
+                    );
                     foreach (GameObject terrainObj in loadedScene.GetRootGameObjects()) {
                         terrainObj.transform.position = chunkPosition;
 
@@ -229,7 +228,7 @@ public class ChunkManager : MonoBehaviour {
                             foreach (LODGroup lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
                                 lodGroup.ForceLOD(0);
                             }
-                            
+
                             // Terrains
                             Terrain terrain = terrainObj.GetComponent<Terrain>();
                             terrain.heightmapPixelError = 1;
