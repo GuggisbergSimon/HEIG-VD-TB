@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using Unity.Cinemachine;
 using Unity.PerformanceTesting;
 using UnityEngine;
@@ -118,3 +119,4 @@ namespace Tests {
         }
     }
 }
+#endif
