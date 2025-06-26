@@ -75,31 +75,31 @@ Leur propre structure sera conservée, afin de faciliter le réimport de celles-
 
 === Scènes
 
-Unity charge différents environnements, appelés Scenes.
+Unity charge différents environnements, appelés `Scenes`.
 Cela peut être réalisé de manière additive, ou en remplaçant complètement l'environnement précédent.
 
-Ces scènes contiennent toutes sortes d'instances d'objets, appelés GameObjects.
+Ces scènes contiennent toutes sortes d'instances d'objets, appelés `GameObjects`.
 Ces GameObjects peuvent représenter des éléements visuels 3D, de la lumière, une caméra, contenir des scripts, etc.
 Ceci est déterminé par les composants attachés à chacun de ces GameObjects.
 Le composant par défaut, pour les objets 3D, est le Transform, qui détermine position, rotation et échelle d'un objet.
-Chaque GameObject peut posséder plusieurs composants, dont certains qui peuvent être attachés au runtime à un objet.
-De plus, chaque GameObject peut contenir plusieurs enfants GameObjects afin d'aider à structurer une Scène.
+Chaque `GameObject` peut posséder plusieurs composants, dont certains qui peuvent être attachés au runtime à un objet.
+De plus, chaque `GameObject` peut contenir plusieurs enfants GameObjects afin d'aider à structurer une Scène.
 
-Il est possible de sauvegarder un GameObject et ses enfants en tant qu'Asset, afin de facilement pouvoir le réutiliser dans d'autres Scènes et synchroniser certains changements dans l'éditeur Unity.
-Ce type d'Asset est appelé Prefab, la forme raccourcie de préfabriqué.
-Les Prefabs ont le rôle d'un template puisque deux instances d'un même préfab auront des comportements indépendants.
+Il est possible de sauvegarder un `GameObject` et ses enfants en tant qu'`Asset`, afin de facilement pouvoir le réutiliser dans d'autres scènes et synchroniser certains changements dans l'éditeur Unity.
+Ce type d'`Asset` est appelé `Prefab`, la forme raccourcie de préfabriqué.
+Les `Prefabs` ont le rôle d'un template puisque deux instances d'un même préfab auront des comportements indépendants.
 
 TODO image démontrant architecture et composants
 
 ==== GameManager
 
-Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un GameManager, qui va pouvoir être accédé par tout objet présent dans la scène.
+Un modèle de programmation typiquement utilisé dans le milieu du jeu vidéo est celui du Singleton, ici sous la forme d'un `GameManager`, qui va pouvoir être accédé par tout objet présent dans la scène.
 Ce singleton aura le rôle de chef d'orchestre, s'assurant des bonnes communications entre les différents composants.
 
-Ce GameManager possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
-Ainsi, un SceneManager gérera le chargement et déchargement des scènes, tandis qu'un SoundManager gérera les différents effets sonores, etc.
+Ce `GameManager` possédera différents types de managers, éventuellement accessibles au travers d'une propriété, pour gérer différents aspects du jeu.
+Ainsi, un `SceneManager` gérera le chargement et déchargement des scènes, tandis qu'un `SoundManager` gérera les différents effets sonores, etc.
 
-Pour s'assurer qu'un GameManager soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés dans une scène dédiée avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au au jeu.
+Pour s'assurer qu'un `GameManager` soit présent dans une scène, une structure simple est celle du boot, où tous les éléments initiaux requis sont chargés dans une scène dédiée avant de passer au comportement attendu, qu'il s'agisse d'un menu principal, ou droit au au jeu.
 
 Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être fait de manière additive lors d'un écran de chargement, afin d'éviter que l'application soit immobilisée lors du chargement initial.
 
@@ -115,17 +115,17 @@ Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être
 Une solution très populaire pour charger en mémoire un monde virtuel par élément, plutôt que dans son ensemble, est de le diviser en parties, appelées chunks.
 
 Chaque chunk correspond à un fichier scène séparé de Unity afin de pouvoir être chargé de manière additive, et asynchrone.
-Ceci permet aux chunks de posséder moults objets, appelés GameObjects dans Unity, qui peuvent représenter toutes sortes d'éléments du décor.
+Ceci permet aux chunks de posséder moults `GameObjects` qui peuvent représenter toutes sortes d'éléments du décor.
 Un terrain de 8000x8000 peut être divisé en chunks de 500x500 formant une sous grille de 16x16.
 
 Pour enregistrer les coordonnées de chaque chunk et les charger au bon endroit dans l'espace 3D monde, il faut ajouter des méta informations aux chunks.
 En raison de limitations de Unity, les scènes, et par extension les chunks, ne peuvent pas offrir ces informations en lecture sans être chargées.
-Heureusement, Unity propose la structure de fichier ScriptableObjects qui permettent de stocker toutes sortes de données.
+Heureusement, Unity propose la structure de fichier `ScriptableObjects` qui permettent de stocker toutes sortes de données.
 Il suffit alors de créer un ScriptableObject pour chaque chunk, contenant toutes les méta informations nécessaires pour ceux-ci.
 
-Les ScriptableObjects ont comme avantage principal de pouvoir stocker des larges quantités de données et de les partager entre objets à faible coût.
+Les `ScriptableObjects` ont comme avantage principal de pouvoir stocker des larges quantités de données et de les partager entre objets à faible coût.
 Leur utilisation, ici, profite du fait les données modifiées en tant que ScriptableObject dans l'éditeur Unity sont conservées en tant qu'asset.
-À noter néanmoins que ces ScriptableObjects ne conservent les changements que dans l'éditeur, et non pas lors d'un build.
+À noter néanmoins que ces `ScriptableObjects` ne conservent les changements que dans l'éditeur, et non pas lors d'un build.
 
 Maintenir une liste des chunks chargés permet de minimiser le nombre de chunks à charger.
 Pour déterminer quel chunk à charger, il est possible de procéder en fonction de la distance au joueur, ou, si l'on simplifie, de la distance à un chunk, celui-ci occupé par le joueur.
@@ -149,9 +149,9 @@ Une autre complication concernant les chunks et l'ajout d'agents en dehors du jo
 Ceux-ci sont usuellement chargés avec une scène, ici un chunk.
 Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un chunk à l'autre.
 
-Une manière de résoudre ce problème est de créer un AgentManager qui tiendra à jour la liste des agents présents dans le monde et les chargera/déchargera en fonction des chunks chargés.
+Une manière de résoudre ce problème est de créer un `AgentManager` qui tiendra à jour la liste des agents présents dans le monde et les chargera/déchargera en fonction des chunks chargés.
 Cette approche permet une permanence des agents ainsi qu'une consistence accrue mais ne permet pas de simuler des comportements en background, hors de vision du joueur.
-Pour arriver à un résultat pareil, il faudrait que l'AgentManager mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
+Pour arriver à un résultat pareil, il faudrait que l'`AgentManager` mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
 Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de bachelor et ne sera donc pas abordée plus en détail.
@@ -202,7 +202,6 @@ Ainsi on distingue deux types d'interactions principales, se déplacer et contr�
 )
 
 Les outils de Unity permettant de réaliser ces tests sont :
-- Unity Test Framework pour effectuer des tests unitaires en Play Mode.
+- Unity Test Framework pour effectuer des tests unitaires en Edit ou Play Mode.
 - Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet sur plusieurs frames.
 - Input System met à disposition des manières pour simuler des entrées utilisateur.
-
