@@ -16,7 +16,7 @@ public class ChunkManager : MonoBehaviour {
     [Tooltip("Dimensions of one chunk"), SerializeField]
     private Vector2 gridSize = Vector2.one * 500f;
 
-    [Tooltip("Grid offset for original instantiation. Must be positive."), SerializeField]
+    [Tooltip("Grid offset for original instantiation of the player. Must be positive values."), SerializeField]
     private Vector2Int gridOffset = Vector2Int.one * 8;
 
     [Tooltip("It represents the radius of a circular pattern centered on the player's chunk. " +
@@ -40,14 +40,14 @@ public class ChunkManager : MonoBehaviour {
     private string[][] _sortedScenes;
     private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
-    private bool[,] _chunksToLoad;
+    private bool[,] _viewGrid;
 
     private void Awake() {
         ImpostorCamera.enabled = false;
         ImpostorCamera.clearFlags = CameraClearFlags.SolidColor;
         ImpostorCamera.backgroundColor = new Color(0, 0, 0, 0);
     }
-    
+
     public void Setup() {
         GameSettings settings = new GameSettings {
             RecenterChunks = recenterChunks,
@@ -62,11 +62,11 @@ public class ChunkManager : MonoBehaviour {
             viewDistance = 50;
         }
         // ChunksToLoad, circular pattern with viewDistance as radius
-        _chunksToLoad = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
+        _viewGrid = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
         for (int x = -viewDistance; x <= viewDistance; x++) {
             for (int y = -viewDistance; y <= viewDistance; y++) {
                 if (x * x + y * y <= viewDistance * viewDistance) {
-                    _chunksToLoad[x + viewDistance, y + viewDistance] = true;
+                    _viewGrid[x + viewDistance, y + viewDistance] = true;
                 }
             }
         }
@@ -112,29 +112,25 @@ public class ChunkManager : MonoBehaviour {
     private void FixedUpdate() {
         Vector3 playerPos = Player.transform.position;
         Vector2Int currentGridPos = GetGridPosition(playerPos);
-        if ((recenterChunks && currentGridPos != gridOffset) ||
-            (!recenterChunks && currentGridPos != _playerGridPos)) {
-            Debug.Log($"Player moved from chunk {_playerGridPos} to {currentGridPos}, ");
+        if (recenterChunks && currentGridPos != gridOffset) {
             Vector2Int diff = currentGridPos - gridOffset;
             Vector3 worldOffset = new Vector3(diff.x * gridSize.x, 0, diff.y * gridSize.y);
 
-            if (recenterChunks) {
-                // Reposition all loaded chunks
-                foreach (var coords in _chunksLoaded) {
-                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
-                    foreach (GameObject rootObj in loadedScene.GetRootGameObjects()) {
-                        rootObj.transform.position -= worldOffset;
-                    }
+            // Reposition all loaded chunks
+            foreach (var coords in _chunksLoaded) {
+                Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
+                foreach (var rootObj in loadedScene.GetRootGameObjects()) {
+                    rootObj.transform.position -= worldOffset;
                 }
-
-                // Move player
-                playerPos -= worldOffset;
-                Player.MoveToPosition(playerPos);
-                _playerGridPos += diff;
-            } else {
-                _playerGridPos = currentGridPos;
             }
 
+            // Move player
+            playerPos -= worldOffset;
+            Player.MoveToPosition(playerPos);
+            _playerGridPos += diff;
+            UpdateLoadedChunks();
+        } else if (!recenterChunks && currentGridPos != _playerGridPos) {
+            _playerGridPos = currentGridPos;
             UpdateLoadedChunks();
         }
     }
@@ -151,23 +147,27 @@ public class ChunkManager : MonoBehaviour {
         StartCoroutine(LoadChunks(FindChunksToLoad()));
     }
 
-    private void UnloadNonRequiredChunks() {
+    private List<Vector2Int> FindChunksToUnload() {
         List<Vector2Int> chunksToUnload = new List<Vector2Int>();
-
-        // Find chunks outside ChunksToLoad
         foreach (var coords in _chunksLoaded) {
             int relX = coords.x - _playerGridPos.x;
             int relY = coords.y - _playerGridPos.y;
 
             // Skip if within view distance and in the chunksToLoad pattern
             if (Mathf.Abs(relX) <= viewDistance && Mathf.Abs(relY) <= viewDistance &&
-                _chunksToLoad[relX + viewDistance, relY + viewDistance]) {
+                _viewGrid[relX + viewDistance, relY + viewDistance]) {
                 continue;
             }
 
             chunksToUnload.Add(coords);
         }
 
+        return chunksToUnload;
+    }
+
+    private void UnloadNonRequiredChunks() {
+        List<Vector2Int> chunksToUnload = FindChunksToUnload();
+        
         // Unload chunks outside ChunksToLoad
         foreach (var coords in chunksToUnload) {
             AsyncOperation unloadOperation =
@@ -193,7 +193,7 @@ public class ChunkManager : MonoBehaviour {
                 int arrayY = y + viewDistance;
 
                 // Pre emptive skips
-                if (!_chunksToLoad[arrayX, arrayY]) {
+                if (!_viewGrid[arrayX, arrayY]) {
                     continue;
                 }
 
@@ -222,21 +222,18 @@ public class ChunkManager : MonoBehaviour {
     private IEnumerator LoadChunks(List<Vector2Int> chunksToLoad) {
         List<AsyncOperation> loadOperations = new List<AsyncOperation>();
 
-        foreach (Vector2Int coords in chunksToLoad) {
-            int xCoord = coords.x;
-            int yCoord = coords.y;
-
+        foreach (var coords in chunksToLoad) {
             AsyncOperation loadOperation =
-                SceneManager.LoadSceneAsync(_sortedScenes[xCoord][yCoord], LoadSceneMode.Additive);
+                SceneManager.LoadSceneAsync(_sortedScenes[coords.x][coords.y], LoadSceneMode.Additive);
             if (loadOperation != null) {
                 loadOperation.completed += _ => {
-                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[xCoord][yCoord]);
+                    Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
                     Vector3 chunkPosition = new Vector3(
                         (coords.x - (recenterChunks ? _playerGridPos.x : gridOffset.x)) * gridSize.x,
                         yOffset,
                         (coords.y - (recenterChunks ? _playerGridPos.y : gridOffset.y)) * gridSize.y
                     );
-                    foreach (GameObject terrainObj in loadedScene.GetRootGameObjects()) {
+                    foreach (var terrainObj in loadedScene.GetRootGameObjects()) {
                         terrainObj.transform.position = chunkPosition;
 
                         if (!enableLOD) {
@@ -254,7 +251,6 @@ public class ChunkManager : MonoBehaviour {
 
                     _chunksLoaded.Add(coords);
                 };
-                loadOperations.Add(loadOperation);
                 loadOperations.Add(loadOperation);
             }
         }
