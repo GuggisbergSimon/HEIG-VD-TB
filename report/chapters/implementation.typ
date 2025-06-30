@@ -215,6 +215,35 @@ if (!enableLOD) {
 
 TODO
 
+Puisque toutes les solutions existantes pour des imposteurs HDRP sont payantes, une première tentative d'implémenter ceux-ci de manière naïve à l'aide d'un script C\# a été faite.
+Pour un imposteur en runtime, deux paramètres sont nécessaires :
+- la distance à partir de laquelle l'imposteur est activé 
+- la différence d'angle à partir duquel un rafraîchissement de l'imposteur est effectué
+
+De plus, un imposteur doit posséder une `RenderTexture` qui rendra ce qu'une caméra voit.
+Cette caméra est différente de celle du joueur puisqu'elle ne rendra que l'imposteur en question.
+La pipeline HDRP requière néanmoins de désactiver de nombreuses options afin de parvenir à rendre le modèle 3D sur un fond transparent.
+Une fois ceci fait, la texture rendu est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles.
+
+```cs
+float angleToRefresh = 10f;
+float distanceFromCamera = 50f;
+float lastAngleRefreshed;
+// Comportement des imposteurs
+Camera cam = GameManager.Instance.ChunkManager.Camera;
+if (Vector3.Distance(cam.transform.position, transform.position) > distanceFromCamera) {
+    Vector3 direction = (cam.transform.position - transform.position).normalized;
+    float angle = Vector3.Angle(transform.forward, direction);
+    if (!_isEnabled || Mathf.Abs(angle - lastAngleRefreshed) > angleToRefresh) {
+        lastAngleRefreshed = angle;
+        ToggleImpostor(true);
+        RefreshImpostor(cam);
+    }
+} else if (_isEnabled) {
+    ToggleImpostor(false);
+}
+```
+
 == Shader
 
 TODO
