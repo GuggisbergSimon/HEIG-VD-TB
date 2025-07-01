@@ -27,7 +27,17 @@ Pour ce travail de bachelor il a été décidé d'utiliser la dernière version 
 
 Quant à installer Unity et gérer différents projets ou éditeurs, Unity Hub permet ceci en offrant également de nombreux templates de projets.
 
-Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch
+En terme de rendu graphique, il existe deux espaces de couleur différents dans Unity, `Linear` et `Gamma`.
+`Linear` est celui-ci par défaut dans Unity mais n'est pas représentatif de la réalité.
+`Gamma` est plus proche de la réalité et est le standard actuel, aussi connu sous le nom sRGB.
+Il s'agit de ce deuxième espace de couleur qui a été choisi.
+Ce choix n'impacte que le rendu graphique et pas les performances.
+
+@unity-doc-color-space
+
+=== Render Pipeline
+
+Unity dispose de trois pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch
 Patcher ces assets peut en partie être automatisé par Unity.
 - Standard - Cette pipeline est aussi connue sous le nom built-in.
   Il s'agit d'une option built-in par défaut mais n'est plus mise à jour depuis plusieurs années, destinée à être remplacée par les deux suivantes.
@@ -44,13 +54,8 @@ La pipeline HDRP possède de nombreuses assets photoréalistes tandis que celle 
 Un premier prototype a été réalisé avec URP lors de la première partie de ce travail de bachelor.
 Il a ensuite été porté vers HDRP, en utilisant d'autres assets, pour adhérer à la réalité du métier.
 
-En terme de rendu graphique, il existe deux espaces de couleur différents dans Unity, `Linear` et `Gamma`.
-`Linear` est celui-ci par défaut dans Unity mais n'est pas représentatif de la réalité.
-`Gamma` est plus proche de la réalité et est le standard actuel, aussi connu sous le nom sRGB.
-Il s'agit de ce deuxième espace de couleur qui a été choisi.
-Ce choix n'impacte que le rendu graphique et pas les performances.
-
-@unity-doc
+@unity-urp
+@unity-hdrp
 
 === Packages
 
@@ -62,6 +67,7 @@ Cinemachine offre, entre autres, la possibilité de contraindre la caméra à su
 
 Terrain Tools est un package officiel Unity qui ajoute des fonctionnalités aux terrains.
 Ce package a pour vocation de faciliter la création, édition et gestion de terrains.
+En raison de problèmes de ce package, il a été retiré du projet une fois son utilisation, ponctuelle, terminée.
 
 @unity-terrain-tools
 
@@ -69,13 +75,12 @@ Ce package a pour vocation de faciliter la création, édition et gestion de ter
 
 La rédaction du rapport a été fait avec l'aide de Typst et en particulier d'un template pour les travaux de bachelor HEIG-VD.
 La rédaction en elle-même a été réalisée avec Visuel Studio Code et l'extension Tinymist pour l'affichage et export Typst en local.
-La rédaction du code a été réalisé avec Jetbrains Rider et l'extension GiHub Copilot.
+De plus, pour les passages de code, l'extension Codly a été utilisée pour la mise en forme.
 
-TODO eventually use
-https://typst.app/universe/package/glossarium/
-https://typst.app/universe/package/codly/
+@typst-template
+@typst-codly
+
+La rédaction du code a été réalisé avec Jetbrains Rider et l'extension GiHub Copilot.
 
 Le logiciel GIMP a été utilisé pour la création ou l'édition d'images, qu'il s'agisse de sprites, textures ou d'images destinées au rapport.
 PlantUML a été utilisé pour la création de quelques diagrammes.
-
-@typst-template
