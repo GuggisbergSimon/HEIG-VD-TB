@@ -25,15 +25,21 @@ Ce n'est que récemment que ce cycle a été altéré avec une seule version maj
 Ainsi, en 2024 est sorti Unity 6.0, et début 2025 la version 6.1.
 Pour ce travail de bachelor il a été décidé d'utiliser la dernière version stable, soit Unity 6.0 LTS.
 
-Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch, qui peut en partie être automatisé par Unity.
+Quant à installer Unity et gérer différents projets ou éditeurs, Unity Hub permet ceci en offrant également de nombreux templates de projets.
+
+Unity dispose de 3 pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch
+Patcher ces assets peut en partie être automatisé par Unity.
 - Standard - Cette pipeline est aussi connue sous le nom built-in.
   Il s'agit d'une option built-in par défaut mais n'est plus mise à jour depuis plusieurs années, destinée à être remplacée par les deux suivantes.
+  Elle est encore disponible mais les dernières versions de Unity ne la proposent plus par défaut.
 - URP - Universal Render Pipeline est un rendu visant la performance destiné au grand marché mobile (\~50% du marché).
-- HDRP - HD Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
-  Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils supplémentaires.
+  Cette pipeline propose moins d'options graphiques, pour des meilleures performances.
+- HDRP - High Definition Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
+  Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils uniques à celle-ci.
+  Il s'agit de la pipeline permettant d'utiliser du ray tracing, entre autre.
 
 Ce travail de bachelor a pour volonté d'implémenter les méthode de l'art du métier et donc d'utiliser une pipeline moderne, cela exclue la pipeline Standard.
-La pipeline HDRP possède de nombreuses assets photoréalistes tandis que URP tend vers la stylisation avec des assets moins lourdes, avec un compte de polygones moins élevé, pour un style souvent dénommé low poly.
+La pipeline HDRP possède de nombreuses assets photoréalistes tandis que celle URP tend vers la stylisation avec des assets moins lourdes, avec un compte de polygones moins élevé, pour un style souvent dénommé low poly.
 
 Un premier prototype a été réalisé avec URP lors de la première partie de ce travail de bachelor.
 Il a ensuite été porté vers HDRP, en utilisant d'autres assets, pour adhérer à la réalité du métier.

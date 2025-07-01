@@ -55,8 +55,8 @@ Une liste de vecteurs de coordonnées stocke les chunks chargés.
 Ainsi, il est facile d'accéder pour un chunk chargé à son nom de scène, et le décharger.
 
 ```cs
-// Déchargement des chunks
 string[,] sortedScenes;
+// Déchargement des chunks
 List<Vector2Int> chunksLoaded = new List<Vector2Int>();
 List<Vector2Int> chunksToUnload = FindChunksToUnload();
 foreach (var coords in chunksToUnload) {
@@ -152,8 +152,7 @@ if (recenterChunks && currentGridPos != gridOffset) {
         }
     }
 
-    playerPos -= worldOffset;
-    Player.MoveToPosition(playerPos);
+    Player.MoveToPosition(playerPos - worldOffset);
     _playerGridPos += diff;
     UpdateLoadedChunks();
 } else if (!recenterChunks && currentGridPos != _playerGridPos) {
@@ -192,20 +191,18 @@ L'alternative qui a été choisie est de changer, lors du chargement d'un chunk,
 Ceci ajoute un léger overhead CPU lors de la frame physique de chargement des chunks, mais ceci n'impactera que les performances du prototype non optimisé.
 
 Il s'agit donc d'un compromis entre fidélité de résultats de tests et simplicité d'architecture.
-Après des rapides tests, il s'est avéré que ce compromis était strictement positif puisque la baisse de performance sur la frame physique attendue n'était que peu notable.
+Après des rapides tests, il s'est avéré que ce compromis était strictement positif puisque la baisse de performance sur la frame physique attendue n'était que peu notable malgré le coût de l'opérattion `GetComponent`.
+Une optimisation supplémentaire serait de passer par un Manager pour chaque `Chunk` qui ferait le pont entre `ChunkManager` et `LOD Group`.
+Celui-ci contiendrait déjà les informations nécessaires, sauvegardées au préalable.
 
 ```cs
-// Forcer LOD 0 lors du chargement d'un chunk
 if (!enableLOD) {
-    // Objects/Props
-    foreach (LODGroup lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
+    foreach (var lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
         lodGroup.ForceLOD(0);
     }
 
-    // Terrains
     Terrain terrain = terrainObj.GetComponent<Terrain>();
-    terrain.heightmapPixelError = 1;
-    terrain.detailObjectDistance *= 2;
+    terrain.forceLOD(0);
 }
 ```
 
@@ -213,40 +210,93 @@ if (!enableLOD) {
 
 == Imposteurs
 
-TODO
+=== IMP
 
-Puisque toutes les solutions existantes pour des imposteurs HDRP sont payantes, une première tentative d'implémenter ceux-ci de manière naïve à l'aide d'un script C\# a été faite.
+Parmi les solutions existantes pour des imposteurs dans Unity, le répertoire public IMP propose, pour la pipeline Standard, une solution complète.
+Ce répertoire a également été forké pour URP sous le nom de URPIMP.
+Mais ce répertoire a été archivé et manque des fichiers pour parvenir à un niveau fonctionnel.
+
+Une première tentative a été de porter IMP vers HDRP.
+Mais coder des shaders HDRP est bien plus complexe car Unity favorise l'usage de l'outil Shader Graph pour créer des Shaders à l'aide de noeuds.
+
+@imp
+@urpimp
+
+=== Approche naïve
+
+Une seconde tentative a été d'implémenter des imposteurs de manière naïve, sous la forme billboards représentant l'objet capturé distant à l'aide d'un script C\#.
+Ceci a comme avantage de pouvoir rapidement prototyper au coût de performances plus basses.
+Cette approche a été proposée en tant que Proof of Concept.
 Pour un imposteur en runtime, deux paramètres sont nécessaires :
 - la distance à partir de laquelle l'imposteur est activé 
 - la différence d'angle à partir duquel un rafraîchissement de l'imposteur est effectué
 
 De plus, un imposteur doit posséder une `RenderTexture` qui rendra ce qu'une caméra voit.
-Cette caméra est différente de celle du joueur puisqu'elle ne rendra que l'imposteur en question.
-La pipeline HDRP requière néanmoins de désactiver de nombreuses options afin de parvenir à rendre le modèle 3D sur un fond transparent.
-Une fois ceci fait, la texture rendu est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles.
+Cette caméra est différente de celle du joueur puisqu'elle ne rendra que les modèles sujets à être des imposteurs.
+Cette caméra sera orientée vers l'objet à rendre, dont la taille totale à rendre est connue par les limites du modèle 3D.
+Le FOV et la position de la caméra sont ensuite ajustés de manière à cadrer l'objet à rendre dans la `RenderTexture`.
+
+La pipeline HDRP requière néanmoins un paramétrage précis.
+À savoir : Il faut sélectionner le format `R16G16B16A16_UNORM` pour la `RenderTexture`.
+Il faut également choisir, dans les paramètres du projet, le format de couleur `R16G16B16A16` afin de supporter la transparence.
+Ce format de couleur pour le projet est deux fois plus lourd en mémoire que celui par défaut `R11G11B10` en utilisant 64 bits plutôt que 32 bits pour chaque couleur.
+Le format correspondant, en terme d'API de script Unity, est appelé `RGBAHalf`.
+
+Une fois ceci fait, la texture rendu est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles, qui est lui également redimensionné pour correspondre aux limites du modèle 3D.
 
 ```cs
 float angleToRefresh = 10f;
 float distanceFromCamera = 50f;
+bool isEnabled = false;
 float lastAngleRefreshed;
 // Comportement des imposteurs
-Camera cam = GameManager.Instance.ChunkManager.Camera;
-if (Vector3.Distance(cam.transform.position, transform.position) > distanceFromCamera) {
-    Vector3 direction = (cam.transform.position - transform.position).normalized;
-    float angle = Vector3.Angle(transform.forward, direction);
-    if (!_isEnabled || Mathf.Abs(angle - lastAngleRefreshed) > angleToRefresh) {
+if (distance(cam.position, position) > distanceFromCamera) {
+    float angle = Angle(this.forward, cam.position - position); 
+    if (!isEnabled || angle > angleToRefresh) {
         lastAngleRefreshed = angle;
         ToggleImpostor(true);
-        RefreshImpostor(cam);
+        RefreshImpostor();
     }
-} else if (_isEnabled) {
+} else if (isEnabled) {
     ToggleImpostor(false);
 }
 ```
 
+=== Amplify Impostors
+
+Finalement, une solution payante mais très efficace et utilisée à titre professionnel pour une fonctionnalité pareille est celle proposée par Amplify.
+Cet outil, comme bon nombre d'assets de qualités disponibles sur le Unity Asset Store, s'est révélé être de qualité et aisé à prendre en main.
+Les jours de travail dédiés aux tentatives d'implémentations des imposteurs auraient pu être économisées en utilisant ce plugin dès le début.
+
+TODO
+
+@amplify-impostors
+
 == Shader
 
 TODO
+
+Deux approches très populaires sont possibles pour représenter des brins d'herbe.
+- La solution shader via une image en billboard. 
+  Pour éviter de nedisposer que de brins d'herbes plats il est possible de disposer de 4 `Quads` pour chaque brin d'herbe.
+  Un pour x, z, et deux pour les diagonales xz, zx.
+- La solution geometry shader pour modéliser chaque brin d'herbe en 3D.
+  Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
+- À noter qu'il est possible d'implémenter une solution de tesselation, mais est plus demandante niveau performance.
+
+Brins d'herbe x, z, xz, zx
+Ajout de diversité de taille/rotation
+animation de vent
+animation contact joueur
+placement via terrain ?
+
+HDRP packages :
+- https://github.com/EmmetOT/HDRPGrass?tab=readme-ov-file
+- https://github.com/flamacore/UnityHDRPTerrainDetailGrass
+
+SRP tutorials :
+- https://roystan.net/articles/grass-shader/
+- https://halisavakis.com/my-take-on-shaders-geometry-shaders/
 
 == Tests
 
