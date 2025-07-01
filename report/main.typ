@@ -44,6 +44,10 @@
 /*
  Table of Content
 */
+
+// Set numbering for content
+#set heading(numbering: "1.1")
+
 #outline(title: "Table des matières", depth: 3, indent: 15pt)
 
 /*
@@ -62,6 +66,10 @@
 #include "chapters/implementation.typ"
 
 #include "chapters/conclusion.typ"
+
+
+// Remove numbering after content
+#set heading(numbering: none)
 
 /*
  Tables

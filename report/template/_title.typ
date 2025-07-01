@@ -4,9 +4,7 @@
     #colbreak()
     #par(justify: false)[#align(right, [
       #TBdpt
-      #v(1%)
       #TBfiliere
-      #v(1%)
       #TBorient
     ])]
   ])
