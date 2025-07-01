@@ -278,17 +278,17 @@ TODO
 
 Deux approches très populaires sont possibles pour représenter des brins d'herbe.
 - La solution shader via une image en billboard. 
-  Pour éviter de nedisposer que de brins d'herbes plats il est possible de disposer de 4 `Quads` pour chaque brin d'herbe.
-  Un pour x, z, et deux pour les diagonales xz, zx.
+  Pour éviter de ne disposer que de brins d'herbes plats il est possible de disposer de 4 `Quads` pour chaque brin d'herbe.
+  Un pour chaque direction cardinale, et intercardinale.
 - La solution geometry shader pour modéliser chaque brin d'herbe en 3D.
   Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
 - À noter qu'il est possible d'implémenter une solution de tesselation, mais est plus demandante niveau performance.
 
-Brins d'herbe x, z, xz, zx
-Ajout de diversité de taille/rotation
-animation de vent
-animation contact joueur
-placement via terrain ?
+1. Brins d'herbe cardinaux/intercardinaux
+2. Ajout de diversité de taille/rotation
+3. animation de vent
+4. animation contact joueur
+5. placement via terrain
 
 HDRP packages :
 - https://github.com/EmmetOT/HDRPGrass?tab=readme-ov-file
