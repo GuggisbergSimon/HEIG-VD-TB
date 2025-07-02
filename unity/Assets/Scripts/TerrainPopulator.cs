@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -119,7 +118,9 @@ public class TerrainPopulator : MonoBehaviour {
                     }
 
                     GameObject building = buildingPrefabs[Random.Range(0, buildingPrefabs.Length)];
-                    GameObject instance = Instantiate(building, position, rotation, terrain.transform);
+                    GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(building, terrain.transform);
+                    instance.transform.position = position;
+                    instance.transform.rotation = rotation;
 
                     if (isCity) {
                         float distanceToCenter =
@@ -146,7 +147,9 @@ public class TerrainPopulator : MonoBehaviour {
                         Quaternion.Euler(0, Random.Range(0, 360), 0);
 
                     GameObject clutter = clutterPrefabs[Random.Range(0, clutterPrefabs.Length)];
-                    Instantiate(clutter, position, rotation, terrain.transform);
+                    GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(clutter, terrain.transform);
+                    instance.transform.position = position;
+                    instance.transform.rotation = rotation;
                 }
             }
         }
