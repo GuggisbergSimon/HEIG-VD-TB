@@ -11,17 +11,24 @@ public class ImpostorRunTime : MonoBehaviour {
     [SerializeField] private float sizeFactor = 1.5f;
     [SerializeField] private float orthographicFactor = 0.5f;
     [SerializeField] private float fieldOfViewFactor = 2.0f;
+    [SerializeField] private Camera mainCamera;
     
     private RenderTexture _renderTexture;
+    private Camera _camera;
     private Bounds _bounds;
     private bool _isEnabled = false;
     private float _lastAngleRefreshed;
 
     private void Awake() {
         _renderTexture = new RenderTexture(impostorResolution.x, impostorResolution.y, 24) {
-            format = RenderTextureFormat.ARGB32 // Ensure alpha channel support
+            format = RenderTextureFormat.ARGBHalf
         };
         _bounds = GetModelBounds(fullModel);
+        _camera = new GameObject("ImpostorCamera").AddComponent<Camera>();
+        _camera.transform.parent = transform;
+        _camera.enabled = false;
+        _camera.clearFlags = CameraClearFlags.SolidColor;
+        _camera.backgroundColor = new Color(0, 0, 0, 0);
     }
 
     private void OnDestroy() {
@@ -43,26 +50,25 @@ public class ImpostorRunTime : MonoBehaviour {
         imposterModel.transform.rotation = Quaternion.LookRotation(-dirToCamera);
 
         // — grab your shared impostor camera —
-        Camera impostorCamera = GameManager.Instance.ChunkManager.ImpostorCamera;
-        impostorCamera.CopyFrom(cam);
+        _camera.CopyFrom(cam);
     
         // Setup camera for impostor rendering
-        impostorCamera.clearFlags = CameraClearFlags.SolidColor;
-        impostorCamera.backgroundColor = Color.clear; // RGBA = (0,0,0,0)
+        _camera.clearFlags = CameraClearFlags.SolidColor;
+        _camera.backgroundColor = Color.clear; // RGBA = (0,0,0,0)
     
         // Position the camera to frame the model properly
         float objectSize = _bounds.size.magnitude;
         float distance = objectSize * sizeFactor;
     
         // Position camera looking at the center of the model
-        impostorCamera.transform.position = transform.position - dirToCamera * distance;
-        impostorCamera.transform.LookAt(transform.position);
+        _camera.transform.position = transform.position - dirToCamera * distance;
+        _camera.transform.LookAt(transform.position);
     
         // Set field of view to frame the object properly
-        if (impostorCamera.orthographic) {
-            impostorCamera.orthographicSize = objectSize * orthographicFactor;
+        if (_camera.orthographic) {
+            _camera.orthographicSize = objectSize * orthographicFactor;
         } else {
-            impostorCamera.fieldOfView = fieldOfViewFactor * Mathf.Atan(objectSize / (fieldOfViewFactor * distance)) * Mathf.Rad2Deg;
+            _camera.fieldOfView = fieldOfViewFactor * Mathf.Atan(objectSize / (fieldOfViewFactor * distance)) * Mathf.Rad2Deg;
         }
     
         // — render only the full-model layer into the RT —
@@ -70,9 +76,9 @@ public class ImpostorRunTime : MonoBehaviour {
         imposterModel.SetActive(false);
         fullModel.SetActive(true);
 
-        impostorCamera.cullingMask = 1 << impostorLayer;
-        impostorCamera.targetTexture = _renderTexture;
-        impostorCamera.Render();
+        _camera.cullingMask = 1 << impostorLayer;
+        _camera.targetTexture = _renderTexture;
+        _camera.Render();
 
         // — restore everything —
         imposterModel.SetActive(wasImpostorActive);
@@ -94,14 +100,13 @@ public class ImpostorRunTime : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        Camera cam = GameManager.Instance.ChunkManager.Camera;
-        if (Vector3.Distance(cam.transform.position, transform.position) > distanceFromCamera) {
-            Vector3 direction = (cam.transform.position - transform.position).normalized;
+        if (Vector3.Distance(mainCamera.transform.position, transform.position) > distanceFromCamera) {
+            Vector3 direction = (mainCamera.transform.position - transform.position).normalized;
             float angle = Vector3.Angle(transform.forward, direction);
             if (!_isEnabled || Mathf.Abs(angle - _lastAngleRefreshed) > angleToRefresh) {
                 _lastAngleRefreshed = angle;
                 ToggleImpostor(true);
-                RefreshImpostor(cam);
+                RefreshImpostor(mainCamera);
             }
         } else if (_isEnabled) {
             ToggleImpostor(false);

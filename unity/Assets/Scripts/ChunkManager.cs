@@ -26,27 +26,14 @@ public class ChunkManager : MonoBehaviour {
     [Tooltip("Offset to load chunks at proper height."), SerializeField]
     private float yOffset = 0f;
 
-    [SerializeField] private Camera impostorCamera;
-
     public HovercraftController Player { get; private set; }
 
     public Camera Camera { get; private set; }
-
-    public Camera ImpostorCamera {
-        get => impostorCamera;
-        private set => impostorCamera = value;
-    }
 
     private string[][] _sortedScenes;
     private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
     private bool[,] _viewGrid;
-
-    private void Awake() {
-        ImpostorCamera.enabled = false;
-        ImpostorCamera.clearFlags = CameraClearFlags.SolidColor;
-        ImpostorCamera.backgroundColor = new Color(0, 0, 0, 0);
-    }
 
     public void Setup() {
         GameSettings settings = new GameSettings {
