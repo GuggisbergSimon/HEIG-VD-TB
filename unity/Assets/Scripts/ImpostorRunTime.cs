@@ -8,9 +8,6 @@ public class ImpostorRunTime : MonoBehaviour {
     [SerializeField] private Vector2Int impostorResolution = new Vector2Int(256, 256);
     [SerializeField] private int impostorLayer = 6;
     [SerializeField] private Renderer impostorRenderer;
-    [SerializeField] private float sizeFactor = 1.5f;
-    [SerializeField] private float orthographicFactor = 0.5f;
-    [SerializeField] private float fieldOfViewFactor = 2.0f;
     [SerializeField] private Camera mainCamera;
     
     private RenderTexture _renderTexture;
@@ -45,46 +42,37 @@ public class ImpostorRunTime : MonoBehaviour {
     }
 
     private void RefreshImpostor(Camera cam) {
-        // — orient billboard —
+        // Orient billboard
         Vector3 dirToCamera = (cam.transform.position - transform.position).normalized;
         imposterModel.transform.rotation = Quaternion.LookRotation(-dirToCamera);
-
-        // — grab your shared impostor camera —
-        _camera.CopyFrom(cam);
-    
+        
         // Setup camera for impostor rendering
+        _camera.CopyFrom(cam);
         _camera.clearFlags = CameraClearFlags.SolidColor;
-        _camera.backgroundColor = Color.clear; // RGBA = (0,0,0,0)
+        _camera.backgroundColor = Color.clear;
+        _camera.cullingMask = 1 << impostorLayer;
+        _camera.targetTexture = _renderTexture;
     
-        // Position the camera to frame the model properly
-        float objectSize = _bounds.size.magnitude;
-        float distance = objectSize * sizeFactor;
+        // Orient the camera
+        Vector3 boundsCenter = _bounds.center;
+        _camera.transform.LookAt(boundsCenter);
+
+        // Change fov/position of camera to fit the model bounds
+        _camera.transform.position = boundsCenter + dirToCamera * _bounds.size.magnitude;
+        float distance = Vector3.Distance(_camera.transform.position, boundsCenter);
+        float requiredFOV = 2.0f * Mathf.Atan(_bounds.extents.magnitude / distance) * Mathf.Rad2Deg;
+        _camera.fieldOfView = requiredFOV * 1.2f; // Add 20% margin to ensure model fits
     
-        // Position camera looking at the center of the model
-        _camera.transform.position = transform.position - dirToCamera * distance;
-        _camera.transform.LookAt(transform.position);
-    
-        // Set field of view to frame the object properly
-        if (_camera.orthographic) {
-            _camera.orthographicSize = objectSize * orthographicFactor;
-        } else {
-            _camera.fieldOfView = fieldOfViewFactor * Mathf.Atan(objectSize / (fieldOfViewFactor * distance)) * Mathf.Rad2Deg;
-        }
-    
-        // — render only the full-model layer into the RT —
+        // Render only the full-model layer into the RenderTexture
         bool wasImpostorActive = imposterModel.activeSelf;
         imposterModel.SetActive(false);
         fullModel.SetActive(true);
-
-        _camera.cullingMask = 1 << impostorLayer;
-        _camera.targetTexture = _renderTexture;
         _camera.Render();
 
-        // — restore everything —
+        // Restore everything
         imposterModel.SetActive(wasImpostorActive);
         fullModel.SetActive(!wasImpostorActive);
 
-        // — apply to your impostor quad/material —
         impostorRenderer.material.mainTexture = _renderTexture;
     }
     
