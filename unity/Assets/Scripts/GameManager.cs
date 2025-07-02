@@ -5,6 +5,7 @@ public struct GameSettings {
     public bool RecenterChunks;
     public bool LoadingChunks;
     public bool EnableLOD;
+    public bool EnableImpostor;
     public bool IsInitialized;
 }
 

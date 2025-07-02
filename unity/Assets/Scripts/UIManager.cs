@@ -17,10 +17,11 @@ public class UIManager : MonoBehaviour {
 
     [Tooltip("The panel containing the loading screen"), SerializeField]
     private GameObject loadingPanel;
-
+    
     [SerializeField] private Toggle loadingChunkToggle;
     [SerializeField] private Toggle recenterWorldToggle;
     [SerializeField] private Toggle lodToggle;
+    [SerializeField] private Toggle impostorToggle;
 
     private bool _isLoading = false;
     private bool _isPaused = false;
@@ -36,11 +37,12 @@ public class UIManager : MonoBehaviour {
         GameSettings gameSettings = new GameSettings {
             RecenterChunks = recenterWorldToggle.isOn,
             LoadingChunks = loadingChunkToggle.isOn,
-            EnableLOD = lodToggle.isOn
+            EnableLOD = lodToggle.isOn, 
+            EnableImpostor = lodToggle.isOn && impostorToggle.isOn,
         };
         GameManager.Instance.LoadSettings(gameSettings);
-        SceneManager.UnloadSceneAsync(menuSceneName);
         AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName);
+        SceneManager.UnloadSceneAsync(menuSceneName);
         if (operation != null) {
             operation.completed += _ => { ToggleLoadingPanel(); };
         }
