@@ -12,6 +12,7 @@ public class TerrainPopulator : MonoBehaviour {
     [SerializeField] private string chunksDirectory = "Assets/Scenes/Chunks";
     [SerializeField] private GameObject[] buildingPrefabs;
     [SerializeField] private GameObject[] clutterPrefabs;
+    [SerializeField] private GameObject[] grassPrefabs;
     [SerializeField] private float yOffsetBuilding = 0f;
     [SerializeField] private float yOffsetClutter = 0f;
     [SerializeField] private int sampleFactor = 3;
@@ -23,7 +24,11 @@ public class TerrainPopulator : MonoBehaviour {
     [SerializeField] private int citySampleFactor = 10;
     [SerializeField] private float cityDensityFactor = 3f;
     [SerializeField] private float cityBuildingScaleFactor = 4f;
-    [SerializeField] private float randomMinScale = 0.8f, randomMaxScale = 1.2f;
+    [SerializeField] private float minScaleCity = 0.8f, maxScaleCity = 1.2f;
+    [SerializeField] private float minScaleGrass = 1f, maxScaleGrass = 2f;
+    [SerializeField] private float grassDensityFactor = 0.5f;
+    [SerializeField] private int grassDetailResolution = 1024;
+    [SerializeField] private int grassDetailResolutionPerPatch = 8;
 
     [ContextMenu("Place and Save Buildings")]
     private void PlaceBuildings() {
@@ -131,7 +136,7 @@ public class TerrainPopulator : MonoBehaviour {
 
                         // Scale factor is higher in the center (inverse relationship with distance)
                         float centerScaleFactor = Mathf.Lerp(1.5f, 0.7f, normalizedDistance);
-                        float randomFactor = Random.Range(randomMinScale, randomMaxScale);
+                        float randomFactor = Random.Range(minScaleCity, maxScaleCity);
                         instance.transform.localScale *= cityBuildingScaleFactor * centerScaleFactor * randomFactor;
                     }
                 }
@@ -151,6 +156,102 @@ public class TerrainPopulator : MonoBehaviour {
                     instance.transform.position = position;
                     instance.transform.rotation = rotation;
                 }
+            }
+        }
+    }
+    
+    
+    [ContextMenu("Paint and Save Grass Details")]
+    private void PaintGrassDetails() {
+    #if UNITY_EDITOR
+        string[] sceneFiles = Directory.GetFiles(chunksDirectory, "*.unity");
+
+        foreach (string sceneFile in sceneFiles) {
+            EditorSceneManager.OpenScene(sceneFile, OpenSceneMode.Single);
+            PaintGrassDetailsInActiveTerrains();
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+        }
+    #endif
+    }
+
+    [ContextMenu("Paint Grass Details")]
+    private void PaintGrassDetailsInActiveTerrains() {
+        Random.InitState(seed);
+        foreach (var terrain in Terrain.activeTerrains) {
+            TerrainData terrainData = terrain.terrainData;
+            
+            // Set up detail resolution
+            terrainData.SetDetailResolution(grassDetailResolution, grassDetailResolutionPerPatch);
+            
+            // Create detail prototypes from grass prefabs
+            DetailPrototype[] detailPrototypes = new DetailPrototype[grassPrefabs.Length];
+            for (int i = 0; i < grassPrefabs.Length; i++) {
+                detailPrototypes[i] = new DetailPrototype {
+                    usePrototypeMesh = true,
+                    prototype = grassPrefabs[i],
+                    alignToGround = 0,
+                    positionJitter = 0,
+                    minWidth = minScaleGrass,
+                    maxWidth = maxScaleGrass,
+                    minHeight = minScaleGrass,
+                    maxHeight = maxScaleGrass,
+                    noiseSpread = 0.1f,
+                    holeEdgePadding = 0,
+                    density = 1f,
+                    renderMode = DetailRenderMode.VertexLit,
+                    useInstancing = true,
+                    useDensityScaling = true,
+                };
+            }
+            terrainData.detailPrototypes = detailPrototypes;
+
+            // Clear any existing details first
+            for (int i = 0; i < terrainData.detailPrototypes.Length; i++) {
+                int[,] emptyDetailLayer = new int[terrainData.detailWidth, terrainData.detailHeight];
+                terrainData.SetDetailLayer(0, 0, i, emptyDetailLayer);
+            }
+
+            // Get Min/Max heights for density calculation
+            float minHeight = float.MaxValue;
+            float maxHeight = float.MinValue;
+            int heightmapResolution = terrainData.heightmapResolution;
+            for (int x = 0; x < heightmapResolution; x++) {
+                for (int z = 0; z < heightmapResolution; z++) {
+                    float height = terrainData.GetHeight(x, z);
+                    minHeight = Mathf.Min(minHeight, height);
+                    maxHeight = Mathf.Max(maxHeight, height);
+                }
+            }
+            float heightRange = maxHeight - minHeight;
+            
+            // Paint details
+            int detailWidth = terrainData.detailWidth;
+            int detailHeight = terrainData.detailHeight;
+            
+            for (int layerIndex = 0; layerIndex < detailPrototypes.Length; layerIndex++) {
+                int[,] detailLayer = new int[detailWidth, detailHeight];
+                
+                for (int y = 0; y < detailHeight; y++) {
+                    for (int x = 0; x < detailWidth; x++) {
+                        // Get terrain height at this position
+                        float normalizedX = (float)x / (detailWidth - 1);
+                        float normalizedZ = (float)y / (detailHeight - 1);
+                        float terrainHeight = terrainData.GetInterpolatedHeight(normalizedX, normalizedZ);
+                        
+                        // Calculate density based on height
+                        float heightFactor = 1f - Mathf.Clamp01((terrainHeight - minHeight) / heightRange);
+                        float density = Mathf.Pow(heightFactor, densityPower) * grassDensityFactor;
+                        
+                        // Add randomness to density
+                        density *= Random.Range(0.8f, 1.2f);
+                        
+                        // Set detail density (0-15)
+                        detailLayer[y, x] = Mathf.RoundToInt(Mathf.Clamp01(density) * 15);
+                    }
+                }
+                
+                // Apply the detail layer
+                terrainData.SetDetailLayer(0, 0, layerIndex, detailLayer);
             }
         }
     }
