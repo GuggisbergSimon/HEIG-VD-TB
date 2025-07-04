@@ -24,6 +24,7 @@ The typst files are located in the [report](/report/main.typ) subfolder.
 
 The application is built using `Unity 6000.0.39f1`.
 The project files are located in the [unity](/unity/) subfolder.
+System Requirements for a Unity HDRP project can be found [here](https://docs.unity3d.com/Manual/system-requirements.html#editor).
 
 ## GitHub Project
 
@@ -41,3 +42,5 @@ A release with a PDF of the report and builds for Linux and Windows will be crea
 ## Releases
 
 Builds of the application are located in the [releases](https://github.com/GuggisbergSimon/HEIG-VD-TB/releases/latest) tab of the GitHub repository.
+
+Supported platforms are Windows and Linux, with those requirements for [Unity](https://docs.unity3d.com/Manual/system-requirements.html#desktop) [HDRP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.3/manual/System-Requirements.html).
