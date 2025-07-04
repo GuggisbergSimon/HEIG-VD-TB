@@ -210,6 +210,8 @@ if (!enableLOD) {
 
 == Imposteurs
 
+Le problème que les imposteurs tentent de résoudre est celui de l'overdraw.
+
 === IMP
 
 Parmi les solutions existantes pour des imposteurs dans Unity, le répertoire public IMP propose, pour la pipeline Standard, une solution complète.
@@ -265,30 +267,67 @@ if (distance(cam.position, position) > distanceFromCamera) {
 === Amplify Impostors
 
 Finalement, une solution payante mais très efficace et utilisée à titre professionnel pour une fonctionnalité pareille est celle proposée par Amplify.
-Cet outil, comme bon nombre d'assets de qualités disponibles sur le Unity Asset Store, s'est révélé être de qualité et aisé à prendre en main.
+Cet outil s'est révélé être aisé à prendre en main et de qualité significative.
 Les jours de travail dédiés aux tentatives d'implémentations des imposteurs auraient pu être économisées en utilisant ce plugin dès le début.
 
-TODO
+Amplify Impostors propose des imposteurs de plusieurs types : sphérique, octahedron ou mi-octahedron.
+Ceux-ci sont pré calculés dans un fichier de texture allant de 32x32 à 8192x8192 pixels.
+Un modèle d'imposteur peut ensuite être aujouté pour chaque objet possédant `LOD Group`.
+Les imposteurs seront considérés comme $"LOD" n + 1$ où $n$ est le nombre de LODs existants.
+Il est également possible de choisir que les imposteurs remplacent le niveau de $"LOD" n$.
+
+À noter que, de la même manière que l'implémentation pour le LOD, les imposteurs sont implémentés au niveau des `Prefabs` pour une architecture simplifiée.
+Cela a donc comme même désavantage, lorsque les imposteurs sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk.
+
+#figure(
+  image("images/impostor_example_atlas.jpg", width: 52%),
+  caption: [
+    Atlas d'imposteurs résultant de Amplify Impostors.
+  ],
+)
 
 @amplify-impostors
 
-== Shader
+== Shaders
 
-TODO
+TODO find better title
 
-Deux approches très populaires sont possibles pour représenter des brins d'herbe.
-- La solution shader via une image en billboard. 
-  Pour éviter de ne disposer que de brins d'herbes plats il est possible de disposer de 4 `Quads` pour chaque brin d'herbe.
-  Un pour chaque direction cardinale, et intercardinale.
-- La solution geometry shader pour modéliser chaque brin d'herbe en 3D.
+Un problème fréquemment rencontré dans les jeux vidéo est une large quantité d'objets 3D identiques, tels que des brins d'herbe ou des arbres.
+
+Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représente un goulot d'étranglement de performance.
+En effet, bien que le GPU soit très puissant pour de nombreux calculs répétitifs, transmettre de nombreuses informations de CPU à GPU est une opération coûteuse.
+
+La solution à cela est connue sous le nom de GPU Instancing.
+Au lieu de transmettre les informations de meshes à chaque fois, il est possible, pour un même modèle 3D, d'uniquement transmettre les informations uniques à chaque instance de celui-ci, telles que la position, rotation et échelle.
+
+Ceci permettra ensuite, du côté GPU, de réutiliser les informations du modèle 3D pour rendre chaque instance à un coût moindre en échange de données.
+Ceci est particulièrement performant pour des nombreux modèles 3D tels que des brins d'herbe ou des arbres.
+
+#figure(
+  image("images/grass_mesh.jpg", width: 52%),
+  caption: [
+    Exemple d'un buisson d'herbe et de son maillage, représenté par Mesh.
+  ],
+)
+
+Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pour les représenter, notamment au travers de l'outil des `Terrains`.
+- Mesh.
+  Il est assez intuitif de vouloir représenter des brins d'herbe via des modèles 3D.
+  Bien que l'on puisse envisager dans un premier temps de modéliser chaque brin d'herbe en 3D, il existe une meilleure solution, comme le montre le package de démonstration officiel de Unity TerrainDemoScene HDRP.
+  Il convient d'utiliser la transparence de textures pour simuler le volume.
+  Les brins d'herbe sont, en réalités, des `Quads` complexes.
+  Pour les `Terrains` dans Unity, cette solution correspond à l'option `Detail Mesh`.
+- Billboard.
+  Pour éviter de ne disposer que de brins d'herbes plats il est possible de disposer de plusieurs `Quads` pour chaque brin d'herbe.
+  Chacun de ces `Quads` seront orientés de manière régulière autour de l'axe Y afin de donner l'illusion du volume.
+  Pour les `Terrains`, cette solution correspond à l'option `Grass Texture`.
+  Cette option n'est pas disponible pour HDRP malheureusement.
+- Geometry Shader.
+  Cette solution consiste à modéliser individuellement chaque brin d'herbe, à l'aide des shaders.
   Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
-- À noter qu'il est possible d'implémenter une solution de tesselation, mais est plus demandante niveau performance.
+- Tessellation.
 
-1. Brins d'herbe cardinaux/intercardinaux
-2. Ajout de diversité de taille/rotation
-3. animation de vent
-4. animation contact joueur
-5. placement via terrain
+Un rapide test des deux packages HDRP ci-dessous a été effectué mais ceux-ci n'ayant pas été mis à jour pour la version 6.0 de Unity, ceux-ci présentent des incompatibilités.
 
 HDRP packages :
 - https://github.com/EmmetOT/HDRPGrass?tab=readme-ov-file
