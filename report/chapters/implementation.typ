@@ -277,8 +277,26 @@ Finalement, une solution payante mais très efficace et utilisée à titre profe
 Cet outil s'est révélé être aisé à prendre en main et de qualité significative.
 Les jours de travail dédiés aux tentatives d'implémentations des imposteurs auraient pu être économisées en utilisant ce plugin dès le début.
 
-Amplify Impostors propose des imposteurs de plusieurs types : sphérique, octahedron ou mi-octahedron.
-Ceux-ci sont pré calculés dans un fichier de texture allant de 32x32 à 8192x8192 pixels.
+Amplify Impostors propose des imposteurs de plusieurs types : sphérique, octahèdre ou semi-octahèdre.
+Cette spécification détermine la manière dont les captures de perspective sont effectuées.
+Chaque capture de perspective est effectuée à un angle défini par un sommet.
+
+Pour une meilleure qualité d'image l'octahèdre est recommandé, ou semi-octahèdre si les imposteurs ne seront pas vus depuis en bas.
+La répartition sphérique est plus rapide mais présente un défaut visuel lors du changement d'un imposteur à un autre.
+
+#figure(
+  grid(
+    columns: 3,
+    image("images/Spherical.png", width: 50%),
+    image("images/Octahedron.png", width: 50%),
+    image("images/HemiOctahedron.png", width: 50%),
+  ),
+  caption: [
+    De gauche à droite : sphérique, octahèdre et semi-octahèdre.
+  ],
+)
+
+Ceux-ci sont pré-calculés dans un fichier de texture allant de 32x32 à 8192x8192 pixels.
 Un modèle d'imposteur peut ensuite être aujouté pour chaque objet possédant `LOD Group`.
 Les imposteurs seront considérés comme $"LOD" n + 1$ où $n$ est le nombre de LODs existants.
 Il est également possible de choisir que les imposteurs remplacent le niveau de $"LOD" n$.
@@ -289,7 +307,7 @@ Cela a donc comme même désavantage, lorsque les imposteurs sont désactivés, 
 #figure(
   image("images/impostor_example_atlas.jpg", width: 52%),
   caption: [
-    Atlas d'imposteurs résultant de Amplify Impostors.
+    Exemple d'atlas d'imposteurs octahèdre résultant de Amplify Impostors.
   ],
 )
 
