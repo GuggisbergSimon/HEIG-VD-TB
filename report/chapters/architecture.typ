@@ -31,10 +31,9 @@ Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, s
     [`D`],[Tourner à droite],[Naviguer vers la droite],
     [`W`],[Accélérer],[Naviguer vers le haut],
     [`S`],[Ralentir],[Naviguer vers le bas],
-    [`Space`],[Freiner],[Sélectionner],
     [`Esc`],[Ouvrir le menu],[Revenir en arrière],
     [`Mouse`],[Contrôle de la caméra],[Navigation libre],
-    [`Left Click`],[/],[Sélectionner],    
+    [`Left Click`],[/],[Sélectionner],
   ),
   caption: "Contrôle du prototype dans différents contextes."
 )
@@ -84,6 +83,8 @@ Ceci est déterminé par les composants attachés à chacun de ces GameObjects.
 Le composant par défaut, pour les objets 3D, est le Transform, qui détermine position, rotation et échelle d'un objet.
 Chaque `GameObject` peut posséder plusieurs composants, dont certains qui peuvent être attachés au runtime à un objet.
 De plus, chaque `GameObject` peut contenir plusieurs enfants GameObjects afin d'aider à structurer une Scène.
+Garder une hiérarchie de `Scene` claire et logique est essentiel pour un projet, mais varie de projet en projet.
+On dénote néanmoins souvent un `GameObject` pour tous les éléments visuels de la `Scene`, appelé "Monde".
 
 Il est possible de sauvegarder un `GameObject` et ses enfants en tant qu'`Asset`, afin de facilement pouvoir le réutiliser dans d'autres scènes et synchroniser certains changements dans l'éditeur Unity.
 Ce type d'`Asset` est appelé `Prefab`, la forme raccourcie de préfabriqué.
@@ -111,6 +112,8 @@ Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être
 )
 
 === Monde
+
+==== Chunks
 
 Une solution très populaire pour charger en mémoire un monde virtuel par élément, plutôt que dans son ensemble, est de le diviser en parties, appelées chunks.
 
@@ -141,7 +144,9 @@ Les positions dans le monde des chunks sont déterminées en fonction de celle d
   ),
 
   caption: [
-    À gauche, exemple d'un filtre 7x7 de chargement de chunks appliqué sur le monde. À droite, chargement et déchargement de chunks selone une matrice 3x3, lors d'un changement de chunk par le joueur.
+    À gauche, exemple d'un filtre 7x7 de chargement de chunks appliqué sur le monde.
+    
+    À droite, chargement et déchargement de chunks selone une matrice 3x3, lors d'un changement de chunk par le joueur.
   ],
 )
 
@@ -149,8 +154,8 @@ Une autre complication concernant les chunks et l'ajout d'agents en dehors du jo
 Ceux-ci sont usuellement chargés avec une scène, ici un chunk.
 Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un chunk à l'autre.
 
-Une manière de résoudre ce problème est de créer un `AgentManager` qui tiendra à jour la liste des agents présents dans le monde et les chargera/déchargera en fonction des chunks chargés.
-Cette approche permet une permanence des agents ainsi qu'une consistence accrue mais ne permet pas de simuler des comportements en background, hors de vision du joueur.
+Une manière de résoudre ce problème serait de créer un `AgentManager` qui tiendrait à jour la liste des agents présents dans le monde et les chargerait ou déchargerait en fonction des chunks chargés.
+Cette approche permettrait une permanence des agents ainsi qu'une consistence accrue mais ne permettrait pas de simuler des comportements en background, hors de vision du joueur.
 Pour arriver à un résultat pareil, il faudrait que l'`AgentManager` mette à jour les agents et le monde non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
@@ -158,6 +163,21 @@ Malheureusement, la gestion des agents et une implémentation pareille sort du c
 
 @unity-doc-scenemanager
 @rain-world-gdc
+
+==== Grandes coordonnées
+
+La précision des valeurs flottantes utilisées pour représenter les positions des objets perd en précision uniquement pour des grandes échelles, bien au delà de celles de ce projet.
+Lorsque des coordonnées distantes de l'origine du monde sont utilisées, toutes sortes d'aberrations visuelles et logiques peuvent se produire.
+
+Une solution typique pour éviter les valeurs flottantes d'atteindre de trop grandes valeurs est de recentrer le monde autour du l'observateur, ici le joueur.
+Ainsi, le joueur et les chunks chargés seront toujours proches de l'origine du monde, bien avant que les effets de perte de précision de float ne se fassent sentir.
+
+Effectuer cette opération, à un intervalle donné, demande de déplacer le monde entier et les acteurs, joueur compris, dans la direction opposée au déplacement du joueur.
+Un intervalle approprié, au vu de l'utilisation de chunks pour ce projet, est à chaque passage d'un chunk à un autre.
+Ainsi, pour un déplacement du joueur d'un chunk A à B, le déplacement vectoriel de celui-ci sous la forme $delta d = arrow("AB")$.
+La modification de position de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
+
+À noter néanmoins que recentrer le monde n'améliore pas les performances dans le cadre de ce prototype, mais représente une base essentielle pour les vastes mondes virtuels.
 
 == Test
 

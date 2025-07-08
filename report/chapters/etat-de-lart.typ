@@ -396,7 +396,9 @@ Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, 
     image("images/impostors_atlas.jpg", width: 90%)
   ),
   caption: [
-    À gauche: Exemple de placement de caméras pour le rendu d'un imposteur octahedral. À droite: Atlas de textures pour un imposteur Baked.
+    À gauche: Exemple de placement de caméras pour le rendu d'un imposteur octahedral.
+    
+    À droite: Atlas de textures pour un imposteur Baked.
   ],
 )
 

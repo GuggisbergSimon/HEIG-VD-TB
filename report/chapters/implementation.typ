@@ -11,9 +11,11 @@ Ces assets sont listées et leur license est détaillée dans le fichier `unity/
 Un premier contrôleur physique pour le joueur, assez sommaire, permet de facilement tester le chargement du monde.
 Celui-ci a été complètement remplacé par un second contrôleur, plus abouti, simulant la physique d'un hovercraft pour qu'il adhère au terrain.
 
-En raison de la contrainte de la taille de fichier maximum de 100Mo pour les assets, il a été requis de séparé la scène principale en plusieurs scènes, ou chunks, dès le début.
-Peupler un terrain de 8000x8000m avec toutes sortes de `Prefabs` atteint cette limite de taille de fichier.
+En raison de la contrainte de la taille de fichier maximum de 100Mo pour les assets, il a été requis de séparer la scène principale en plusieurs scènes, ou chunks, dès le début.
+En effet, peupler un terrain de 8000x8000m avec toutes sortes de `Prefabs` atteint cette limite de taille de fichier.
 Réaliser le prototype final a donc requis d'implémenter la partie du chargement de chunks.
+Ainsi, la réalisation ne s'est pas produite de la manière prévue initialement, mais d'avantage sous la forme d'un aller et retour constant entre les prototype et optimisation de performance.
+Les tests de performance ont effectués à la fin du projet, plutôt qu'après chaque étape du projet.
 
 === Séparation du monde en chunks
 
@@ -33,26 +35,26 @@ L'angle de ces `Prefabs` sont ensuite ajustés pour correspondre à la pente du 
 Les deux catégories de `Prefabs` permettent des ajustements indépendants de densité et de hauteur.
 En effet, parmi les différents `Prefabs`, certains sont considérablement plus grands que les autres, considérés, à juste titre, comme des bâtiments, tandis que la second catégorie concerne toute sorte d'éléments plus petits
 
-De plus, afin de simuler des situations de stress test, certaines coordonnées de chunks sont catégorisées comme cluster, ou ici, de ville et voient la densité de la population de `Prefab` multipliée par un facteur.
+De plus, afin de simuler des situations de stress test, certaines coordonnées de chunks sont catégorisées comme cluster, ou ici, de ville et voient la densité de la population de `Prefab` multipliée par un facteur, ici dix.
 La taille des éléments de ces clusters sont égalements ajustés aléatoirement afin de simuler des bâtiments de tailles variées, avec les plus haut au centre du chunk.
 Finalement, pour un aspect visuel plus soigné, l'orientation de ces éléments dans les villes n'est pas dépendante de la pente du terrain, mais pointe toujours vers le haut.
-Néanmoins, la rotation aléatoire sur l'axe Y est conservée.
 
 == Chargement de chunks
 
 Charger les chunks est une opération qui s'effectue de manière asynchrone pour éviter de bloquer la thread principale de Unity.
 Ceci implique la gestion de la concurrence en cas de modification d'une ressource partagée.
-Ici cela concerne la listes des chunks chargés, afin de pouvoir les décharger par la suite.
+Ici celle-ci concerne la listes des chunks chargés, `chunksLoaded`.
+Cette liste est utilisée afin de garder en mémoir les chunks chargés, et de pouvoir les décharger par la suite.
 
-Une première modification consiste à n'ajouter et à supprimer dans la liste des chunks chargés que lorsque ceux-ci sont effectivement chargés ou déchargés.
+Une première modification consiste à n'ajouter et à supprimer dans la liste des chunks chargés que lorsque ceux-ci sont effectivement chargés ou déchargés, soit après réussite de l'opération asynchrone.
 Ceci est fait via une écoute de l'événement confirmant la fin de l'opération de chargement ou déchargement du chunk.
 
-En raison de la taille limitée du monde, un double tableau contenant le nom des scènes correspondant aux chunks est stocké en mémoire.
+De plus, pour accéder aux scènes plus rapidement, un double tableau `sortedScenes` contenant le nom des scènes correspondant aux des chunks est utilisé.
 Les indices x et y de celui-ci représentent les coordonnées du chunk, pour un accès plus rapide.
 Ce tableau est créé une seule fois lors de l'initialisation de la scène composant le monde.
+Cette solution a été envisagée en raison de la taille limitée du monde.
 
-Une liste de vecteurs de coordonnées stocke les chunks chargés.
-Ainsi, il est facile d'accéder pour un chunk chargé à son nom de scène, et le décharger.
+Avec cette structure, il est facile d'itérer sur les chunks chargés et de décharger ceux qui ne sont plus nécessaire.
 
 ```cs
 string[,] sortedScenes;
@@ -97,7 +99,8 @@ Cette contrainte implique une perspective s'étirant vers l'infini, ce qui n'est
 Il faut donc uniquement afficher une partie du monde, et dissimuler ce qui dépasse une certaine distance.
 Ceci va entraîner une coupure entre l'espace modélisé et l'espace vide, tenter de cacher cette coupure au mieux est préférable.
 
-Une approche habituelle consiste à ajouter du brouillard distant, qui permet une transition douce entre ces deux.
+Une approche est de disposer d'un relief montagneux distant permettant de camoufler cette coupure.
+Couplé à cela une seconde technique consiste à ajouter du brouillard distant, qui permet une transition douce entre ces deux.
 Unity propose une telle option pour la pipeline HDRP au travers d'un `Volume`, qui offre toutes sortes d'options graphiques, dont le brouillard.
 
 @unity-doc-hdrp-volume
@@ -162,12 +165,16 @@ if (recenterChunks && currentGridPos != gridOffset) {
 ```
 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
-Les calculs physiques se produisent lors de l'étape `FixedUpdate`, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à cappage du framerate.
-Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriété physiques que lors des frames FixedUpdate.
+Dans Unity, les calculs physiques se produisent lors de l'étape `FixedUpdate`, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à atteindre le framerate requis.
+Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriété physiques que lors des frames `FixedUpdate`.
 Puisque le passage d'un chunk à un autre ne se produit que de manière ponctuelle, toute la logique de vérification de chunk se trouve dans l'étape `FixedUpdate`.
 
 Quant à l'impact sur la performance qu'a cette modification, il n'est pas notable puisque seuls les objets à la racine sont modifiés.
-À noter néanmoins que recentrer le monde n'améliore pas les performances, mais permet uniquement d'éviter des problèmes de précision de coordonnées, qui peuvent se produire dans des jeux à des échelles bien plus considérables que celui-ci.
+Dans le cadre de ce projet, il n'existe qu'un seul objet à la racine de chaque `Chunk`, le `Terrain`.
+Une autre limitation est que, pour pouvoir déplacer des objets, ceux-ci ne peuvent être statiques.
+Un `GameObject` étant taggé comme statique, dans Unity, permet d'accélérer certaines étapes de calculs pour améliorer les performances.
+Les étapes concernées ont trait au pathfinding, à la lumière précalculée, et à l'utilisation d'occlusion culling.
+Pour ce projet, aucun de ces trois éléments ne sont utilisés, mais dans le cas d'un jeu en monde ouvert certaines de ces techniques pourraient être utiles.
 
 @unity-doc-script-execution-order
 
@@ -288,29 +295,68 @@ Cela a donc comme même désavantage, lorsque les imposteurs sont désactivés, 
 
 @amplify-impostors
 
-== Shaders
+== Optimisations GPU
 
-TODO find better title
+=== GPU Instancing
 
-Un problème fréquemment rencontré dans les jeux vidéo est une large quantité d'objets 3D identiques, tels que des brins d'herbe ou des arbres.
+Un problème fréquemment rencontré dans les jeux vidéo est l'affichage d'une large quantité d'objets 3D identiques, tels que des brins d'herbe ou des arbres.
 
-Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représente un goulot d'étranglement de performance.
+Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représente un goulot d'étranglement pour les performances.
 En effet, bien que le GPU soit très puissant pour de nombreux calculs répétitifs, transmettre de nombreuses informations de CPU à GPU est une opération coûteuse.
 
-La solution à cela est connue sous le nom de GPU Instancing.
-Au lieu de transmettre les informations de meshes à chaque fois, il est possible, pour un même modèle 3D, d'uniquement transmettre les informations uniques à chaque instance de celui-ci, telles que la position, rotation et échelle.
-
+Une solution habituellement utilisée est de diminuer les appels de rendu, ou draw call, via une instantiation de données sur le GPU.
+Ceci est d'avantage connu sous le nom de GPU Instanting.
+Au lieu de transmettre les informations de maillage et de matériaux à chaque fois, il est possible, pour un même modèle 3D, de transmettre uniquement les informations uniques à chaque instance de celui-ci, telles que la position, rotation et échelle.
 Ceci permettra ensuite, du côté GPU, de réutiliser les informations du modèle 3D pour rendre chaque instance à un coût moindre en échange de données.
-Ceci est particulièrement performant pour des nombreux modèles 3D tels que des brins d'herbe ou des arbres.
+
+TODO test performance of gpu instancing
+
+@unity-doc-gpu-instancing
+
+=== SRP Batcher
+
+TODO try SRP batcher
+
+SRP Batcher est une manière de préparer et transmettre les données qui est incompatible avec GPU Instancing.
+Cette méthode est uniquement possible avec les Scriptable Render Pipeline de Unity, dont URP et HDRP font partie.
+Cela va réduire le nombre de render-state effectué entre deux appels.
+Il s'agit de ces opérations qui sont en effet coûteuse puisqu'un nouveau `Material` doit être transmis à chaque fois.
+Ici, SRP Batcher va garder un lien persistent vers un buffer `Material` jusqu'à ce qu'une nouvelle variante soit utilisée et provoque un rafraîchissement du buffer.
+Cette méthode est donc plus efficace en cas de peu d'uttilisation de variantes de `Material`.
+
+Le SRP Batcher dispose d'un accès permettant une update directe du buffer du GPU.
 
 #figure(
-  image("images/grass_mesh.jpg", width: 52%),
+  grid(
+    columns: 2,
+    image("images/SROShaderPass.png", width: 100%),
+    image("images/SRP_Batcher_loop.png", width: 100%),
+  ),
   caption: [
-    Exemple d'un buisson d'herbe et de son maillage, représenté par Mesh.
+    À gauche: Préparation d'un batch pour un draw call vs SPR Batcher
+    
+    À droite: Boucle du fonctionnement du SRP Batcher.
   ],
 )
 
-Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pour les représenter, notamment au travers de l'outil des `Terrains`.
+@unity-doc-srp-batcher
+
+=== DOTS
+
+Data Oriented Technology Stack est l'implémentation dans Unity d'un pattern ECS afin de pouvoir traiter une grande quantité de données.
+Cela découple la logique des entités, de celles des composants et des systèmes.
+Il est également possible d'utiliser DOTS pour améliorer le rendu graphique en cas de nombreux objets à rendre dans une scène.
+Les fonctionnalités attendues des pipelines URP et HDRP ne sont néanmoins pas toutes implémentées dans DOTS.
+
+DOTS est un système complexe permettant de traiter la logique de nombreux éléments.
+Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant du cadre de celui-ci.
+
+@unity-entities
+@unity-entities-graphics
+
+=== Cas d'étude
+
+Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pour les représenter, notamment pour les instancer au travers de l'outil des `Terrains`.
 - Mesh.
   Il est assez intuitif de vouloir représenter des brins d'herbe via des modèles 3D.
   Bien que l'on puisse envisager dans un premier temps de modéliser chaque brin d'herbe en 3D, il existe une meilleure solution, comme le montre le package de démonstration officiel de Unity TerrainDemoScene HDRP.
@@ -325,22 +371,25 @@ Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pou
 - Geometry Shader.
   Cette solution consiste à modéliser individuellement chaque brin d'herbe, à l'aide des shaders.
   Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
-- Tessellation.
+  Écrire de tels shaders ne peut être fait qu'en HLSL, le langage 
 
-Un rapide test des deux packages HDRP ci-dessous a été effectué mais ceux-ci n'ayant pas été mis à jour pour la version 6.0 de Unity, ceux-ci présentent des incompatibilités.
+#figure(
+  image("images/grass_mesh.jpg", width: 52%),
+  caption: [
+    Exemple d'un buisson d'herbe et de son maillage, représenté par Mesh.
+  ],
+)
 
-HDRP packages :
+Un test d'implémentation des deux shaders HDRP ci-dessous a été effectué mais ceux-ci n'ayant pas été mis à jour pour la version 6.0 de Unity, ceux-ci présentent des incompatibilités.
 - https://github.com/EmmetOT/HDRPGrass?tab=readme-ov-file
 - https://github.com/flamacore/UnityHDRPTerrainDetailGrass
 
-SRP tutorials :
-- https://roystan.net/articles/grass-shader/
-- https://halisavakis.com/my-take-on-shaders-geometry-shaders/
+TODO Test d'implémentation
 
 == Tests
 
 L'implémentation de tests à l'aide de Unity Test Framework requière des annotations spécifiques sur les méthodes de test afin de spécifier les conditions dans lesquelles elles seront exécutées.
-L'annotation [TestFixture] est utilisée pour une classe de test tandis que celle [Test] pour les fonctions signifie que celle-ci est un test.
+L'annotation `TestFixture` est utilisée pour une classe de test tandis que celle `Test` pour les fonctions signifie que celle-ci est un test.
 On différencie les tests en mode Edit, en mode Play, ou via un Player pour simuler différentes plate-formes.
 
 #codly(languages: codly-languages)
@@ -367,7 +416,7 @@ Afin de pouvoir néanmoins continuer de référencer les méthodes des scripts e
 Une seconde Assembly pour les scripts du jeu lui-même a été créée.
 
 Les tests de performance, eux, permettent de mesurer plusieurs frames et d'évaluer la durée de chaque frame via un histogramme, pour chaque test.
-En raison de la capture de plusieurs frames, les méthodes de test utilisent l'annotation [UnityTest] et retourne un IEnumerator.
+En raison de la capture de plusieurs frames, les méthodes de test utilisent l'annotation `UnityTest` et retourne un IEnumerator.
 
 Les IEnumerator dans Unity permettent à des fonctions d'être exécutées sur plusieurs frames.
 Cette structure retourne, pour chaque yield, une fonction à exécuter.
@@ -394,7 +443,7 @@ TODO extrait histogramme test performance
 L'implémentation du package Input System pour les test s'est révélé bien plus complexe que prévu.
 En effet, les tests de performance de Unity ne s'effectuent pas exactement selon le pattern AAA - Arrange, Act, Assert.
 Des états sont permanents entre deux tests, notamment tout ce qui est du chargement de scènes, y compris la manière dont les entrées utilisateurs sont simulées.
-Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut passer par deux autres annotations [Setup] et [TearDown] qui indiquent respectivement les actions à effectuer avant et après chaque test.
+Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut passer par deux autres annotations `Setup` et `TearDown` qui indiquent respectivement les actions à effectuer avant et après chaque test.
 
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
 Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas uttiliser Input System.
