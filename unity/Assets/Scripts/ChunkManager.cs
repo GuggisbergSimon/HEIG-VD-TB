@@ -12,7 +12,7 @@ public class ChunkManager : MonoBehaviour {
 
     [SerializeField] private bool enableLOD = true;
     [SerializeField] private bool enableImpostor = true;
-    [SerializeField, Range(0f,1f)] private float noImpostorCullingPercentage = 0.05f;
+    [SerializeField, Range(0f, 1f)] private float noImpostorCullingPercentage = 0.05f;
     [SerializeField] private bool srpBatcher = true;
 
     [Tooltip("Unsorted list of scenes to load as chunks. The expected format is Terrain_x_y_id.unity"), SerializeField]
@@ -163,7 +163,7 @@ public class ChunkManager : MonoBehaviour {
 
     private void UnloadNonRequiredChunks() {
         List<Vector2Int> chunksToUnload = FindChunksToUnload();
-        
+
         // Unload chunks outside ChunksToLoad
         foreach (var coords in chunksToUnload) {
             AsyncOperation unloadOperation =
@@ -215,27 +215,21 @@ public class ChunkManager : MonoBehaviour {
         return chunksToLoad;
     }
 
-    private void DisableImpostor(GameObject rootObj) {
-        foreach (AmplifyImpostor impostor in rootObj.GetComponentsInChildren<AmplifyImpostor>(true)) {
+    private void DisableImpostor(Chunk chunk) {
+        foreach (AmplifyImpostor impostor in chunk.Impostors) {
             Destroy(impostor);
-
             LODGroup lodGroup = impostor.gameObject.GetComponent<LODGroup>();
             LOD[] lods = lodGroup.GetLODs();
-        
             if (lods.Length > 1) {
-                // Remove Impostor from LOD levels and ensure before-last level covers removed impostor's range
                 LOD[] newLods = new LOD[lods.Length - 1];
                 System.Array.Copy(lods, newLods, lods.Length - 1);
 
-                // If there's at least one LOD level remaining, make sure the last level covers the full distance
-                if (newLods.Length > 0)
-                {
-                    // Set the last LOD level's transition height to 0 to ensure it's shown at maximum distance
+                if (newLods.Length > 0) {
                     newLods[^1].screenRelativeTransitionHeight = noImpostorCullingPercentage;
                 }
 
                 lodGroup.SetLODs(newLods);
-    
+
                 // If impostor was picked, refresh it
                 bool wasAtLastLevel = lods[^1].renderers[0].enabled;
                 if (wasAtLastLevel) {
@@ -266,21 +260,22 @@ public class ChunkManager : MonoBehaviour {
                         terrainObj.transform.position = chunkPosition;
 
                         if (!enableLOD) {
+                            Chunk chunk = terrainObj.GetComponent<Chunk>();
                             // Objects/Props
                             if (!enableImpostor) {
-                                DisableImpostor(terrainObj);
+                                DisableImpostor(chunk);
                             }
-                            
-                            foreach (LODGroup lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
+
+                            foreach (LODGroup lodGroup in chunk.LodGroups) {
                                 lodGroup.ForceLOD(0);
                             }
 
                             // Terrains
-                            Terrain terrain = terrainObj.GetComponent<Terrain>();
+                            Terrain terrain = chunk.Terrain;
                             terrain.heightmapPixelError = 1;
                             terrain.detailObjectDistance *= 2;
                         } else if (!enableImpostor) {
-                            DisableImpostor(terrainObj);
+                            DisableImpostor(terrainObj.GetComponent<Chunk>());
                         }
                     }
 
