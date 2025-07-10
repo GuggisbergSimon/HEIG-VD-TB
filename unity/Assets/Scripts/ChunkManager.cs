@@ -217,8 +217,11 @@ public class ChunkManager : MonoBehaviour {
 
     private void DisableImpostor(Chunk chunk) {
         foreach (AmplifyImpostor impostor in chunk.Impostors) {
-            Destroy(impostor);
+            if (impostor == null) {
+                continue;
+            }
             LODGroup lodGroup = impostor.gameObject.GetComponent<LODGroup>();
+            Destroy(impostor);
             LOD[] lods = lodGroup.GetLODs();
             if (lods.Length > 1) {
                 LOD[] newLods = new LOD[lods.Length - 1];

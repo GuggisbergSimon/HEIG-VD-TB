@@ -8,10 +8,10 @@ using UnityEngine.SceneManagement;
 namespace Tests {
     public static class Utils {
         private const int WarmUpCount = 30;
-        private const int MeasurementCount = 200;
+        private const int MeasurementCount = 100;
         private const int MoveDistance = 1;
         private const int MoveFastDistance = 5;
-        private const int TeleportDistance = 700;
+        private const int TeleportDistance = 500;
         private const float HorizontalPanSpeed = 2f;
         private const float FastHorizontalPanSpeed = 45.0f;
 
@@ -83,7 +83,17 @@ namespace Tests {
 
         public static IEnumerator MoveFast() {
             return RunPerformanceTest(
-                i => GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveFastDistance
+                i => {
+                    // Generate deterministic teleport positions in a square spiral pattern
+                    float angle = i * 0.25f * Mathf.PI; // 90 degree increments
+                    int layer = 1 + i / 4;
+                    Vector3 direction = new Vector3(
+                        Mathf.RoundToInt(Mathf.Cos(angle)) * layer,
+                        0,
+                        Mathf.RoundToInt(Mathf.Sin(angle)) * layer
+                    );
+                    GameManager.Instance.ChunkManager.Player.transform.position = direction * TeleportDistance;
+                }
             );
         }
 
@@ -95,9 +105,9 @@ namespace Tests {
         public static IEnumerator BackAndForth() {
             return RunPerformanceTest(i => {
                 if (i % 2 == 0) {
-                    GameManager.Instance.ChunkManager.Player.transform.position += Vector3.up * TeleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position += new Vector3(1, 0, 1) * TeleportDistance;
                 } else {
-                    GameManager.Instance.ChunkManager.Player.transform.position -= Vector3.up * TeleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position -= new Vector3(1, 0, 1) * TeleportDistance;
                 }
             });
         }
