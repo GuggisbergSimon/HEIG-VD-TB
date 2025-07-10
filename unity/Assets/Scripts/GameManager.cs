@@ -6,6 +6,7 @@ public struct GameSettings {
     public bool LoadingChunks;
     public bool EnableLOD;
     public bool EnableImpostor;
+    public bool SRPBatcher;
     public bool IsInitialized;
 }
 

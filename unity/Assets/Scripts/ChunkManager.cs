@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AmplifyImpostors;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class ChunkManager : MonoBehaviour {
@@ -12,6 +13,7 @@ public class ChunkManager : MonoBehaviour {
     [SerializeField] private bool enableLOD = true;
     [SerializeField] private bool enableImpostor = true;
     [SerializeField, Range(0f,1f)] private float noImpostorCullingPercentage = 0.05f;
+    [SerializeField] private bool srpBatcher = true;
 
     [Tooltip("Unsorted list of scenes to load as chunks. The expected format is Terrain_x_y_id.unity"), SerializeField]
     private TerrainScriptableObject[] scenes;
@@ -44,6 +46,7 @@ public class ChunkManager : MonoBehaviour {
             LoadingChunks = true,
             EnableLOD = enableLOD,
             EnableImpostor = enableImpostor,
+            SRPBatcher = srpBatcher,
         };
         Setup(settings);
     }
@@ -81,6 +84,7 @@ public class ChunkManager : MonoBehaviour {
 
         enableLOD = gameSettings.EnableLOD;
         enableImpostor = gameSettings.EnableImpostor;
+        GraphicsSettings.useScriptableRenderPipelineBatching = srpBatcher;
         recenterChunks = gameSettings.RecenterChunks;
         StartCoroutine(LoadInitialChunk());
     }
