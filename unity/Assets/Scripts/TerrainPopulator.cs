@@ -27,6 +27,7 @@ public class TerrainPopulator : MonoBehaviour {
     [SerializeField] private float minScaleCity = 0.8f, maxScaleCity = 1.2f;
     [SerializeField] private float minScaleGrass = 1f, maxScaleGrass = 2f;
     [SerializeField] private float grassDensityFactor = 0.5f;
+    [SerializeField] private float detailDensityFactor = 1f;
     [SerializeField] private int grassDetailResolution = 1024;
     [SerializeField] private int grassDetailResolutionPerPatch = 8;
 
@@ -197,7 +198,7 @@ public class TerrainPopulator : MonoBehaviour {
                     maxHeight = maxScaleGrass,
                     noiseSpread = 0.1f,
                     holeEdgePadding = 0,
-                    density = 1f,
+                    density = detailDensityFactor,
                     renderMode = DetailRenderMode.VertexLit,
                     useInstancing = true,
                     useDensityScaling = true,
