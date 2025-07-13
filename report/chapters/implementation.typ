@@ -391,6 +391,9 @@ Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pou
   Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
   Écrire de tels shaders ne peut être fait qu'en HLSL, le langage 
 
+À noter que Unity URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé Shader Graph, mais que celui-ci ne traite que des opérations Vertex et Fragment.
+VFX Graph permet de créer des particules qui pourraient être utilisées pour simuler des brins d'herbe, mais cela est une solution détournée.
+
 #figure(
   image("images/grass_mesh.jpg", width: 52%),
   caption: [
@@ -403,6 +406,17 @@ Un test d'implémentation des deux shaders HDRP ci-dessous a été effectué mai
 - https://github.com/flamacore/UnityHDRPTerrainDetailGrass
 
 TODO Test d'implémentation
+
+== Mesures de performance
+
+Graphy pour builds
+
+- ctrl + F10 : cycler dans les options de profiler
+- ctrl +  F11 : activer/désactiver le profiler
+
+TODO ask report order (add new stuff in sota ? or all in implementation/architecture ?) -> expand sota
+TODO ask where to document failures/issues ? -> petit paragraphe, section correspondante implémentation
+TODO fine with using existing tools (amplify impostors, grass shaders, etc) ? -> solution réalisable/réaliste choisie
 
 == Tests
 
