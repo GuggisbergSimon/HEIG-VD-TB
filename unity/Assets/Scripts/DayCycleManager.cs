@@ -4,11 +4,13 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Serialization;
 
 public class DayCycleManager : MonoBehaviour {
+    [Header("Time")]
     [SerializeField, Range(0f, 24f)] private float currentTime;
     [SerializeField] private float timeSpeed = 1f;
     [SerializeField] private float startDay = 6f;
     [SerializeField] private float endDay = 18f;
-
+    [SerializeField] private AnimationCurve timeSpeedCurve;
+    
     [Header("Sun")] [SerializeField] private Light sunLight;
     [SerializeField] private HDAdditionalLightData sunLightData;
     [SerializeField] private float sunPosition;
@@ -41,8 +43,9 @@ public class DayCycleManager : MonoBehaviour {
     }
 
     private void Update() {
-        currentTime += Time.deltaTime * timeSpeed;
-        currentTime %= 24;
+        float timeSpeedMultiplier = timeSpeedCurve.Evaluate(currentTime / 24f);
+        currentTime += Time.deltaTime * timeSpeed * timeSpeedMultiplier;
+        currentTime %= 24f;
         UpdateLight();
         CheckShadowStatus();
         SkyStar();
