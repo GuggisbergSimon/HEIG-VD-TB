@@ -84,7 +84,7 @@ public class ChunkManager : MonoBehaviour {
 
         enableLOD = gameSettings.EnableLOD;
         enableImpostor = gameSettings.EnableImpostor;
-        GraphicsSettings.useScriptableRenderPipelineBatching = srpBatcher;
+        GraphicsSettings.useScriptableRenderPipelineBatching = gameSettings.SRPBatcher;
         recenterChunks = gameSettings.RecenterChunks;
         StartCoroutine(LoadInitialChunk());
     }
