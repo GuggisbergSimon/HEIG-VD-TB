@@ -31,6 +31,7 @@ Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, s
     [`D`],[Tourner à droite],[Naviguer vers la droite],
     [`W`],[Accélérer],[Naviguer vers le haut],
     [`S`],[Ralentir],[Naviguer vers le bas],
+    [`R`],[Reset le vaisseau],[/],
     [`Esc`],[Ouvrir le menu],[Revenir en arrière],
     [`Mouse`],[Contrôle de la caméra],[Navigation libre],
     [`Left Click`],[/],[Sélectionner],
@@ -179,13 +180,7 @@ La modification de position de chaque acteurs et du monde est donc $-delta d = a
 
 À noter néanmoins que recentrer le monde n'améliore pas les performances dans le cadre de ce prototype, mais représente une base essentielle pour les vastes mondes virtuels.
 
-== Test
-
-=== Unitaire
-
-TODO
-
-=== Performance
+== Mesures de performance
 
 Pour s'assurer de la reproductibilité du test de performance, il faudrait privilégier une situation de stress test sans que le joueur n'ait aucun contrôle.
 C'est ce qu'un benchmark permet de faire, par exemple sous la forme d'un parcours dirigé de la caméra, avec plusieurs actions se déroulant lors de la durée de celui-ci pour mettre le système à l'épreuve.
@@ -195,6 +190,7 @@ Ceux-ci vont du plus simple comme les statistiques visibles dans l'éditeur ou l
 
 Le profiler, et en particulier le Deep profiling, a comme désavantage d'ajouter de l'overhead aux mesures de performances.
 C'est pour cette raison que le Deep profiling ne sera utilisé que pour investiguer les problèmes de performance.
+Si des problèmes plus complexes venaient à survenir, par exemple dans le rendu d'une frame spécifique, alors le Frame Debugger sera utilisé.
 
 Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du framerate mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
 Mettre en évidence ceci permet de suivre les chutes de performances.
@@ -221,7 +217,12 @@ Ainsi on distingue deux types d'interactions principales, se déplacer et contr�
   caption: "Liste des types d'interactions à tester."
 )
 
+De plus, plusieurs profiles de tests reproductibles seront exécutés :
+- un profil sans aucune optimisation, pour servir de référence.
+- un profil avec les optimisations considérées essentielles, à savoir : chargement des chunks, recentrage du monde, et LODs.
+- un profil avec toutes les optimisations implémentées, à savoir : imposteurs et techniques de batching ou gpu instancing.
+
 Les outils de Unity permettant de réaliser ces tests sont :
 - Unity Test Framework pour effectuer des tests unitaires en Edit ou Play Mode.
-- Performance Testing Extension, qui, comme son nom l'indique, est une extension pour ajouter tests de performance au projet sur plusieurs frames.
+- Performance Testing Extension, qui, comme son nom l'indique, est une extension de UTF pour ajouter tests de performance au projet sur plusieurs frames.
 - Input System met à disposition des manières pour simuler des entrées utilisateur.

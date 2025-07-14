@@ -78,7 +78,7 @@
 = Annexes
 
 #include "template/_bibliography.typ"
-#include "template/_glossary.typ"
+//#include "template/_glossary.typ"
 #include "template/_figures.typ"
 #include "template/_tables.typ"
 

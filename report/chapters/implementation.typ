@@ -91,7 +91,7 @@ foreach (var coords in chunksToLoad) {
 }
 ```
 
-=== Distance d'affichage
+== Distance d'affichage
 
 Les terrains dans Unity représentent des plans 3D.
 Représenter une vraie planète, sous forme de sphère, est donc impossible.
@@ -126,6 +126,8 @@ for (int x = -viewDistance; x <= viewDistance; x++) {
 Une autre considération à prendre en compte est la distance d'affichage de la caméra, ou far clipping plane.
 Afin de disposer d'une mesure homogène entre la situation de test et celle du prototype, cette distance doit être la même.
 Elle est ajustée de concert avec la distance de vue des chunks à charger et la distance du brouillard, pour un rendu cohérent entre les trois paramètres.
+
+TODO slider
 
 == Recentrer le monde
 
@@ -195,12 +197,13 @@ Ces assets contiennent 2 ou 3 niveau de détails.
 
 En raison de l'architecture du projet, bien qu'il serait possible de disposer d'une série de chunks peuplés de modèles 3D avec et sans LOD, ceci requière néanmoins un duplicata des ressources `Scenes`, `ScriptableObjects`, et `Prefabs`.
 L'alternative qui a été choisie est de changer, lors du chargement d'un chunk, les LODs pour les forcer à un certain niveau de détail, ici LOD 0, le plus détaillé.
-Ceci ajoute un léger overhead CPU lors de la frame physique de chargement des chunks, mais ceci n'impactera que les performances du prototype non optimisé.
-
+Ceci ajoute un overhead CPU lors de la frame physique de chargement des chunks.
 Il s'agit donc d'un compromis entre fidélité de résultats de tests et simplicité d'architecture.
-Après des rapides tests, il s'est avéré que ce compromis était strictement positif puisque la baisse de performance sur la frame physique attendue n'était que peu notable malgré le coût de l'opérattion `GetComponent`.
-Une optimisation supplémentaire serait de passer par un Manager pour chaque `Chunk` qui ferait le pont entre `ChunkManager` et `LOD Group`.
-Celui-ci contiendrait déjà les informations nécessaires, sauvegardées au préalable.
+
+Malheureusement, la répétition de plusieurs d'opérations `GetComponent` est coûteuse.
+Procéder de la sorte implique une complexité d'appel à `GetComponent` en $O(n)$, où $n$ est le nombre d'objets dans le `Chunk`. 
+Pour pallier à cela, une script C\# `Chunk` contient les informations relatives à chaque chunk, permet un accès rapide aux composants, en $O(1)$ pour chaque `Chunk`.
+À noter néanmoins qu'une itération sur tous les objets d'un `Chunk` est tout de même nécessaire.
 
 ```cs
 if (!enableLOD) {
@@ -217,32 +220,38 @@ if (!enableLOD) {
 
 == Imposteurs
 
-Le problème que les imposteurs tentent de résoudre est celui de l'overdraw.
+Unity considère ajouter une solution officielle d'imposteurs, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la roadmap du moteur de jeu.
+En l'absence d'une solution unique, plusieurs tentatives ont été faites.
+
+@unity-roadmap
 
 === IMP
 
 Parmi les solutions existantes pour des imposteurs dans Unity, le répertoire public IMP propose, pour la pipeline Standard, une solution complète.
 Ce répertoire a également été forké pour URP sous le nom de URPIMP.
-Mais ce répertoire a été archivé et manque des fichiers pour parvenir à un niveau fonctionnel.
+Mais ce répertoire URP a été archivé et manque de fichiers pour atteindre un niveau fonctionnel.
 
 Une première tentative a été de porter IMP vers HDRP.
 Mais coder des shaders HDRP est bien plus complexe car Unity favorise l'usage de l'outil Shader Graph pour créer des Shaders à l'aide de noeuds.
+
+Cette solution a été mise de côté, tandis que d'autres essais ont été explorés.
 
 @imp
 @urpimp
 
 === Approche naïve
 
-Une seconde tentative a été d'implémenter des imposteurs de manière naïve, sous la forme billboards représentant l'objet capturé distant à l'aide d'un script C\#.
+Une seconde tentative a été d'implémenter des imposteurs de manière naïve.
+Ceux-ci seront représentés sous la forme de billboards en runtime affichant l'objet capturé distant à l'aide d'un script C\#.
 Ceci a comme avantage de pouvoir rapidement prototyper au coût de performances plus basses.
 Cette approche a été proposée en tant que Proof of Concept.
 Pour un imposteur en runtime, deux paramètres sont nécessaires :
-- la distance à partir de laquelle l'imposteur est activé 
+- la distance à partir de laquelle l'imposteur est activé
 - la différence d'angle à partir duquel un rafraîchissement de l'imposteur est effectué
 
 De plus, un imposteur doit posséder une `RenderTexture` qui rendra ce qu'une caméra voit.
 Cette caméra est différente de celle du joueur puisqu'elle ne rendra que les modèles sujets à être des imposteurs.
-Cette caméra sera orientée vers l'objet à rendre, dont la taille totale à rendre est connue par les limites du modèle 3D.
+Elle sera orientée vers l'objet à rendre, dont la taille totale à rendre est connue par les limites du modèle 3D.
 Le FOV et la position de la caméra sont ensuite ajustés de manière à cadrer l'objet à rendre dans la `RenderTexture`.
 
 La pipeline HDRP requière néanmoins un paramétrage précis.
@@ -273,41 +282,30 @@ if (distance(cam.position, position) > distanceFromCamera) {
 
 === Amplify Impostors
 
-Finalement, une solution payante mais très efficace et utilisée à titre professionnel pour une fonctionnalité pareille est celle proposée par Amplify.
+Finalement, une solution payante mais constituant, en soi, l'état de l'art pour Unity est celle proposée par Amplify.
 Cet outil s'est révélé être aisé à prendre en main et de qualité significative.
 Les jours de travail dédiés aux tentatives d'implémentations des imposteurs auraient pu être économisées en utilisant ce plugin dès le début.
 
 Amplify Impostors propose des imposteurs de plusieurs types : sphérique, octahèdre ou semi-octahèdre.
-Cette spécification détermine la manière dont les captures de perspective sont effectuées.
-Chaque capture de perspective est effectuée à un angle défini par un sommet.
+Ceux-ci sont baked, pré-calculés, dans cinq fichiers de texture allant de 32x32 à 8192x8192 pixels.
+Ces textures permettent un meilleur rendu visuel mais ont une incompatiblité au niveau des shaders.
+Les shaders utilisés par les matériaux des modèles à afficher en tant qu'imposteurs doivent exposer un chemin `Deferred`, à la manière des shaders Unity par défaut.
+Le cas échéant, un shader personnalisé de baking devra être écrit pour chaque shader de matériel utilisé.
 
-Pour une meilleure qualité d'image l'octahèdre est recommandé, ou semi-octahèdre si les imposteurs ne seront pas vus depuis en bas.
-La répartition sphérique est plus rapide mais présente un défaut visuel lors du changement d'un imposteur à un autre.
+C'est ce qui s'est produit pour une asset utilisée dans le prototype. 
+Convertir ses matériaux en matériaux standards HDRP a permis de résoudre le problème.
 
-#figure(
-  grid(
-    columns: 3,
-    image("images/Spherical.png", width: 50%),
-    image("images/Octahedron.png", width: 50%),
-    image("images/HemiOctahedron.png", width: 50%),
-  ),
-  caption: [
-    De gauche à droite : sphérique, octahèdre et semi-octahèdre.
-  ],
-)
-
-Ceux-ci sont pré-calculés dans un fichier de texture allant de 32x32 à 8192x8192 pixels.
-Un modèle d'imposteur peut ensuite être aujouté pour chaque objet possédant `LOD Group`.
-Les imposteurs seront considérés comme $"LOD" n + 1$ où $n$ est le nombre de LODs existants.
+Pour l'implémentation, les imposteurs Amplify se greffent sur un `LOD Group` existant.
+Les imposteurs seront considérés comme $"LOD" n + 1$ où $n$ est le nombre de LODs déjà présents.
 Il est également possible de choisir que les imposteurs remplacent le niveau de $"LOD" n$.
 
 À noter que, de la même manière que l'implémentation pour le LOD, les imposteurs sont implémentés au niveau des `Prefabs` pour une architecture simplifiée.
-Cela a donc comme même désavantage, lorsque les imposteurs sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk.
+Cela a donc comme le même désavantage, lorsque les imposteurs sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk. Cet overhead CPU a néanmoins comme complexité d'opération `GetComponent` en $O(1)$, à la manière du chargement des LODs désactivés.
 
 #figure(
   image("images/impostor_example_atlas.jpg", width: 52%),
   caption: [
-    Exemple d'atlas d'imposteurs octahèdre résultant de Amplify Impostors.
+    Exemple d'un atlas albedo pour des imposteurs octahèdres résultant de Amplify Impostors.
   ],
 )
 
@@ -315,45 +313,47 @@ Cela a donc comme même désavantage, lorsque les imposteurs sont désactivés, 
 
 == Optimisations GPU
 
+L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de visualiser rapidement les performances.
+
+Voici les données les plus intéressantes parmi ces statistiques :
+- FPS et CPU correspondent sont liés et représentent la même mesure, de deux manières différentes.
+  FPS est le nombre de frames par secondes, tandis que CPU est le temps de rendu d'un frame en millisecondes.
+  Le temps de rendu de la frame est une meilleure mesure, dans le contexte d'une frame unique, mais est moins parlant que celle des FPS.
+  Le plus haut les FPS sont, le mieux c'est, et inversement le plus bas le temps CPU est, le mieux c'est.
+- Batches correspond au nombre total de batches de draw call effectués durant une frame.
+  Le plus bas, le mieux c'est.
+- Saved by batching correspond au nombre de batches que Unity a pu combiner entre deux batches.
+  Cela se produit lorsqu'un `Material` est partagé entre plusieurs objets.
+  TODO cela se produit avec GPU instancing (?)
+  Le plus haut, le mieux c'est.
+- SetPass calls correspond au moment où Unity charge un nouveau shader du CPU au GPU.
+  Le plus bas, le mieux c'est.
+- Tris et Verts correspondent, respectivement, au nombre de triangles et de sommets rendus.
+  Le plus bas, le mieux c'est.
+
+@unity-doc-rendering-stats
+
 === GPU Instancing
 
-Un problème fréquemment rencontré dans les jeux vidéo est l'affichage d'une large quantité d'objets 3D identiques, tels que des brins d'herbe ou des arbres.
-
-Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représente un goulot d'étranglement pour les performances.
-En effet, bien que le GPU soit très puissant pour de nombreux calculs répétitifs, transmettre de nombreuses informations de CPU à GPU est une opération coûteuse.
-
-Une solution habituellement utilisée est de diminuer les appels de rendu, ou draw call, via une instantiation de données sur le GPU.
-Ceci est d'avantage connu sous le nom de GPU Instanting.
-Au lieu de transmettre les informations de maillage et de matériaux à chaque fois, il est possible, pour un même modèle 3D, de transmettre uniquement les informations uniques à chaque instance de celui-ci, telles que la position, rotation et échelle.
-Ceci permettra ensuite, du côté GPU, de réutiliser les informations du modèle 3D pour rendre chaque instance à un coût moindre en échange de données.
-
-TODO test performance of gpu instancing
+Dans des moteurs de jeux tels que Unity, cette technique est déjà implémentée par les shaders par défaut et peut être activée individuellement pour chaque matériel utilisant ce shader.
 
 @unity-doc-gpu-instancing
 
 === SRP Batcher
 
-TODO try SRP batcher
-
 SRP Batcher est une manière de préparer et transmettre les données qui est incompatible avec GPU Instancing.
 Cette méthode est uniquement possible avec les Scriptable Render Pipeline de Unity, dont URP et HDRP font partie.
-Cela va réduire le nombre de render-state effectué entre deux appels.
-Il s'agit de ces opérations qui sont en effet coûteuse puisqu'un nouveau `Material` doit être transmis à chaque fois.
-Ici, SRP Batcher va garder un lien persistent vers un buffer `Material` jusqu'à ce qu'une nouvelle variante soit utilisée et provoque un rafraîchissement du buffer.
-Cette méthode est donc plus efficace en cas de peu d'uttilisation de variantes de `Material`.
+Elle consiste à réduire le nombre de render-state effectué entre deux appels via l'utilisation d'un buffer.
+Ces opérations sont en effet coûteuse puisqu'un nouveau `Material` doit être transmis à chaque fois du CPU au GPU.
+Ici, le SRP Batcher va garder un lien persistent vers un buffer `Material` jusqu'à ce qu'une nouvelle variante soit utilisée et provoque un rafraîchissement du buffer.
+Cette méthode est donc plus efficace en cas de peu d'utilisation de variantes de `Material`.
 
-Le SRP Batcher dispose d'un accès permettant une update directe du buffer du GPU.
+Le SRP Batcher dispose d'un accès permettant une mise à jour directe du buffer du GPU.
 
 #figure(
-  grid(
-    columns: 2,
-    image("images/SROShaderPass.png", width: 100%),
-    image("images/SRP_Batcher_loop.png", width: 100%),
-  ),
+  image("images/SROShaderPass.png", width: 100%),
   caption: [
-    À gauche: Préparation d'un batch pour un draw call vs SPR Batcher
-    
-    À droite: Boucle du fonctionnement du SRP Batcher.
+    Préparation d'un batch pour un draw call vs SPR Batcher
   ],
 )
 
@@ -367,7 +367,7 @@ Il est également possible d'utiliser DOTS pour améliorer le rendu graphique en
 Les fonctionnalités attendues des pipelines URP et HDRP ne sont néanmoins pas toutes implémentées dans DOTS.
 
 DOTS est un système complexe permettant de traiter la logique de nombreux éléments.
-Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant du cadre de celui-ci.
+Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant le cadre de celui-ci.
 
 @unity-entities
 @unity-entities-graphics
@@ -389,7 +389,7 @@ Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pou
 - Geometry Shader.
   Cette solution consiste à modéliser individuellement chaque brin d'herbe, à l'aide des shaders.
   Les geometry shaders sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
-  Écrire de tels shaders ne peut être fait qu'en HLSL, le langage 
+  Écrire de tels shaders ne peut être fait qu'en HLSL ou ShaderLab pour URP et HDRP.
 
 À noter que Unity URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé Shader Graph, mais que celui-ci ne traite que des opérations Vertex et Fragment.
 VFX Graph permet de créer des particules qui pourraient être utilisées pour simuler des brins d'herbe, mais cela est une solution détournée.
@@ -401,24 +401,52 @@ VFX Graph permet de créer des particules qui pourraient être utilisées pour s
   ],
 )
 
-Un test d'implémentation des deux shaders HDRP ci-dessous a été effectué mais ceux-ci n'ayant pas été mis à jour pour la version 6.0 de Unity, ceux-ci présentent des incompatibilités.
-- https://github.com/EmmetOT/HDRPGrass?tab=readme-ov-file
-- https://github.com/flamacore/UnityHDRPTerrainDetailGrass
+==== EmmetOT HDRPGrass
 
-TODO Test d'implémentation
+Ce répertoire public propose deux shaders utilisant l'étape de Geometry pour représenter de nombreux brins d'herbes.
+Un patchage de ce répertoire a été requis pour le rendre compatible avec les versions d'outils utilisés, cet outil n'étant pas mis à jour depuis 2021.
+
+Deux shaders sont proposés :
+- L'étape Tesselation est utilisée pour subdiviser le maillage d'un objet en des points où des brins d'herbe seront placés.
+  C'est une solution assez complexe mais qui est aussi simple à implémenter que d'assigner un `Material` à un objet.
+- Une alternative plus simple, Compute, génère des points aléatoires sur une surface. 
+  Cette solution ne se base pas que sur un `Material` mais demande à un script C\# de générer le maillage subdivisé de manière préliminaire.
+  Cela ne s'adaptte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
+
+La seconde solution, Compute, n'a néanmoins pas été patchée pour Unity 6.0 et demeure donc inutilisable.
+
+- TODO test/debug compute solution -> implement ?
+- TODO use compute terrain in demo scene
+
+@emmetot-hdrpgrass
+
+==== Bruteforce Grass Shader
+
+Cette solution disponible sur le Unity Asset Store n'en est qu'une parmi de nombreuses autres, mais elle offre un support HDRP via geometry shader.
+Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'interaction tels qu'un aplatissement suivant le parcours d'un agent, ou même un rasage de celle-ci.
+
+Son implémentation a été assez aisée mais est plus adapté à des petites tailles de terrains, telles que 50x50.
+
+TODO implement ?
+
+@bruteforce-grass-shader
 
 == Mesures de performance
 
-Graphy pour builds
+=== Graphy
 
-- ctrl + F10 : cycler dans les options de profiler
-- ctrl +  F11 : activer/désactiver le profiler
+Pour mesurer les performances lors d'un build, bien qu'il soit possible, pour un build local, de le connecter au profiler Unity pour debugger, il est néanmoins plus agréable de profiter d'une solution visuelle permettant, en un coup d'oeil, de voir une estimation de la performance du jeu.
 
-TODO ask report order (add new stuff in sota ? or all in implementation/architecture ?) -> expand sota
-TODO ask where to document failures/issues ? -> petit paragraphe, section correspondante implémentation
-TODO fine with using existing tools (amplify impostors, grass shaders, etc) ? -> solution réalisable/réaliste choisie
+Un tel outil existe sous le nom de Graphy, 
+Cet outil permet de visualiser sous forme de graphe les performances pour les dernières frames afin d'observer les variations soudaines.
 
-== Tests
+Des raccourcis uniques à cet outil permettent de :
+- cycler dans les options de profiler : `ctrl + F10`
+- activer/désactiver le profiler : `ctrl + F11`
+
+@unity-graphy
+
+=== Unity Test Framework
 
 L'implémentation de tests à l'aide de Unity Test Framework requière des annotations spécifiques sur les méthodes de test afin de spécifier les conditions dans lesquelles elles seront exécutées.
 L'annotation `TestFixture` est utilisée pour une classe de test tandis que celle `Test` pour les fonctions signifie que celle-ci est un test.
@@ -470,12 +498,25 @@ public IEnumerator MoveForward_PerformanceTest() {
 }
 ```
 
-TODO extrait histogramme test performance
-
 L'implémentation du package Input System pour les test s'est révélé bien plus complexe que prévu.
 En effet, les tests de performance de Unity ne s'effectuent pas exactement selon le pattern AAA - Arrange, Act, Assert.
 Des états sont permanents entre deux tests, notamment tout ce qui est du chargement de scènes, y compris la manière dont les entrées utilisateurs sont simulées.
 Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut passer par deux autres annotations `Setup` et `TearDown` qui indiquent respectivement les actions à effectuer avant et après chaque test.
 
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
-Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas uttiliser Input System.
+Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas utiliser Input System.
+
+
+
+TODO extrait histogramme test performance
+
+TODO analyse résultat
+
+=== Profile Debugger
+
+De plus, en raison des cas extrêmes dévoilés grâce à ces tests, une reproduction a été réalisée afin de pouvoir observer ces problèmes en temps réel.
+Le Profile Debugger, lors des frames jugées problématiques, a permis de visualiser en détails les appels et temps passé dans chaque fonction.
+
+TODO flamegraph
+
+TODO analyse résultat

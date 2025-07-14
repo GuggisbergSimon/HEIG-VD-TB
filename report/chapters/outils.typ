@@ -37,16 +37,18 @@ Ce choix n'impacte que le rendu graphique et pas les performances.
 
 === Render Pipeline
 
-Unity dispose de trois pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch
+Unity dispose de trois pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch.
 Patcher ces assets peut en partie être automatisé par Unity.
 - Standard - Cette pipeline est aussi connue sous le nom built-in.
   Il s'agit d'une option built-in par défaut mais n'est plus mise à jour depuis plusieurs années, destinée à être remplacée par les deux suivantes.
   Elle est encore disponible mais les dernières versions de Unity ne la proposent plus par défaut.
-- URP - Universal Render Pipeline est un rendu visant la performance destiné au grand marché mobile (\~50% du marché).
-  Cette pipeline propose moins d'options graphiques, pour des meilleures performances.
-- HDRP - High Definition Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
-  Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils uniques à celle-ci.
-  Il s'agit de la pipeline permettant d'utiliser du ray tracing, entre autre.
+- Scriptable Render Pipeline - Aussi abrégée SRP, à ne pas confondre avec Standard Render Pipeline, il s'agit d'une API permettant de configurer différentes commandes de rendu via scripts C\# pour l'éditeur Unity.
+Il ne s'agit pas d'une pipeline en elle-même mais homogénéise les deux pipelines suivantes et offre de créer sa propre pipeline de rendu.
+    - URP - Universal Render Pipeline est un rendu visant la performance destiné au grand marché mobile (\~50% du marché).
+    Cette pipeline propose moins d'options graphiques, pour des meilleures performances.
+    - HDRP - High Definition Render Pipeline est un rendu visant la qualité graphique et voué au marché consoles et PC.
+    Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils uniques à celle-ci.
+    Il s'agit de la pipeline permettant d'utiliser du ray tracing, entre autre.
 
 Ce travail de bachelor a pour volonté d'implémenter les méthode de l'art du métier et donc d'utiliser une pipeline moderne, cela exclue la pipeline Standard.
 La pipeline HDRP possède de nombreuses assets photoréalistes tandis que celle URP tend vers la stylisation avec des assets moins lourdes, avec un compte de polygones moins élevé, pour un style souvent dénommé low poly.
@@ -54,6 +56,7 @@ La pipeline HDRP possède de nombreuses assets photoréalistes tandis que celle 
 Un premier prototype a été réalisé avec URP lors de la première partie de ce travail de bachelor.
 Il a ensuite été porté vers HDRP, en utilisant d'autres assets, pour adhérer à la réalité du métier.
 
+@unity-scriptable-render-pipeline
 @unity-urp
 @unity-hdrp
 

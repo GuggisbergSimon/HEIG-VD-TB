@@ -150,7 +150,7 @@ De plus, il est possible d'utiliser la base d'un shader complexe mais de l'alté
 
 La limite des shaders, et leur bottleneck, consiste en leurs entrées et sorties.
 Ceux-ci ne connaissent que ce qu'ils reçoivent en entrée pour procéder au rendu graphique, et la sortie habituelle d'un shader est la production d'un visuel.
-Bien que les sorties puissent être détournées de différente manière, par exemple en écrivant en sortie une texture en mémoire, cela reste limité.
+Les sorties peuvent être détournées de différente manière, par exemple en écrivant en sortie une texture en mémoire, mais cela reste limité.
 Les shaders ne peuvent pas être utilisés pour affecter le comportement d'autres systèmes indépendants, tel qu'un moteur physique.
 Mais ils peuvent, en prenant un vecteur en entrée pour représenter le vent, par exemple, simuler l'impact de celui-ci sur des brins d'herbe.
 En raison de ce bottleneck entre l'échange de donnée CPU et GPU, il est possible d'optimiser ceux-ci via l'instanciation d'objets par shaders, au coût d'une mémoire vidéo plus importante.
@@ -163,6 +163,20 @@ En raison de ce bottleneck entre l'échange de donnée CPU et GPU, il est possib
     Pipeline de rendu d'un shader OpenGL, les étapes bleues représentes celles programmables.
   ],
 )
+
+==== GPU Instancing
+
+Un problème fréquemment rencontré dans les jeux vidéo est l'affichage d'une large quantité d'objets 3D identiques, tels que des brins d'herbe ou des arbres.
+
+Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représente un goulot d'étranglement pour les performances.
+En effet, bien que le GPU soit très puissant pour de nombreux calculs répétitifs, transmettre de nombreuses informations de CPU à GPU est une opération coûteuse.
+
+Une solution habituellement utilisée est de diminuer les appels de rendu, ou draw call, via une instantiation de données sur le GPU.
+Ceci est d'avantage connu sous le nom de GPU Instanting.
+Au lieu de transmettre les informations de maillage et de matériaux à chaque fois, il est possible, pour un même modèle 3D, de transmettre uniquement les informations uniques à chaque instance de celui-ci, telles que la position, rotation et échelle.
+Ceci permettra ensuite, du côté GPU, de réutiliser les informations du modèle 3D pour rendre chaque instance à un coût moindre en échange de données.
+
+@unity-doc-gpu-instancing
 
 === Textures
 
@@ -364,30 +378,52 @@ Cette technique a néanmoint un coût puisque cela ajoute de l'overdraw entre le
 
 === Impostor
 
-Les imposteurs sont une forme avancée de Billboards.
+Les imposteurs sont une forme avancée de Billboards, de la même manière que ceux-ci, ils tentent de résoudre le problème de l'overdraw.
 Les Billboards affichent la texture pour un modèle distant sur des quads dont la rotation peut être ajustée pour toujours faire face à la caméra.
 Différentes variantes existent, certaines permettant aux billboards de figer la rotation d'un ou plusieurs axes.
 Une utilisation commune de cette technique est pour représenter la végétation, que ce soit herbe ou arbres.
 
-Les billboards ont comme particularité de représenter une image 2D dans un environnement 3D, ce qui est parfait pour des objets distants, mais cette solution comporte des limitations.
+Les Billboards ont comme particularité de représenter une image 2D dans un environnement 3D, ce qui est parfait pour des objets distants, mais cette solution comporte des limitations.
 Afin de rendre une image 3D dans un environnement 3D, il faut dessiner le modèle, selon l'angle requis et les conditions de lumière.
 Lorsque l'angle entre la caméra et l'objet est trop grand par rapport à celui-ci initial pour l'imposteur actuel, alors un second imposteur est dessiné.
 Les GPUs modernes disposent d'API facilitant la génération d'imposteurs, en raison de la popularité de la technique.
 
-Pour mettre à jour un imposteur deux possibilités existent :
-- Baked : Demande un espace de stockage pour l'atlas de textures générées. Un bon shader peut également ajouter des conditions de lumières, des ombres, etc.
-- Runtime : plus coûteux mais rend mieux les conditions de lumières, d'éventuelles animations procédurales, etc.
-
-Unity, au contraire de Unreal Engine, ne propose pas de solution facile d'accès pour les imposteurs.
-Une solution solution existe pour les utilisateurs souscrivant à Unity Industry seulement.
-Le package offrant cette option est Pixyz, un outil permettant l'import de modèles CAD sous plusieurs formes, telles qu'un nuage de points.
-
-Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, tel que Amplify Impostors, disponible sur Unity Asset Store.
+Pour mettre à jour un imposteur deux possibilités existent.
 
 @nvidia-true-impostors
-@medium-octahedral-impostors
 @unreal-doc-impostor
 @unity-pixyz-impostor
+
+==== Baked 
+
+Ce type d'imposteur va générer des atlas de textures représentant le modèle 3D selon différents angles de vue.
+L'imposteur consistera ensuite à afficher la texture correspondant à l'angle de vue actuel de la caméra.
+Cette technique demande un plus grand espace mémoire vidéo pour stocker l'atlas de textures générées.
+Chaque texture générée aura une taille habituellement de 2048x2048 pixels, ce qui résultera, dans le cas d'un atlas 16x16, de 128x128 pixels attribués à chaque image servant d'imposteur.
+Le nombre de ces textures peut varier selon la qualité du shader utilisé pour représenter les imposteurs.
+Un bon shader peut également ajouter des conditions de lumières, des ombres, interpolation entre deux points de vue, etc.
+
+Il existe plusieurs types d'imposteurs Baked : sphérique, octahèdre et semi-octahèdre.
+Cette spécification détermine la manière dont les captures de perspective sont effectuées.
+Chaque capture de perspective est effectuée à un angle défini par un sommet.
+
+Pour une meilleure qualité d'image l'octahèdre est recommandé, ou semi-octahèdre si les imposteurs ne seront pas vus depuis le bas.
+La répartition sphérique est souvent plus rapide mais présente un défaut visuel lors du changement d'un imposteur à un autre.
+
+@amplify-impostors
+@medium-octahedral-impostors
+
+#figure(
+  grid(
+    columns: 3,
+    image("images/Spherical.png", width: 50%),
+    image("images/Octahedron.png", width: 50%),
+    image("images/HemiOctahedron.png", width: 50%),
+  ),
+  caption: [
+    Les différents types d'imposteurs Baked, de gauche à droite : sphérique, octahèdre et semi-octahèdre.
+  ],
+)
 
 #figure(
   grid(
@@ -396,11 +432,21 @@ Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, 
     image("images/impostors_atlas.jpg", width: 90%)
   ),
   caption: [
-    À gauche: Exemple de placement de caméras pour le rendu d'un imposteur octahedral.
+    À gauche: Exemple de placement de caméras pour le rendu Baked d'un imposteur semi-octahèdre.
     
-    À droite: Atlas de textures pour un imposteur Baked.
+    À droite: Atlas de textures pour un imposteur Baked semi-octahèdre.
   ],
 )
+
+==== Runtime
+
+plus coûteux mais rend mieux les conditions de lumières, d'éventuelles animations procédurales, textures animées, etc.
+
+Unity, au contraire de Unreal Engine, ne propose pas de solution facile d'accès pour les imposteurs.
+Une solution solution existe pour les utilisateurs souscrivant à Unity Industry seulement.
+Le package offrant cette option est Pixyz, un outil permettant l'import de modèles CAD sous plusieurs formes, telles qu'un nuage de points.
+
+Une autre solution notable pour Unity est l'utilisation d'un plugin inofficiel, tel que Amplify Impostors, disponible sur Unity Asset Store.
 
 === Terrain et Landscape
 
