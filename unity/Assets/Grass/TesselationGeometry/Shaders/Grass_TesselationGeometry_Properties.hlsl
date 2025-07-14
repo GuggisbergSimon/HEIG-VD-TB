@@ -116,6 +116,10 @@ half _WindStrength;
 float2 _WindFrequency;
 
 half _GrassOffset;
+half _AlphaRemapMin;
+half _AlphaRemapMax;
+half _TransmissionMask;
+half _ObjectSpaceUVMapping;
 
 half _BendRotationRandom;
 half _BladeHeight;

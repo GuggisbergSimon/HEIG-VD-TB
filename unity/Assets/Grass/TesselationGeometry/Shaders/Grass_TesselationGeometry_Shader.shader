@@ -1,88 +1,89 @@
-﻿Shader "Grass/Grass_TesselationGeometry"
-{
-    Properties
-    {
-		//_GrassDensity("Grass Density", Float) = 1
-		_GrassOffset("Position Randomization", Range(0, 5)) = 0
-		
-		//[Header(Textures)] [Space(7)]
+﻿Shader "Grass/Grass_TesselationGeometry" {
+    Properties {
+        //_GrassDensity("Grass Density", Float) = 1
+        _GrassOffset("Position Randomization", Range(0, 5)) = 0
+        
+        _AlphaRemapMin("Alpha Remap Min", Range(0, 1)) = 0.0
+        _AlphaRemapMax("Alpha Remap Max", Range(0, 1)) = 1.0
+        _TransmissionMask("Transmission Mask", Float) = 0.0
+        _ObjectSpaceUVMapping("Object Space UV Mapping", Float) = 0.0
 
-		_GrassMap("Grass Map", 2D) = "white" {}
-		
-		_FieldTexture("Field Texture", 2D) = "white" {}
+        //[Header(Textures)] [Space(7)]
 
-		_BladeTexture("Blade Texture", 2D) = "white" {}
+        _GrassMap("Grass Map", 2D) = "white" {}
+        _FieldTexture("Field Texture", 2D) = "white" {}
+        _BladeTexture("Blade Texture", 2D) = "white" {}
 
-		//[Header(Grass Blade Shapes)] [Space(7)]
+        //[Header(Grass Blade Shapes)] [Space(7)]
 
-		_BladeWidth("Median Blade Width", Float) = 0.05
-		_BladeWidthRandom("Max Random Width Offset", Float) = 0.02
+        _BladeWidth("Median Blade Width", Float) = 0.05
+        _BladeWidthRandom("Max Random Width Offset", Float) = 0.02
 
-		//[Space(5)]
+        //[Space(5)]
 
-		_BladeHeight("Median Blade Height", Float) = 0.5
-		_BladeHeightRandom("Max Random Height Offset", Float) = 0.3
-		
-		//[Space(5)]
-		
-		_BladeRotationRange("Rotation Range", Range(0, 360)) = 360
-		_BendRotationRandom("Max Downward Rotation", Range(0, 1)) = 0.2
-		_BladeCurve("Curvature", Range(1, 4)) = 2
-		_BladeForward("Max Random Curvature Offset (aka Grass Untidiness)", Float) = 0.4
+        _BladeHeight("Median Blade Height", Float) = 0.5
+        _BladeHeightRandom("Max Random Height Offset", Float) = 0.3
 
-		//[Header(Grass Blade Colour Properties)] [Space(7)]
+        //[Space(5)]
 
-		_GrassBottomColour("Grass Bottom Colour", Color) = (1, 1, 1, 1)
-		_GrassTopColour("Grass Top Colour", Color) = (1, 1, 1, 1)
+        _BladeRotationRange("Rotation Range", Range(0, 360)) = 360
+        _BendRotationRandom("Max Downward Rotation", Range(0, 1)) = 0.2
+        _BladeCurve("Curvature", Range(1, 4)) = 2
+        _BladeForward("Max Random Curvature Offset (aka Grass Untidiness)", Float) = 0.4
+
+        //[Header(Grass Blade Colour Properties)] [Space(7)]
+
+        _GrassBottomColour("Grass Bottom Colour", Color) = (1, 1, 1, 1)
+        _GrassTopColour("Grass Top Colour", Color) = (1, 1, 1, 1)
         _Metallic("Metallic", Range(0.0, 1.0)) = 0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
 
-		//[Header(Wind)] [Space(7)]
+        //[Header(Wind)] [Space(7)]
 
-		_WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
-		_WindFrequency("Wind Frequency", Vector) = (0.05, 0.05, 0, 0)
-		_WindStrength("Wind Strength", Float) = 1
-		
-		//[Header(Normals)] [Space(7)]
+        _WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
+        _WindFrequency("Wind Frequency", Vector) = (0.05, 0.05, 0, 0)
+        _WindStrength("Wind Strength", Float) = 1
 
-		[Toggle(NORMAL_TYPE_TRUE)]
-		_NormalTypeTrue("Normal Type: True", Float) = 0
-		
-		[Toggle(NORMAL_TYPE_FROM_SOURCE)]
-		_NormalTypeFromSource("Normal Type: From Source", Float) = 0
+        //[Header(Normals)] [Space(7)]
 
-		[Toggle(NORMAL_TYPE_OVERRIDE)]
-		_NormalTypeAbsolute("Normal Type: Override", Float) = 0
-		
-		_GrassLODSqrDistances("Grass LOD Square Distances (Nearest to Farthest)", Vector) = (15, 30, 45, 0)
-		_GrassLODSegments("Grass LOD Segments", Vector) = (7, 1, 1, 0)
-		_GrassLODDensities("Grass LOD Densities", Vector) = (1, 0, 0, 0)
+        [Toggle(NORMAL_TYPE_TRUE)]
+        _NormalTypeTrue("Normal Type: True", Float) = 0
 
-		_AbsoluteNormal("Absolute Normal", Vector) = (0, 1, 0, 0)
+        [Toggle(NORMAL_TYPE_FROM_SOURCE)]
+        _NormalTypeFromSource("Normal Type: From Source", Float) = 0
 
-		//_FrustumCullingScreenSpaceMargin("Frustum Culling Screen Space Margin", Float) = 0
+        [Toggle(NORMAL_TYPE_OVERRIDE)]
+        _NormalTypeAbsolute("Normal Type: Override", Float) = 0
 
-		//[Header(Debug)] [Space(7)]
-		
-		[Toggle(BILLBOARD)]
-		_Billboard("Billboard", Float) = 0
-		
-		[Toggle(GENERATE_QUADS)]
-		_GenerateQuads("Generate Quads", Float) = 0
-		
-		[Toggle(VISUALIZE_WIND)]
-		_DebugWind("Visualize Wind", Float) = 0
-		
-		[Toggle(VISUALIZE_DISPLACEMENT)]
-		_DebugDisplacement("Visualize Displacement", Float) = 0
+        _GrassLODSqrDistances("Grass LOD Square Distances (Nearest to Farthest)", Vector) = (15, 30, 45, 0)
+        _GrassLODSegments("Grass LOD Segments", Vector) = (7, 1, 1, 0)
+        _GrassLODDensities("Grass LOD Densities", Vector) = (1, 0, 0, 0)
 
-		[Toggle(VISUALIZE_LODS)]
-		_DebugLODs("Visualize LODs", Float) = 0
+        _AbsoluteNormal("Absolute Normal", Vector) = (0, 1, 0, 0)
 
-		[Toggle(DRAW_SOURCE_GEOMETRY)]
-		_DrawSourceGeometry("Draw Source Geometry", Float) = 0
+        //_FrustumCullingScreenSpaceMargin("Frustum Culling Screen Space Margin", Float) = 0
 
-		//[HideInInspector] _GrassDisplacementSpheresBufferCount("_GrassDisplacementSpheresBufferCount", int) = 0
+        //[Header(Debug)] [Space(7)]
+
+        [Toggle(BILLBOARD)]
+        _Billboard("Billboard", Float) = 0
+
+        [Toggle(GENERATE_QUADS)]
+        _GenerateQuads("Generate Quads", Float) = 0
+
+        [Toggle(VISUALIZE_WIND)]
+        _DebugWind("Visualize Wind", Float) = 0
+
+        [Toggle(VISUALIZE_DISPLACEMENT)]
+        _DebugDisplacement("Visualize Displacement", Float) = 0
+
+        [Toggle(VISUALIZE_LODS)]
+        _DebugLODs("Visualize LODs", Float) = 0
+
+        [Toggle(DRAW_SOURCE_GEOMETRY)]
+        _DrawSourceGeometry("Draw Source Geometry", Float) = 0
+
+        //[HideInInspector] _GrassDisplacementSpheresBufferCount("_GrassDisplacementSpheresBufferCount", int) = 0
 
         // Following set of parameters represent the parameters node inside the MaterialGraph.
         // They are use to fill a SurfaceData. With a MaterialGraph this should not exist.
@@ -98,14 +99,14 @@
         [HideInInspector] _AORemapMin("AORemapMin", Float) = 0.0
         [HideInInspector] _AORemapMax("AORemapMax", Float) = 1.0
 
-        [HideInInspector] _NormalMap("NormalMap", 2D) = "bump" {}     // Tangent space normal map
+        [HideInInspector] _NormalMap("NormalMap", 2D) = "bump" {} // Tangent space normal map
         [HideInInspector] _NormalMapOS("NormalMapOS", 2D) = "white" {} // Object space normal map - no good default value
         [HideInInspector] _NormalScale("_NormalScale", Range(0.0, 8.0)) = 1
 
         [HideInInspector] _BentNormalMap("_BentNormalMap", 2D) = "bump" {}
         [HideInInspector] _BentNormalMapOS("_BentNormalMapOS", 2D) = "white" {}
 
-       [HideInInspector]  _HeightMap("HeightMap", 2D) = "black" {}
+        [HideInInspector] _HeightMap("HeightMap", 2D) = "black" {}
         // Caution: Default value of _HeightAmplitude must be (_HeightMax - _HeightMin) * 0.01
         // Those two properties are computed from the ones exposed in the UI and depends on the displaement mode so they are separate because we don't want to lose information upon displacement mode change.
         [HideInInspector] _HeightAmplitude("Height Amplitude", Float) = 0.02 // In world units. This will be computed in the UI.
@@ -122,40 +123,40 @@
         [HideInInspector] _HeightTessCenter("Height Center", Range(0.0, 1.0)) = 0.5 // In texture space
 
         // These parameters are for pixel displacement
-       [HideInInspector] _HeightPoMAmplitude("Height Amplitude", Float) = 2.0 // In centimeters
+        [HideInInspector] _HeightPoMAmplitude("Height Amplitude", Float) = 2.0 // In centimeters
 
         [HideInInspector] _DetailMap("DetailMap", 2D) = "linearGrey" {}
-       [HideInInspector] _DetailAlbedoScale("_DetailAlbedoScale", Range(0.0, 2.0)) = 1
-       [HideInInspector] _DetailNormalScale("_DetailNormalScale", Range(0.0, 2.0)) = 1
+        [HideInInspector] _DetailAlbedoScale("_DetailAlbedoScale", Range(0.0, 2.0)) = 1
+        [HideInInspector] _DetailNormalScale("_DetailNormalScale", Range(0.0, 2.0)) = 1
         [HideInInspector] _DetailSmoothnessScale("_DetailSmoothnessScale", Range(0.0, 2.0)) = 1
 
         [HideInInspector] _TangentMap("TangentMap", 2D) = "bump" {}
         [HideInInspector] _TangentMapOS("TangentMapOS", 2D) = "white" {}
         [HideInInspector] _Anisotropy("Anisotropy", Range(-1.0, 1.0)) = 0
-       [HideInInspector] _AnisotropyMap("AnisotropyMap", 2D) = "white" {}
+        [HideInInspector] _AnisotropyMap("AnisotropyMap", 2D) = "white" {}
 
-       [HideInInspector] _SubsurfaceMask("Subsurface Radius", Range(0.0, 1.0)) = 1.0
-       [HideInInspector] _SubsurfaceMaskMap("Subsurface Radius Map", 2D) = "white" {}
+        [HideInInspector] _SubsurfaceMask("Subsurface Radius", Range(0.0, 1.0)) = 1.0
+        [HideInInspector] _SubsurfaceMaskMap("Subsurface Radius Map", 2D) = "white" {}
         [HideInInspector] _Thickness("Thickness", Range(0.0, 1.0)) = 1.0
         [HideInInspector] _ThicknessMap("Thickness Map", 2D) = "white" {}
-       [HideInInspector] _ThicknessRemap("Thickness Remap", Vector) = (0, 1, 0, 0)
+        [HideInInspector] _ThicknessRemap("Thickness Remap", Vector) = (0, 1, 0, 0)
 
-       [HideInInspector] _IridescenceThickness("Iridescence Thickness", Range(0.0, 1.0)) = 1.0
-       [HideInInspector] _IridescenceThicknessMap("Iridescence Thickness Map", 2D) = "white" {}
-       [HideInInspector] _IridescenceThicknessRemap("Iridescence Thickness Remap", Vector) = (0, 1, 0, 0)
-       [HideInInspector] _IridescenceMask("Iridescence Mask", Range(0.0, 1.0)) = 1.0
+        [HideInInspector] _IridescenceThickness("Iridescence Thickness", Range(0.0, 1.0)) = 1.0
+        [HideInInspector] _IridescenceThicknessMap("Iridescence Thickness Map", 2D) = "white" {}
+        [HideInInspector] _IridescenceThicknessRemap("Iridescence Thickness Remap", Vector) = (0, 1, 0, 0)
+        [HideInInspector] _IridescenceMask("Iridescence Mask", Range(0.0, 1.0)) = 1.0
         [HideInInspector] _IridescenceMaskMap("Iridescence Mask Map", 2D) = "white" {}
 
-       [HideInInspector] _CoatMask("Coat Mask", Range(0.0, 1.0)) = 0.0
+        [HideInInspector] _CoatMask("Coat Mask", Range(0.0, 1.0)) = 0.0
         [HideInInspector] _CoatMaskMap("CoatMaskMap", 2D) = "white" {}
 
         [HideInInspector] [ToggleUI] _EnergyConservingSpecularColor("_EnergyConservingSpecularColor", Float) = 1.0
         [HideInInspector] _SpecularColor("SpecularColor", Color) = (1, 1, 1, 1)
-       [HideInInspector] _SpecularColorMap("SpecularColorMap", 2D) = "white" {}
+        [HideInInspector] _SpecularColorMap("SpecularColorMap", 2D) = "white" {}
 
         // Following options are for the GUI inspector and different from the input parameters above
         // These option below will cause different compilation flag.
-        [HideInInspector] [Enum(Off, 0, From Ambient Occlusion, 1, From Bent Normals, 2)]  _SpecularOcclusionMode("Specular Occlusion Mode", Int) = 1
+        [HideInInspector] [Enum(Off, 0, From Ambient Occlusion, 1, From Bent Normals, 2)] _SpecularOcclusionMode("Specular Occlusion Mode", Int) = 1
 
         [HideInInspector] [HDR] _EmissiveColor("EmissiveColor", Color) = (0, 0, 0)
         // Used only to serialize the LDR and HDR emissive color in the material UI,
@@ -166,34 +167,34 @@
         [HideInInspector] _EmissiveIntensityUnit("Emissive Mode", Int) = 0
         [HideInInspector] [ToggleUI] _UseEmissiveIntensity("Use Emissive Intensity", Int) = 0
         [HideInInspector] _EmissiveIntensity("Emissive Intensity", Float) = 1
-       [HideInInspector] _EmissiveExposureWeight("Emissive Pre Exposure", Range(0.0, 1.0)) = 1.0
+        [HideInInspector] _EmissiveExposureWeight("Emissive Pre Exposure", Range(0.0, 1.0)) = 1.0
 
-       [HideInInspector]  _DistortionVectorMap("DistortionVectorMap", 2D) = "black" {}
+        [HideInInspector] _DistortionVectorMap("DistortionVectorMap", 2D) = "black" {}
         [HideInInspector] [ToggleUI] _DistortionEnable("Enable Distortion", Float) = 0.0
-       [HideInInspector]  [ToggleUI] _DistortionDepthTest("Distortion Depth Test Enable", Float) = 1.0
-       [HideInInspector]  [Enum(Add, 0, Multiply, 1, Replace, 2)] _DistortionBlendMode("Distortion Blend Mode", Int) = 0
+        [HideInInspector] [ToggleUI] _DistortionDepthTest("Distortion Depth Test Enable", Float) = 1.0
+        [HideInInspector] [Enum(Add, 0, Multiply, 1, Replace, 2)] _DistortionBlendMode("Distortion Blend Mode", Int) = 0
         [HideInInspector] _DistortionSrcBlend("Distortion Blend Src", Int) = 0
         [HideInInspector] _DistortionDstBlend("Distortion Blend Dst", Int) = 0
         [HideInInspector] _DistortionBlurSrcBlend("Distortion Blur Blend Src", Int) = 0
         [HideInInspector] _DistortionBlurDstBlend("Distortion Blur Blend Dst", Int) = 0
         [HideInInspector] _DistortionBlurBlendMode("Distortion Blur Blend Mode", Int) = 0
-       [HideInInspector] _DistortionScale("Distortion Scale", Float) = 1
-       [HideInInspector] _DistortionVectorScale("Distortion Vector Scale", Float) = 2
-       [HideInInspector] _DistortionVectorBias("Distortion Vector Bias", Float) = -1
-       [HideInInspector] _DistortionBlurScale("Distortion Blur Scale", Float) = 1
-       [HideInInspector] _DistortionBlurRemapMin("DistortionBlurRemapMin", Float) = 0.0
-       [HideInInspector] _DistortionBlurRemapMax("DistortionBlurRemapMax", Float) = 1.0
+        [HideInInspector] _DistortionScale("Distortion Scale", Float) = 1
+        [HideInInspector] _DistortionVectorScale("Distortion Vector Scale", Float) = 2
+        [HideInInspector] _DistortionVectorBias("Distortion Vector Bias", Float) = -1
+        [HideInInspector] _DistortionBlurScale("Distortion Blur Scale", Float) = 1
+        [HideInInspector] _DistortionBlurRemapMin("DistortionBlurRemapMin", Float) = 0.0
+        [HideInInspector] _DistortionBlurRemapMax("DistortionBlurRemapMax", Float) = 1.0
 
-[ToggleUI]  _UseShadowThreshold("_UseShadowThreshold", Float) = 0.0
-        [ToggleUI]  _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 0.0
+        [ToggleUI] _UseShadowThreshold("_UseShadowThreshold", Float) = 0.0
+        [ToggleUI] _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 0.0
         _AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
- _AlphaCutoffShadow("_AlphaCutoffShadow", Range(0.0, 1.0)) = 0.5
-_AlphaCutoffPrepass("_AlphaCutoffPrepass", Range(0.0, 1.0)) = 0.5
- _AlphaCutoffPostpass("_AlphaCutoffPostpass", Range(0.0, 1.0)) = 0.5
-     [ToggleUI] _TransparentDepthPrepassEnable("_TransparentDepthPrepassEnable", Float) = 0.0
-[ToggleUI] _TransparentBackfaceEnable("_TransparentBackfaceEnable", Float) = 0.0
-[ToggleUI] _TransparentDepthPostpassEnable("_TransparentDepthPostpassEnable", Float) = 0.0
-_TransparentSortPriority("_TransparentSortPriority", Float) = 0
+        _AlphaCutoffShadow("_AlphaCutoffShadow", Range(0.0, 1.0)) = 0.5
+        _AlphaCutoffPrepass("_AlphaCutoffPrepass", Range(0.0, 1.0)) = 0.5
+        _AlphaCutoffPostpass("_AlphaCutoffPostpass", Range(0.0, 1.0)) = 0.5
+        [ToggleUI] _TransparentDepthPrepassEnable("_TransparentDepthPrepassEnable", Float) = 0.0
+        [ToggleUI] _TransparentBackfaceEnable("_TransparentBackfaceEnable", Float) = 0.0
+        [ToggleUI] _TransparentDepthPostpassEnable("_TransparentDepthPostpassEnable", Float) = 0.0
+        _TransparentSortPriority("_TransparentSortPriority", Float) = 0
 
         // Transparency
         [HideInInspector] [Enum(None, 0, Box, 1, Sphere, 2, Thin, 3)]_RefractionModel("Refraction Model", Int) = 0
@@ -223,17 +224,17 @@ _TransparentSortPriority("_TransparentSortPriority", Float) = 0
         [HideInInspector] _StencilWriteMaskDistortionVec("_StencilWriteMaskDistortionVec", Int) = 4 // StencilUsage.DistortionVectors
 
         // Blending state
-_SurfaceType("__surfacetype", Float) = 1.0
+        _SurfaceType("__surfacetype", Float) = 1.0
         [HideInInspector] _BlendMode("__blendmode", Float) = 0.0
         [HideInInspector] _SrcBlend("__src", Float) = 1.0
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
         [HideInInspector] _AlphaSrcBlend("__alphaSrc", Float) = 1.0
         [HideInInspector] _AlphaDstBlend("__alphaDst", Float) = 0.0
         [HideInInspector][ToggleUI] _ZWrite("__zw", Float) = 1.0
-[ToggleUI] _TransparentZWrite("_TransparentZWrite", Float) = 0.0
+        [ToggleUI] _TransparentZWrite("_TransparentZWrite", Float) = 0.0
         [HideInInspector] _CullMode("__cullmode", Float) = 2.0
         [HideInInspector] _CullModeForward("__cullmodeForward", Float) = 2.0 // This mode is dedicated to Forward to correctly handle backface then front face rendering thin transparent
-[Enum(UnityEditor.Rendering.HighDefinition.TransparentCullMode)] _TransparentCullMode("_TransparentCullMode", Int) = 2 // Back culling by default
+        [Enum(UnityEditor.Rendering.HighDefinition.TransparentCullMode)] _TransparentCullMode("_TransparentCullMode", Int) = 2 // Back culling by default
         [HideInInspector] _ZTestDepthEqualForOpaque("_ZTestDepthEqualForOpaque", Int) = 4 // Less equal
         [HideInInspector] _ZTestModeDistortion("_ZTestModeDistortion", Int) = 8
         [HideInInspector] _ZTestGBuffer("_ZTestGBuffer", Int) = 4
@@ -242,9 +243,9 @@ _SurfaceType("__surfacetype", Float) = 1.0
         [HideInInspector] [ToggleUI] _EnableFogOnTransparent("Enable Fog", Float) = 1.0
         [HideInInspector] [ToggleUI] _EnableBlendModePreserveSpecularLighting("Enable Blend Mode Preserve Specular Lighting", Float) = 1.0
 
-		[HideInInspector] [ToggleUI] _DoubleSidedEnable("Double sided enable", Float) = 0.0
-       [HideInInspector]  [Enum(Flip, 0, Mirror, 1, None, 2)] _DoubleSidedNormalMode("Double sided normal mode", Float) = 1
-       [HideInInspector]  _DoubleSidedConstants("_DoubleSidedConstants", Vector) = (1, 1, -1, 0)
+        [HideInInspector] [ToggleUI] _DoubleSidedEnable("Double sided enable", Float) = 0.0
+        [HideInInspector] [Enum(Flip, 0, Mirror, 1, None, 2)] _DoubleSidedNormalMode("Double sided normal mode", Float) = 1
+        [HideInInspector] _DoubleSidedConstants("_DoubleSidedConstants", Vector) = (1, 1, -1, 0)
 
         [HideInInspector] [Enum(UV0, 0, UV1, 1, UV2, 2, UV3, 3, Planar, 4, Triplanar, 5)] _UVBase("UV Set for base", Float) = 0
         [HideInInspector] _TexWorldScale("Scale to apply on world coordinate", Float) = 1.0
@@ -286,7 +287,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
         // Caution: C# code in BaseLitUI.cs call LightmapEmissionFlagsProperty() which assume that there is an existing "_EmissionColor"
         // value that exist to identify if the GI emission need to be enabled.
         // In our case we don't use such a mechanism but need to keep the code quiet. We declare the value and always enable it.
-        // TODO: Fix the code in legacy unity so we can customize the beahvior for GI
+        // TODO: Fix the code in legacy unity so we can customize the behavior for GI
         [HideInInspector] _EmissionColor("Color", Color) = (1, 1, 1)
 
         // HACK: GI Baking system relies on some properties existing in the shader ("_MainTex", "_Cutoff" and "_Color") for opacity handling, so we need to store our version of those parameters in the hard-coded name the GI baking system recognizes.
@@ -304,7 +305,6 @@ _SurfaceType("__surfacetype", Float) = 1.0
     }
 
     HLSLINCLUDE
-	
     #pragma target 4.5
 
     #pragma require geometry
@@ -321,7 +321,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
     //enable GPU instancing support
     //#pragma multi_compile_instancing
     //#pragma instancing_options renderinglayer
-	
+
 	#pragma shader_feature CAST_SHADOWS
 	#pragma shader_feature APPLY_DISPLACEMENT
 	#pragma shader_feature DRAW_SOURCE_GEOMETRY
@@ -332,8 +332,8 @@ _SurfaceType("__surfacetype", Float) = 1.0
 	#pragma shader_feature GENERATE_QUADS
 
 	#pragma shader_feature DISABLE_TESSELATION
-			
-	// Keyword for transparent
+
+    // Keyword for transparent
     #pragma shader_feature _SURFACE_TYPE_TRANSPARENT
     #pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
     #pragma shader_feature_local _BLENDMODE_PRESERVE_SPECULAR_LIGHTING
@@ -351,7 +351,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
 
 	#define ATTRIBUTES_NEED_TANGENT
 	#define ATTRIBUTES_NEED_TEXCOORD0
-			
+
 	#define VARYINGS_NEED_POSITION_WS
 	#define VARYINGS_NEED_TANGENT_TO_WORLD
 
@@ -370,24 +370,24 @@ _SurfaceType("__surfacetype", Float) = 1.0
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
     #include "Grass_TesselationGeometry_Properties.hlsl"
-	
     ENDHLSL
 
-    SubShader
-    {
+    SubShader {
         // This tags allow to use the shader replacement features
-        Tags{ "RenderPipeline"="HDRenderPipeline" "RenderType" = "HDLitShader" }
-		
-        Pass
-        {
+        Tags {
+            "RenderPipeline"="HDRenderPipeline" "RenderType" = "HDLitShader"
+        }
+
+        Pass {
             Name "SceneSelectionPass"
-            Tags { "LightMode" = "SceneSelectionPass" }
+            Tags {
+                "LightMode" = "SceneSelectionPass"
+            }
 
             Cull Off
             ZWrite On
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
             //enable GPU instancing support
             #pragma multi_compile_instancing
@@ -403,7 +403,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/ShaderPass/LitDepthPass.hlsl"
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitData.hlsl"
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassDepthOnly.hlsl"
-			
+
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
 
@@ -412,7 +412,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
 		#else
 			#include "Grass_TesselationGeometry_Geometry.hlsl"
 		#endif
-			
+
             #pragma vertex Vert
             #pragma fragment Frag
             #pragma hull GrassHull
@@ -420,29 +420,27 @@ _SurfaceType("__surfacetype", Float) = 1.0
 			#pragma geometry GrassGeometry
 
             #pragma editor_sync_compilation
-
             ENDHLSL
         }
-		
+
         // Caution: The outline selection in the editor use the vertex shader/hull/domain shader of the first pass declare. So it should not bethe  meta pass.
-        Pass
-        {
+        Pass {
             Name "Grass"
-            Tags { "LightMode" = "GBuffer" } // This will be only for opaque object based on the RenderQueue index
+            Tags {
+                "LightMode" = "GBuffer"
+            } // This will be only for opaque object based on the RenderQueue index
 
             Cull Off
             ZTest LEqual
 
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMaskGBuffer]
-                Ref  [_StencilRefGBuffer]
+                Ref [_StencilRefGBuffer]
                 Comp Always
                 Pass Replace
             }
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -454,7 +452,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
 			#define VARYINGS_NEED_POSITION
 
 			#pragma multi_compile _ VISUALIZE_DISPLACEMENT VISUALIZE_WIND VISUALIZE_LODS
-			
+
         #ifndef DEBUG_DISPLAY
             // When we have alpha test, we will force a depth prepass so we always bypass the clip instruction in the GBuffer
             // Don't do it with debug display mode as it is possible there is no depth prepass in this case
@@ -469,7 +467,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitData.hlsl"
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassGBuffer.hlsl"
-			
+
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Fragment.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
@@ -485,14 +483,14 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "ShadowCaster"
-            Tags { "LightMode" = "ShadowCaster" }
+            Tags {
+                "LightMode" = "ShadowCaster"
+            }
 
             Cull Off
 
@@ -503,7 +501,6 @@ _SurfaceType("__surfacetype", Float) = 1.0
             ColorMask 0
 
             HLSLPROGRAM
-			
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -517,11 +514,11 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/ShaderPass/LitDepthPass.hlsl"
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitData.hlsl"
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassDepthOnly.hlsl"
-			
+
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
             #include "Grass_TesselationGeometry_Fragment.hlsl"
-			
+
 		#if defined(DRAW_SOURCE_GEOMETRY) || !defined(CAST_SHADOWS)
 			#include "Grass_TesselationGeometry_GeometryPassthrough.hlsl"
 		#else
@@ -536,20 +533,19 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
 		#endif
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "DepthOnly"
-            Tags{ "LightMode" = "DepthOnly" }
+            Tags {
+                "LightMode" = "DepthOnly"
+            }
 
             Cull Off
 
             // To be able to tag stencil with disableSSR information for forward
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMaskDepth]
                 Ref [_StencilRefDepth]
                 Comp Always
@@ -559,7 +555,6 @@ _SurfaceType("__surfacetype", Float) = 1.0
             ZWrite On
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -586,11 +581,11 @@ _SurfaceType("__surfacetype", Float) = 1.0
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitData.hlsl"
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassDepthOnly.hlsl"
-			
+
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Fragment.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
-			
+
 		#ifdef DRAW_SOURCE_GEOMETRY
 			#include "Grass_TesselationGeometry_GeometryPassthrough.hlsl"
 		#else
@@ -602,28 +597,27 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
 
-	
-        Pass
-        {
+
+        Pass {
             Name "TransparentDepthPrepass"
-            Tags{ "LightMode" = "TransparentDepthPrepass" }
+            Tags {
+                "LightMode" = "TransparentDepthPrepass"
+            }
 
             Cull[_CullMode]
             ZWrite On
             ColorMask 0
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
             #pragma multi_compile_instancing
             #pragma instancing_options renderinglayer
-			
+
 			#define ATTRIBUTES_NEED_NORMAL
 
 			#define VARYINGS_NEED_POSITION
@@ -641,7 +635,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Fragment.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
-			
+
 		#ifdef DRAW_SOURCE_GEOMETRY
 			#include "Grass_TesselationGeometry_GeometryPassthrough.hlsl"
 		#else
@@ -653,15 +647,15 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
 
         // Caution: Order is important: TransparentBackface, then Forward/ForwardOnly
-        Pass
-        {
+        Pass {
             Name "TransparentBackface"
-            Tags { "LightMode" = "TransparentBackface" }
+            Tags {
+                "LightMode" = "TransparentBackface"
+            }
 
             Blend [_SrcBlend] [_DstBlend], [_AlphaSrcBlend] [_AlphaDstBlend]
             ZWrite [_ZWrite]
@@ -670,7 +664,6 @@ _SurfaceType("__surfacetype", Float) = 1.0
             ZTest [_ZTestTransparent]
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -689,7 +682,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma multi_compile SHADOW_LOW SHADOW_MEDIUM SHADOW_HIGH
 
             #define USE_CLUSTERED_LIGHTLIST // There is not FPTL lighting when using transparent
-			
+
 			#define ATTRIBUTES_NEED_NORMAL
 
 			#define VARYINGS_NEED_POSITION
@@ -736,17 +729,16 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "Forward"
-            Tags { "LightMode" = "Forward" } // This will be only for transparent object based on the RenderQueue index
+            Tags {
+                "LightMode" = "Forward"
+            } // This will be only for transparent object based on the RenderQueue index
 
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMask]
                 Ref [_StencilRef]
                 Comp Always
@@ -761,7 +753,6 @@ _SurfaceType("__surfacetype", Float) = 1.0
             ColorMask [_ColorMaskTransparentVel] 1
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -833,27 +824,26 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "TransparentDepthPostpass"
-            Tags { "LightMode" = "TransparentDepthPostpass" }
+            Tags {
+                "LightMode" = "TransparentDepthPostpass"
+            }
 
             Cull[_CullMode]
             ZWrite On
             ColorMask 0
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
             #pragma multi_compile_instancing
             #pragma instancing_options renderinglayer
-			
+
 			#define ATTRIBUTES_NEED_NORMAL
 
 			#define VARYINGS_NEED_POSITION
@@ -871,7 +861,7 @@ _SurfaceType("__surfacetype", Float) = 1.0
 			#include "Grass_TesselationGeometry_Common.hlsl"
             #include "Grass_TesselationGeometry_Fragment.hlsl"
             #include "Grass_TesselationGeometry_Tesselation.hlsl"
-			
+
 		#ifdef DRAW_SOURCE_GEOMETRY
 			#include "Grass_TesselationGeometry_GeometryPassthrough.hlsl"
 		#else
@@ -883,11 +873,10 @@ _SurfaceType("__surfacetype", Float) = 1.0
             #pragma hull GrassHull
             #pragma domain GrassDomain
 			#pragma geometry GrassGeometry
-
             ENDHLSL
         }
-	}
+    }
 
-    CustomEditor "Grass.Editor.GrassGUI"    
-	//CustomEditor "Rendering.HighDefinition.LitGUI"
+    CustomEditor "Grass.Editor.GrassGUI"
+    //CustomEditor "Rendering.HighDefinition.LitGUI"
 }
