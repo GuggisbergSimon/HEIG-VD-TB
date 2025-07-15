@@ -10,7 +10,7 @@ L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de
 #figure(
   table(
     columns: (21%, auto, auto, auto, auto, auto, auto),
-    [*Moteurs de jeu*], [*Début*], [*Rendu*], [*Langage*], [*Open Source*],[*Code Source*],[*Sorties 2024*],
+    table.header[Moteurs de jeu][Début][Rendu][Langage][Open Source][Code Source][Sorties 2024],
     "Unity", "2005", "2D/3D", "C#", "Non", "Partiellement", "12638",
     "Unreal Engine", "1998", "3D", "C++", "Non", "Oui", "4707",
     "Godot", "2014", "2D/3D", "GDScript C#", "Oui", "Oui", "1296",
@@ -238,7 +238,7 @@ Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom
 #figure(
   table(
     columns: (auto, auto, auto, auto),
-    [*Techniques*], [*Godot*], [*Unity*], [*Unreal Engine*],
+    table.header[Techniques][Godot][Unity][Unreal Engine],
     "Frustum Culling", "Oui", "Oui", "Opt out",
     "Occlusion Culling", "Opt in", "Opt in", "Opt in",
     "Lightmap", "Opt in", "Opt in", "Opt in",

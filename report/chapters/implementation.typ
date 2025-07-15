@@ -423,9 +423,9 @@ La seconde solution, Compute, n'a néanmoins pas été patchée pour Unity 6.0 e
 ==== Bruteforce Grass Shader
 
 Cette solution disponible sur le Unity Asset Store n'en est qu'une parmi de nombreuses autres, mais elle offre un support HDRP via geometry shader.
-Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'interaction tels qu'un aplatissement suivant le parcours d'un agent, ou même un rasage de celle-ci.
+Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'interaction tels qu'un aplatissement suivant le parcours d'un agent, ou même une coupe de l'herbe.
 
-Son implémentation a été assez aisée mais est plus adapté à des petites tailles de terrains, telles que 50x50.
+Son implémentation a été assez aisée mais est adaptée à des plus petites tailles de terrains, telles que 50x50.
 
 TODO implement ?
 
@@ -505,8 +505,6 @@ Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut pa
 
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
 Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas utiliser Input System.
-
-
 
 TODO extrait histogramme test performance
 

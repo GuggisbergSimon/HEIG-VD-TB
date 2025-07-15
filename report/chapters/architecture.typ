@@ -26,7 +26,7 @@ Une inspiration notable est le jeu vidéo Sable, qui, comme son nom l'indique, s
 #figure(
   table(
     columns: (auto, auto, auto),
-    [*Contrôle*],[*Interaction Jeu*],[*Interaction menu*],
+    table.header[Contrôle][Interaction Jeu][Interaction menu],
     [`A`],[Tourner à gauche],[Naviguer vers la gauche],
     [`D`],[Tourner à droite],[Naviguer vers la droite],
     [`W`],[Accélérer],[Naviguer vers le haut],
@@ -203,7 +203,7 @@ Ainsi on distingue deux types d'interactions principales, se déplacer et contr�
 #figure(
   table(
     columns: (auto, auto, auto),
-    [*Type*], [*Situation*], [*Fréquence attendue lors d'une séance habituelle de gameplay*],
+    table.header[Type][Situation][Fréquence attendue lors d'une séance habituelle de gameplay],
     "Mouvement", "", "",
     "", "Lent", "fréquent",
     "", "Rapide", "inattendu",

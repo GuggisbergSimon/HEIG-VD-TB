@@ -98,5 +98,8 @@
   show heading.where(level:3): set text(size: 14pt) 
   show heading.where(level:4): set text(size: 11pt, style: "italic")
 
+  show table.cell.where(y: 0): set text(weight: "bold")
+  show figure: set block(breakable: true)
+
   body
 }
