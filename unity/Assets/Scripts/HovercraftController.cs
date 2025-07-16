@@ -24,7 +24,7 @@ public class HovercraftController : MonoBehaviour {
 
     [Tooltip("A multiplier applied to the damping force to reduce oscillation."), SerializeField]
     private float dampingForceMultiplier = 5f;
-
+    
     [SerializeField] private float maxSpeedParticles = 100f;
     [SerializeField] private float minSpeedParticles = 50f;
     [SerializeField] private float minSpeedRateOverTime = 0f;
@@ -93,10 +93,6 @@ public class HovercraftController : MonoBehaviour {
                 Mathf.Lerp(minSpeedRateOverTime, maxSpeedRateOverTime, normalizedSpeed)
             );
         }
-    }
-
-    private void OnMenu() {
-        GameManager.Instance.UIManager.TogglePause();
     }
 
     private void OnReset() {

@@ -9,7 +9,7 @@ public class ImpostorRunTime : MonoBehaviour {
     [SerializeField] private int impostorLayer = 6;
     [SerializeField] private Renderer impostorRenderer;
     [SerializeField] private Camera mainCamera;
-    
+
     private RenderTexture _renderTexture;
     private Camera _camera;
     private Bounds _bounds;
@@ -45,14 +45,14 @@ public class ImpostorRunTime : MonoBehaviour {
         // Orient billboard
         Vector3 dirToCamera = (cam.transform.position - transform.position).normalized;
         imposterModel.transform.rotation = Quaternion.LookRotation(-dirToCamera);
-        
+
         // Setup camera for impostor rendering
         _camera.CopyFrom(cam);
         _camera.clearFlags = CameraClearFlags.SolidColor;
         _camera.backgroundColor = Color.clear;
         _camera.cullingMask = 1 << impostorLayer;
         _camera.targetTexture = _renderTexture;
-    
+
         // Orient the camera
         Vector3 boundsCenter = _bounds.center;
         _camera.transform.LookAt(boundsCenter);
@@ -62,7 +62,7 @@ public class ImpostorRunTime : MonoBehaviour {
         float distance = Vector3.Distance(_camera.transform.position, boundsCenter);
         float requiredFOV = 2.0f * Mathf.Atan(_bounds.extents.magnitude / distance) * Mathf.Rad2Deg;
         _camera.fieldOfView = requiredFOV * 1.2f; // Add 20% margin to ensure model fits
-    
+
         // Render only the full-model layer into the RenderTexture
         bool wasImpostorActive = imposterModel.activeSelf;
         imposterModel.SetActive(false);
@@ -75,15 +75,15 @@ public class ImpostorRunTime : MonoBehaviour {
 
         impostorRenderer.material.mainTexture = _renderTexture;
     }
-    
+
     private Bounds GetModelBounds(GameObject model) {
         Bounds bounds = new Bounds(model.transform.position, Vector3.zero);
         Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
-        
+
         foreach (Renderer fullRenderer in renderers) {
             bounds.Encapsulate(fullRenderer.bounds);
         }
-            
+
         return bounds;
     }
 

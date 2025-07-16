@@ -6,9 +6,12 @@ public class UIManager : MonoBehaviour {
     [Tooltip("The name of the scene to load as a main menu. Must be included in the build settings."), SerializeField]
     private string menuSceneName = "MainMenu";
 
-    [Tooltip("The name of scenes to load as compositing scenes. The expected format is 'name n'"), SerializeField]
+    [Tooltip("The name of the compositing scene"), SerializeField]
     private string compositingSceneName = "Compositing";
 
+    [Tooltip("The name of the demo scene"), SerializeField]
+    private string demoSceneName = "Demo";
+    
     [Tooltip("The panel containing the pause menu"), SerializeField]
     private GameObject pausePanel;
 
@@ -46,6 +49,16 @@ public class UIManager : MonoBehaviour {
         };
         GameManager.Instance.LoadSettings(gameSettings);
         AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName);
+        SceneManager.UnloadSceneAsync(menuSceneName);
+        if (operation != null) {
+            operation.completed += _ => { ToggleLoadingPanel(); };
+        }
+    }
+
+    public void LoadDemo() {
+        ToggleLoadingPanel();
+        ToggleMenu();
+        AsyncOperation operation = SceneManager.LoadSceneAsync(demoSceneName);
         SceneManager.UnloadSceneAsync(menuSceneName);
         if (operation != null) {
             operation.completed += _ => { ToggleLoadingPanel(); };
