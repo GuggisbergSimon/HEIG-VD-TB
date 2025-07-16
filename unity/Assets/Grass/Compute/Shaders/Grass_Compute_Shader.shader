@@ -1,33 +1,31 @@
-﻿Shader "Grass/Grass_Compute"
-{
-    Properties
-    {		
-		[Toggle(FROM_PROCEDURAL)]
-		_FromProcedural("Draw Procedural Grass", Float) = 1
-		
-		[Toggle(GRASS_BLADE_SCALING)]
-		_GrassBladeScaling("Grass Blade Scaling", Float) = 1
-		
+﻿Shader "Grass/Grass_Compute" {
+    Properties {
+        [Toggle(FROM_PROCEDURAL)]
+        _FromProcedural("Draw Procedural Grass", Float) = 1
+
+        [Toggle(GRASS_BLADE_SCALING)]
+        _GrassBladeScaling("Grass Blade Scaling", Float) = 1
+
 
         // Following set of parameters represent the parameters node inside the MaterialGraph.
         // They are use to fill a SurfaceData. With a MaterialGraph this should not exist.
-		
-		//_GrassTime("Time", Float) = 0
-		_WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
-		_WindFrequency("Wind Frequency", Vector) = (0.05, 0.05, 0, 0)
-		_WindStrength("Wind Strength", Float) = 1
-        
+
+        //_GrassTime("Time", Float) = 0
+        _WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
+        _WindFrequency("Wind Frequency", Vector) = (0.05, 0.05, 0, 0)
+        _WindStrength("Wind Strength", Float) = 1
+
         _AlphaRemapMin("Alpha Remap Min", Range(0, 1)) = 0.0
         _AlphaRemapMax("Alpha Remap Max", Range(0, 1)) = 1.0
         _TransmissionMask("Transmission Mask", Float) = 0.0
         _ObjectSpaceUVMapping("Object Space UV Mapping", Float) = 0.0
-		
-		//[HideInInspector] float4x4 _ObjectToWorld;
-		//[HideInInspector] float4x4 _WorldToObject;
-		//[HideInInspector] _GrassWorldSpaceCameraPos("Camera Position", Vector) = (0, 0, 0, 0)
 
-		_GrassBottomColour("Grass Bottom Colour", Color) = (0, 1, 0, 1)
-		_GrassTopColour("Grass Top Colour", Color) = (0, 1, 0, 1)
+        //[HideInInspector] float4x4 _ObjectToWorld;
+        //[HideInInspector] float4x4 _WorldToObject;
+        //[HideInInspector] _GrassWorldSpaceCameraPos("Camera Position", Vector) = (0, 0, 0, 0)
+
+        _GrassBottomColour("Grass Bottom Colour", Color) = (0, 1, 0, 1)
+        _GrassTopColour("Grass Top Colour", Color) = (0, 1, 0, 1)
 
         // Reminder. Color here are in linear but the UI (color picker) do the conversion sRGB to linear
         [HideInInspector] _BaseColor("BaseColor", Color) = (1,1,1,1)
@@ -42,7 +40,7 @@
         [HideInInspector] _AORemapMin("AORemapMin", Float) = 0.0
         [HideInInspector] _AORemapMax("AORemapMax", Float) = 1.0
 
-        [HideInInspector] _NormalMap("NormalMap", 2D) = "bump" {}     // Tangent space normal map
+        [HideInInspector] _NormalMap("NormalMap", 2D) = "bump" {} // Tangent space normal map
         [HideInInspector] _NormalMapOS("NormalMapOS", 2D) = "white" {} // Object space normal map - no good default value
         [HideInInspector] _NormalScale("_NormalScale", Range(0.0, 8.0)) = 1
 
@@ -99,7 +97,7 @@
 
         // Following options are for the GUI inspector and different from the input parameters above
         // These option below will cause different compilation flag.
-        [HideInInspector] [Enum(Off, 0, From Ambient Occlusion, 1, From Bent Normals, 2)]  _SpecularOcclusionMode("Specular Occlusion Mode", Int) = 1
+        [HideInInspector] [Enum(Off, 0, From Ambient Occlusion, 1, From Bent Normals, 2)] _SpecularOcclusionMode("Specular Occlusion Mode", Int) = 1
 
         [HideInInspector] [HDR] _EmissiveColor("EmissiveColor", Color) = (0, 0, 0)
         // Used only to serialize the LDR and HDR emissive color in the material UI,
@@ -129,8 +127,8 @@
         [HideInInspector] _DistortionBlurRemapMax("DistortionBlurRemapMax", Float) = 1.0
 
 
-        [HideInInspector] [ToggleUI]  _UseShadowThreshold("_UseShadowThreshold", Float) = 0.0
-        [HideInInspector] [ToggleUI]  _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 0.0
+        [HideInInspector] [ToggleUI] _UseShadowThreshold("_UseShadowThreshold", Float) = 0.0
+        [HideInInspector] [ToggleUI] _AlphaCutoffEnable("Alpha Cutoff Enable", Float) = 0.0
         [HideInInspector] _AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [HideInInspector] _AlphaCutoffShadow("_AlphaCutoffShadow", Range(0.0, 1.0)) = 0.5
         [HideInInspector] _AlphaCutoffPrepass("_AlphaCutoffPrepass", Range(0.0, 1.0)) = 0.5
@@ -249,7 +247,6 @@
     }
 
     HLSLINCLUDE
-
     #pragma target 4.5
 
     //-------------------------------------------------------------------------------------
@@ -327,7 +324,7 @@
 
     // This shader support vertex modification
     #define HAVE_VERTEX_MODIFICATION
-	
+
 	#ifndef _DOUBLESIDED_ON
 	#define _DOUBLESIDED_ON
 	#endif
@@ -372,20 +369,18 @@
     // LitData.hlsl should be responsible for preparing shading parameters.
     // LitShading.hlsl implements the light loop API.
     // LitData.hlsl is included here, LitShading.hlsl is included below for shading passes only.
-
     ENDHLSL
 
-    SubShader
-    {
-        Pass
-        {
+    SubShader {
+        Pass {
             Name "SceneSelectionPass"
-            Tags { "LightMode" = "SceneSelectionPass" }
+            Tags {
+                "LightMode" = "SceneSelectionPass"
+            }
 
             Cull Off
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
             //enable GPU instancing support
             #pragma multi_compile_instancing
@@ -409,22 +404,21 @@
             #pragma fragment GrassFragment
 
             #pragma editor_sync_compilation
-
             ENDHLSL
         }
 
 
         // Caution: The outline selection in the editor use the vertex shader/hull/domain shader of the first pass declare. So it should not bethe  meta pass.
-        Pass
-        {
+        Pass {
             Name "GBuffer"
-            Tags { "LightMode" = "GBuffer" } // This will be only for opaque object based on the RenderQueue index
+            Tags {
+                "LightMode" = "GBuffer"
+            } // This will be only for opaque object based on the RenderQueue index
 
             Cull Off
             ZTest [_ZTestGBuffer]
 
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMaskGBuffer]
                 Ref [_StencilRefGBuffer]
                 Comp Always
@@ -432,7 +426,6 @@
             }
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -455,7 +448,6 @@
         #endif
 
 
-
             #define SHADERPASS SHADERPASS_GBUFFER
             #ifdef DEBUG_DISPLAY
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
@@ -471,14 +463,14 @@
 
 			#pragma vertex GrassVertex
             #pragma fragment GrassFragment
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "ShadowCaster"
-            Tags{ "LightMode" = "ShadowCaster" }
+            Tags {
+                "LightMode" = "ShadowCaster"
+            }
 
             Cull Off
 
@@ -489,7 +481,6 @@
             ColorMask 0
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -504,23 +495,22 @@
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassDepthOnly.hlsl"
 			#include "Grass_Compute_Vertex.hlsl"
 			#include "Grass_Compute_Fragment.hlsl"
-			
+
 			#pragma vertex GrassVertex
             #pragma fragment GrassFragment
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "DepthOnly"
-            Tags{ "LightMode" = "DepthOnly" }
+            Tags {
+                "LightMode" = "DepthOnly"
+            }
 
             Cull Off
 
             // To be able to tag stencil with disableSSR information for forward
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMaskDepth]
                 Ref [_StencilRefDepth]
                 Comp Always
@@ -530,7 +520,6 @@
             ZWrite On
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -556,20 +545,19 @@
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassDepthOnly.hlsl"
 			#include "Grass_Compute_Vertex.hlsl"
 			#include "Grass_Compute_Fragment.hlsl"
-			
+
 			#pragma vertex GrassVertex
             #pragma fragment GrassFragment
-
             ENDHLSL
         }
 
-        Pass
-        {
+        Pass {
             Name "Forward"
-            Tags { "LightMode" = "Forward" } // This will be only for transparent object based on the RenderQueue index
+            Tags {
+                "LightMode" = "Forward"
+            } // This will be only for transparent object based on the RenderQueue index
 
-            Stencil
-            {
+            Stencil {
                 WriteMask [_StencilWriteMask]
                 Ref [_StencilRef]
                 Comp Always
@@ -584,7 +572,6 @@
             ColorMask [_ColorMaskTransparentVel] 1
 
             HLSLPROGRAM
-
             #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
             //enable GPU instancing support
@@ -635,10 +622,9 @@
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassForward.hlsl"
 			#include "Grass_Compute_Vertex.hlsl"
 			#include "Grass_Compute_Fragment.hlsl"
-			
+
 			#pragma vertex GrassVertex
             #pragma fragment GrassFragment
-
             ENDHLSL
         }
     }
