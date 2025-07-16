@@ -30,6 +30,9 @@ public class ChunkManager : MonoBehaviour {
 
     [Tooltip("Offset to load chunks at proper height."), SerializeField]
     private float yOffset = 0f;
+    [SerializeField] private ParticleSystem speedParticles;
+    
+    public ParticleSystem SpeedParticles => speedParticles;
 
     public HovercraftController Player { get; private set; }
 

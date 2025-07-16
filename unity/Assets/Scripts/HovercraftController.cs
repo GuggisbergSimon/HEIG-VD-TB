@@ -19,16 +19,30 @@ public class HovercraftController : MonoBehaviour {
     [Tooltip("A multiplier applied to the torque force."), SerializeField]
     private float torqueForceMultiplier = 300f;
 
-    [Tooltip("A multiplier applied to the spring force applied on each spring."), SerializeField] private float springForceMultiplier = 250f;
-    [Tooltip("A multiplier applied to the damping force to reduce oscillation."), SerializeField] private float dampingForceMultiplier = 5f;
+    [Tooltip("A multiplier applied to the spring force applied on each spring."), SerializeField]
+    private float springForceMultiplier = 250f;
+
+    [Tooltip("A multiplier applied to the damping force to reduce oscillation."), SerializeField]
+    private float dampingForceMultiplier = 5f;
+
+    [SerializeField] private float maxSpeedParticles = 100f;
+    [SerializeField] private float minSpeedParticles = 50f;
+    [SerializeField] private float minSpeedRateOverTime = 0f;
+    [SerializeField] private float maxSpeedRateOverTime = 100f;
 
     private Rigidbody _rb;
     private InputAction _moveAction;
+
+    private Dictionary<GameObject, TrailRenderer> _trails = new Dictionary<GameObject, TrailRenderer>();
 
     private void Start() {
         _rb = GetComponent<Rigidbody>();
         _rb.centerOfMass = centerOfMass.transform.localPosition;
         _moveAction = InputSystem.actions.FindAction("Move");
+
+        foreach (GameObject spring in springs) {
+            _trails.Add(spring, spring.GetComponentInChildren<TrailRenderer>());
+        }
     }
 
     private void FixedUpdate() {
@@ -44,9 +58,11 @@ public class HovercraftController : MonoBehaviour {
         foreach (var spring in springs) {
             if (!Physics.Raycast(spring.transform.position, transform.TransformDirection(Vector3.down),
                     out var hit, 3f)) {
+                _trails[spring].emitting = false;
                 continue;
             }
 
+            _trails[spring].emitting = true;
             Vector3 springForce = transform.TransformDirection(Vector3.up) *
                 (Time.fixedDeltaTime * Mathf.Pow(3f - hit.distance, 2)) / 3f * springForceMultiplier;
             _rb.AddForceAtPosition(springForce, spring.transform.position);
@@ -57,6 +73,15 @@ public class HovercraftController : MonoBehaviour {
                                (-Time.fixedDeltaTime * transform.InverseTransformVector(_rb.linearVelocity).x *
                                 dampingForceMultiplier);
         _rb.AddForce(dampingForce);
+
+        float currentSpeed = _rb.linearVelocity.magnitude;
+        float normalizedSpeed =
+            Mathf.Clamp01((currentSpeed - minSpeedParticles) / (maxSpeedParticles - minSpeedParticles));
+
+        var emission = GameManager.Instance.ChunkManager.SpeedParticles.emission;
+        emission.rateOverTime = new ParticleSystem.MinMaxCurve(
+            Mathf.Lerp(minSpeedRateOverTime, maxSpeedRateOverTime, normalizedSpeed)
+        );
     }
 
     private void OnMenu() {
