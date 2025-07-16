@@ -107,6 +107,11 @@ float4 _WindDistortionMap_ST;
 half _WindStrength;
 float2 _WindFrequency;
 
+half _AlphaRemapMin;
+half _AlphaRemapMax;
+half _TransmissionMask;
+half _ObjectSpaceUVMapping;
+
 float4x4 _ObjectToWorld;
 
 float3 _GrassBottomColour;

@@ -16,6 +16,11 @@
 		_WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
 		_WindFrequency("Wind Frequency", Vector) = (0.05, 0.05, 0, 0)
 		_WindStrength("Wind Strength", Float) = 1
+        
+        _AlphaRemapMin("Alpha Remap Min", Range(0, 1)) = 0.0
+        _AlphaRemapMax("Alpha Remap Max", Range(0, 1)) = 1.0
+        _TransmissionMask("Transmission Mask", Float) = 0.0
+        _ObjectSpaceUVMapping("Object Space UV Mapping", Float) = 0.0
 		
 		//[HideInInspector] float4x4 _ObjectToWorld;
 		//[HideInInspector] float4x4 _WorldToObject;
