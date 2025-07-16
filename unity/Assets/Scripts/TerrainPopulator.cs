@@ -8,6 +8,7 @@ using System.IO;
 #endif
 
 public class TerrainPopulator : MonoBehaviour {
+#if UNITY_EDITOR
     [SerializeField] private int seed = 42;
     [SerializeField] private string chunksDirectory = "Assets/Scenes/Chunks";
     [SerializeField] private GameObject[] buildingPrefabs;
@@ -33,15 +34,12 @@ public class TerrainPopulator : MonoBehaviour {
 
     [ContextMenu("Place and Save Buildings")]
     private void PlaceBuildings() {
-#if UNITY_EDITOR
         string[] sceneFiles = Directory.GetFiles(chunksDirectory, "*.unity");
-
         foreach (string sceneFile in sceneFiles) {
             EditorSceneManager.OpenScene(sceneFile, OpenSceneMode.Single);
             PlaceBuildingsInActiveTerrains();
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
         }
-#endif
     }
 
     [ContextMenu("Place Buildings")]
@@ -164,7 +162,6 @@ public class TerrainPopulator : MonoBehaviour {
     
     [ContextMenu("Paint and Save Grass Details")]
     private void PaintGrassDetails() {
-    #if UNITY_EDITOR
         string[] sceneFiles = Directory.GetFiles(chunksDirectory, "*.unity");
 
         foreach (string sceneFile in sceneFiles) {
@@ -172,7 +169,6 @@ public class TerrainPopulator : MonoBehaviour {
             PaintGrassDetailsInActiveTerrains();
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
         }
-    #endif
     }
 
     [ContextMenu("Paint Grass Details")]
@@ -266,4 +262,5 @@ public class TerrainPopulator : MonoBehaviour {
         float normalizedZ = Mathf.Clamp01(worldZ / terrainData.size.z);
         return terrainData.GetInterpolatedNormal(normalizedX, normalizedZ);
     }
+#endif
 }
