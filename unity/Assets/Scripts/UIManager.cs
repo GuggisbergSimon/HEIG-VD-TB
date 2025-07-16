@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private Toggle lodToggle;
     [SerializeField] private Toggle impostorToggle;
     [SerializeField] private Toggle srpBatcherToggle;
+    [SerializeField] private Toggle juiceToggle;
 
     private bool _isLoading = false;
     private bool _isPaused = false;
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour {
             EnableLOD = lodToggle.isOn, 
             EnableImpostor = lodToggle.isOn && impostorToggle.isOn,
             SRPBatcher = srpBatcherToggle.isOn,
+            Juice = juiceToggle.isOn
         };
         GameManager.Instance.LoadSettings(gameSettings);
         AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName);

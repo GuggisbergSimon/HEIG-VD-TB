@@ -38,6 +38,7 @@ public class ChunkManager : MonoBehaviour {
 
     public Camera Camera { get; private set; }
 
+    private GameSettings _gameSettings;
     private string[][] _sortedScenes;
     private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
@@ -50,6 +51,7 @@ public class ChunkManager : MonoBehaviour {
             EnableLOD = enableLOD,
             EnableImpostor = enableImpostor,
             SRPBatcher = srpBatcher,
+            Juice = true,
         };
         Setup(settings);
     }
@@ -88,7 +90,9 @@ public class ChunkManager : MonoBehaviour {
         enableLOD = gameSettings.EnableLOD;
         enableImpostor = gameSettings.EnableImpostor;
         GraphicsSettings.useScriptableRenderPipelineBatching = gameSettings.SRPBatcher;
+        SpeedParticles.gameObject.SetActive(gameSettings.Juice);
         recenterChunks = gameSettings.RecenterChunks;
+        _gameSettings = gameSettings;
         StartCoroutine(LoadInitialChunk());
     }
 
@@ -101,6 +105,7 @@ public class ChunkManager : MonoBehaviour {
 
     private IEnumerator LoadInitialChunk() {
         Player = GameObject.FindWithTag("Player").GetComponent<HovercraftController>();
+        Player.ToggleJuice(_gameSettings.Juice);
         Camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         _playerGridPos = GetGridPosition(Player.transform.position);
         GameManager.Instance.UIManager.ToggleLoadingPanel();

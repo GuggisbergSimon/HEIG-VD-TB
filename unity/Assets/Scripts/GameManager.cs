@@ -7,6 +7,7 @@ public struct GameSettings {
     public bool EnableLOD;
     public bool EnableImpostor;
     public bool SRPBatcher;
+    public bool Juice;
     public bool IsInitialized;
 }
 

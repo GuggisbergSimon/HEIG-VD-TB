@@ -34,6 +34,7 @@ namespace Tests {
                 EnableLOD = enableLOD,
                 EnableImpostor = enableImpostor,
                 SRPBatcher = srpBatcher,
+                Juice = false,
             });
         }
 

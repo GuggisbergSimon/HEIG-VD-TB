@@ -30,6 +30,7 @@ public class HovercraftController : MonoBehaviour {
     [SerializeField] private float minSpeedRateOverTime = 0f;
     [SerializeField] private float maxSpeedRateOverTime = 100f;
 
+    private bool _isJuiceEnabled = true;
     private Rigidbody _rb;
     private InputAction _moveAction;
 
@@ -39,9 +40,14 @@ public class HovercraftController : MonoBehaviour {
         _rb = GetComponent<Rigidbody>();
         _rb.centerOfMass = centerOfMass.transform.localPosition;
         _moveAction = InputSystem.actions.FindAction("Move");
-
+        
         foreach (GameObject spring in springs) {
-            _trails.Add(spring, spring.GetComponentInChildren<TrailRenderer>());
+            TrailRenderer trail = spring.GetComponentInChildren<TrailRenderer>();
+            if (_isJuiceEnabled) {
+                _trails.Add(spring, trail);
+            } else {
+                trail.emitting = false;
+            }
         }
     }
 
@@ -58,11 +64,15 @@ public class HovercraftController : MonoBehaviour {
         foreach (var spring in springs) {
             if (!Physics.Raycast(spring.transform.position, transform.TransformDirection(Vector3.down),
                     out var hit, 3f)) {
-                _trails[spring].emitting = false;
+                if (_isJuiceEnabled) {
+                    _trails[spring].emitting = false;
+                }
                 continue;
             }
 
-            _trails[spring].emitting = true;
+            if (_isJuiceEnabled) {
+                _trails[spring].emitting = true;
+            }
             Vector3 springForce = transform.TransformDirection(Vector3.up) *
                 (Time.fixedDeltaTime * Mathf.Pow(3f - hit.distance, 2)) / 3f * springForceMultiplier;
             _rb.AddForceAtPosition(springForce, spring.transform.position);
@@ -74,14 +84,15 @@ public class HovercraftController : MonoBehaviour {
                                 dampingForceMultiplier);
         _rb.AddForce(dampingForce);
 
-        float currentSpeed = _rb.linearVelocity.magnitude;
-        float normalizedSpeed =
-            Mathf.Clamp01((currentSpeed - minSpeedParticles) / (maxSpeedParticles - minSpeedParticles));
-
-        var emission = GameManager.Instance.ChunkManager.SpeedParticles.emission;
-        emission.rateOverTime = new ParticleSystem.MinMaxCurve(
-            Mathf.Lerp(minSpeedRateOverTime, maxSpeedRateOverTime, normalizedSpeed)
-        );
+        if (_isJuiceEnabled) {
+            float currentSpeed = _rb.linearVelocity.magnitude;
+            float normalizedSpeed =
+                Mathf.Clamp01((currentSpeed - minSpeedParticles) / (maxSpeedParticles - minSpeedParticles));
+            var emission = GameManager.Instance.ChunkManager.SpeedParticles.emission;
+            emission.rateOverTime = new ParticleSystem.MinMaxCurve(
+                Mathf.Lerp(minSpeedRateOverTime, maxSpeedRateOverTime, normalizedSpeed)
+            );
+        }
     }
 
     private void OnMenu() {
@@ -94,6 +105,10 @@ public class HovercraftController : MonoBehaviour {
         _rb.angularVelocity = Vector3.zero;
     }
 
+    public void ToggleJuice(bool value) {
+        _isJuiceEnabled = value;
+    }
+    
     public void MoveToPosition(Vector3 position) {
         _rb.position = position;
     }
