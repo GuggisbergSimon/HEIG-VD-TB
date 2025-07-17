@@ -1,47 +1,12 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 #endif
 using System.IO;
 using UnityEditor;
 
 public class TerrainSceneSplitter : MonoBehaviour {
 #if UNITY_EDITOR
-    [ContextMenu("Add Chunk Scripts To Chunk Scenes")]
-    private void AddChunkToChunkScenes() {
-        string chunksPath = "Assets/Scenes/Chunks/";
-        string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", new[] { chunksPath });
-
-        foreach (string guid in sceneGuids) {
-            string scenePath = AssetDatabase.GUIDToAssetPath(guid);
-            Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
-
-            GameObject chunkObject = null;
-            foreach (GameObject rootObj in scene.GetRootGameObjects()) {
-                if (rootObj.GetComponent<Terrain>() != null) {
-                    chunkObject = rootObj;
-                    break;
-                }
-            }
-
-            if (chunkObject != null) {
-                Chunk chunkComponent = chunkObject.GetComponent<Chunk>();
-                if (chunkComponent == null) {
-                    chunkComponent = chunkObject.AddComponent<Chunk>();
-                }
-
-                chunkComponent.Build();
-
-                EditorSceneManager.SaveScene(scene);
-            }
-
-            EditorSceneManager.CloseScene(scene, true);
-        }
-
-        AssetDatabase.SaveAssets();
-    }
-
     [ContextMenu("Split Terrains Into Scenes")]
     private void SplitTerrainsIntoScenes() {
         Transform[] children = new Transform[transform.childCount];

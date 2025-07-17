@@ -31,6 +31,40 @@ public class TerrainPopulator : MonoBehaviour {
     [SerializeField] private float detailDensityFactor = 1f;
     [SerializeField] private int grassDetailResolution = 1024;
     [SerializeField] private int grassDetailResolutionPerPatch = 8;
+    
+    [ContextMenu("Add Chunk Scripts To Chunk Scenes")]
+    private void AddChunkToChunkScenes() {
+        string chunksPath = "Assets/Scenes/Chunks/";
+        string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", new[] { chunksPath });
+
+        foreach (string guid in sceneGuids) {
+            string scenePath = AssetDatabase.GUIDToAssetPath(guid);
+            Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+
+            GameObject chunkObject = null;
+            foreach (GameObject rootObj in scene.GetRootGameObjects()) {
+                if (rootObj.GetComponent<Terrain>() != null) {
+                    chunkObject = rootObj;
+                    break;
+                }
+            }
+
+            if (chunkObject != null) {
+                Chunk chunkComponent = chunkObject.GetComponent<Chunk>();
+                if (chunkComponent == null) {
+                    chunkComponent = chunkObject.AddComponent<Chunk>();
+                }
+
+                chunkComponent.Build();
+
+                EditorSceneManager.SaveScene(scene);
+            }
+
+            EditorSceneManager.CloseScene(scene, true);
+        }
+
+        AssetDatabase.SaveAssets();
+    }
 
     [ContextMenu("Place and Save Buildings")]
     private void PlaceBuildings() {
