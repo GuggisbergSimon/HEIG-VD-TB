@@ -508,7 +508,50 @@ Aussi, après plusieurs essais infructueux en raison à la complexité de charge
 
 TODO extrait histogramme test performance
 
-TODO analyse résultat
+#figure(
+  grid(
+    columns: 2,
+    image("images/NoOptimization.jpg", width: 100%),
+    image("images/LOD.jpg", width: 100%),
+  ),
+
+  caption: [
+    À gauche, statistiques sans aucune optimisation.
+    
+    À droite, statistiques avec LOD.
+  ],
+)
+
+#figure(
+  grid(
+    columns: 2,
+    image("images/ImpostorsGPU.jpg", width: 100%),
+    image("images/ImpostorsSRP.jpg", width: 100%),
+  ),
+
+  caption: [
+    À gauche, statistiques imposteurs et GPU Instancing.
+    
+    À droite, statistiques imposteurs et SRP Batcher.
+  ],
+)
+
+Conditions de test :
+- Les tests ont été réalisés avec une distance d'affiche de 25 chunks, sauf dans le cas du test `ChunkLoading`.
+- Il n'y a pas de recentrage du monde effectué
+- Les tests `Impostors` impliquent également l'utilisation de LODs.
+
+Observations :
+- Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
+  Pour toutes les catégories de tests, possédant de l'optimisation, ou non, le test Teleport connaît la plus haute variance.
+  Il s'agit du résultat escompté en raison de sa fréquence attendue faible lors d'une séquence de gameplay habituel.
+- Chaque technique d'optimisation réduit significativement le temps dédié à chaque frame.
+  Sans aucune technique d'optimisation, le temps CPU est deux à trois fois plus grand qu'avec les techniques d'optimisation.
+- Il n'y a que peu de différences entre `GPU Instancing` et `SRP Batcher`.
+  Ceci peut s'expliquer car le prototype n'offre pas de situation apropriée où chacune de ces techniques pourrait briller.
+- Entre `LOD` et `Impostors` il n'y a également que peu de différences.
+  Les imposteurs permettent de néanmoins de réduire le temps de calcul par frame par un sixième en moyenne.
+  Cette différence mineure peut être expliquée par le fait que les imposteurs sont davantages efficaces sont pour les maillages complexes, typiquement de la végétation, et ce prototype en est dépourvu à longue distance au vu du paysage désertique, d'autant plus que les modèles distants sont ignorés et non rendus passé une certaine distance.
 
 === Profile Debugger
 
