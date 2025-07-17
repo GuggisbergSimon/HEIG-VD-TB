@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public struct GameSettings {
     public bool RecenterChunks;
-    public bool LoadingChunks;
+    public int ViewDistance;
     public bool EnableLOD;
     public bool EnableImpostor;
     public bool SRPBatcher;

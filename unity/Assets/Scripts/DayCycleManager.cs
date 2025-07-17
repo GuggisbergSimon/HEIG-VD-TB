@@ -33,7 +33,6 @@ public class DayCycleManager : MonoBehaviour {
     
     private PhysicallyBasedSky _skySettings;
     
-
     private bool _isDay = true;
 
     private void Start() {

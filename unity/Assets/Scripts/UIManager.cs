@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ public class UIManager : MonoBehaviour {
 
     [Tooltip("The name of the demo scene"), SerializeField]
     private string demoSceneName = "Demo";
-    
+
     [Tooltip("The panel containing the pause menu"), SerializeField]
     private GameObject pausePanel;
 
@@ -20,8 +21,9 @@ public class UIManager : MonoBehaviour {
 
     [Tooltip("The panel containing the loading screen"), SerializeField]
     private GameObject loadingPanel;
-    
-    [SerializeField] private Toggle loadingChunkToggle;
+
+    [SerializeField] private Slider viewDistanceSlider;
+    [SerializeField] private TextMeshProUGUI viewDistanceText;
     [SerializeField] private Toggle recenterWorldToggle;
     [SerializeField] private Toggle lodToggle;
     [SerializeField] private Toggle impostorToggle;
@@ -30,6 +32,10 @@ public class UIManager : MonoBehaviour {
 
     private bool _isLoading = false;
     private bool _isPaused = false;
+
+    public void UpdateViewDistanceText() {
+        viewDistanceText.text = $"{viewDistanceSlider.value}";
+    }
 
     public static void ToggleCursor(bool isUIMode) {
         Cursor.lockState = isUIMode ? CursorLockMode.None : CursorLockMode.Locked;
@@ -41,8 +47,8 @@ public class UIManager : MonoBehaviour {
         ToggleMenu();
         GameSettings gameSettings = new GameSettings {
             RecenterChunks = recenterWorldToggle.isOn,
-            LoadingChunks = loadingChunkToggle.isOn,
-            EnableLOD = lodToggle.isOn, 
+            ViewDistance = (int)viewDistanceSlider.value,
+            EnableLOD = lodToggle.isOn,
             EnableImpostor = lodToggle.isOn && impostorToggle.isOn,
             SRPBatcher = srpBatcherToggle.isOn,
             Juice = juiceToggle.isOn
@@ -92,6 +98,7 @@ public class UIManager : MonoBehaviour {
     private void ToggleMenu() {
         ToggleCursor(true);
         menuPanel.SetActive(!menuPanel.activeSelf);
+        UpdateViewDistanceText();
     }
 
     public void ToggleLoadingPanel() {

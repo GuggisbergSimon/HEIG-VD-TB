@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using AmplifyImpostors;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
 
 public class ChunkManager : MonoBehaviour {
@@ -31,6 +34,8 @@ public class ChunkManager : MonoBehaviour {
     [Tooltip("Offset to load chunks at proper height."), SerializeField]
     private float yOffset = 0f;
     [SerializeField] private ParticleSystem speedParticles;
+    [SerializeField] private CinemachineCamera playerCamera;
+    [SerializeField] private VolumeProfile volumeProfile;
     
     public ParticleSystem SpeedParticles => speedParticles;
 
@@ -47,7 +52,7 @@ public class ChunkManager : MonoBehaviour {
     public void Setup() {
         GameSettings settings = new GameSettings {
             RecenterChunks = recenterChunks,
-            LoadingChunks = true,
+            ViewDistance = viewDistance,
             EnableLOD = enableLOD,
             EnableImpostor = enableImpostor,
             SRPBatcher = srpBatcher,
@@ -57,9 +62,11 @@ public class ChunkManager : MonoBehaviour {
     }
 
     public void Setup(GameSettings gameSettings) {
-        if (!gameSettings.LoadingChunks) {
-            viewDistance = 50;
-        }
+        viewDistance = gameSettings.ViewDistance;
+        playerCamera.Lens.FarClipPlane = gameSettings.ViewDistance * gridSize.x;
+        volumeProfile.TryGet(out Fog fogSettings);
+        fogSettings.maxFogDistance.value = gameSettings.ViewDistance * gridSize.x * 4f / 3f;
+        
         // ChunksToLoad, circular pattern with viewDistance as radius
         _viewGrid = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
         for (int x = -viewDistance; x <= viewDistance; x++) {

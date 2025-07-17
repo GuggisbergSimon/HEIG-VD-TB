@@ -27,10 +27,10 @@ namespace Tests {
             SceneManager.LoadScene("MainMenu");
         }
 
-        public static void LoadSettings(bool recenterChunks, bool loadingChunks, bool enableLOD, bool enableImpostor, bool srpBatcher) {
+        public static void LoadSettings(bool recenterChunks, int viewDistance, bool enableLOD, bool enableImpostor, bool srpBatcher) {
             GameManager.Instance.LoadSettings(new GameSettings {
                 RecenterChunks = recenterChunks,
-                LoadingChunks = loadingChunks,
+                ViewDistance = viewDistance,
                 EnableLOD = enableLOD,
                 EnableImpostor = enableImpostor,
                 SRPBatcher = srpBatcher,

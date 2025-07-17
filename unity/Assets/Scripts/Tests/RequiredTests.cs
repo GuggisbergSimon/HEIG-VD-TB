@@ -14,7 +14,7 @@ namespace Tests {
 
         [SetUp]
         public void Setup() {
-            Utils.LoadSettings(false, false, false, false, false);
+            Utils.LoadSettings(false, 25, false, false, false);
             Utils.Setup();
         }
 
