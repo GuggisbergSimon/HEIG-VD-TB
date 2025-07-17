@@ -1,115 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!21 &-3440820392949269563
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Fence_1_Impostor
-  m_Shader: {fileID: 4800000, guid: 56236dc63ad9b7949b63a27f0ad180b3, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Albedo:
-        m_Texture: {fileID: 2800000, guid: ef875e81ebd09c3409ad293d40585c68, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Emission:
-        m_Texture: {fileID: 2800000, guid: 525a2c1676829494a977a9be8df04b0e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Features:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normals:
-        m_Texture: {fileID: 2800000, guid: 5be04c436a33afc46b6abc777babbae1, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Specular:
-        m_Texture: {fileID: 2800000, guid: 1da86b9490991754fbd927d59852d0ea, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - AI_CLIP_NEIGHBOURS_FRAMES: 0
-    - _AI_AlphaToCoverage: 0
-    - _AI_ShadowBias: 0.25
-    - _AI_ShadowView: 1
-    - _ClipMask: 0.5
-    - _DepthSize: 3.4244068
-    - _EnergyConservingSpecularColor: 1
-    - _Frames: 16
-    - _Hemi: 0
-    - _Hue: 0
-    - _ImpostorSize: 3.439314
-    - _Parallax: 1
-    - _StencilDepthMask: 8
-    - _StencilDepthRef: 8
-    - _StencilForwardMask: 6
-    - _StencilForwardRef: 0
-    - _StencilGBufferMask: 14
-    - _StencilGBufferRef: 10
-    - _StencilMotionMask: 40
-    - _StencilMotionRef: 40
-    - _TextureBias: -1
-    m_Colors:
-    - _AI_SizeOffset: {r: 3.439314, g: 3.4244068, b: 0, a: 0}
-    - _HueVariation: {r: 0, g: 0, b: 0, a: 0}
-    - _Offset: {r: -0.000003721565, g: 1.0000845, b: -1.3400891, a: -0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
-  m_Name: SM_Fence_1_Impostor
-  m_EditorClassIdentifier: 
-  Material: {fileID: -3440820392949269563}
-  Mesh: {fileID: 6491700335849674876}
-  Version: 9905
-  ImpostorType: 1
-  LockedSizes: 1
-  SelectedSize: 2048
-  TexSize: {x: 2048, y: 2048}
-  DecoupleAxisFrames: 0
-  HorizontalFrames: 16
-  VerticalFrames: 16
-  PixelPadding: 32
-  MaxVertices: 8
-  Tolerance: 0.15
-  NormalScale: 0.01
-  ShapePoints:
-  - {x: 0.076698706, y: 0.8124206}
-  - {x: 0.27351692, y: 1}
-  - {x: 0.6477293, y: 1}
-  - {x: 0.9226704, y: 0.85723805}
-  - {x: 0.9228792, y: 0.1593439}
-  - {x: 0.6708666, y: 0}
-  - {x: 0.35253128, y: 0}
-  - {x: 0.07725208, y: 0.15413475}
-  Preset: {fileID: 11400000, guid: 47b6b3dcefe0eaf4997acf89caf8c75e, type: 2}
-  OverrideOutput: []
---- !u!43 &6491700335849674876
+--- !u!43 &-2025483697612107059
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,8 +17,8 @@ Mesh:
     firstVertex: 0
     vertexCount: 8
     localAABB:
-      m_Center: {x: -0.00072580576, y: 0, z: 0}
-      m_Extent: {x: 1.4551401, y: 1.719657, z: 0}
+      m_Center: {x: -0.00072586536, y: 0, z: 0}
+      m_Extent: {x: 1.45514, y: 1.7196567, z: 0}
   m_Shapes:
     vertices: []
     shapes: []
@@ -206,7 +97,7 @@ Mesh:
       format: 0
       dimension: 0
     m_DataSize: 256
-    _typelessdata: d159babfa08989bf000000000000000000000000ffff7fbf36149d3dd014403e086947bfb81ddcbf000000000000000000000000000080bf690a8c3e000000000312023fb81ddcbf000000000000000000000000000080bf96d1253f00000000b812ba3f87449dbf000000000000000000000000000080bf21346c3f3030123e402aba3fc0f7953f000000000000000000000000000080bfd0416c3f3d35573f2471163fb81ddc3f000000000000000000000000000080bfeabd2b3f0000803f48d701bfb81ddc3f000000000000000000000000000080bffb7eb43e0000803f741bbabfd242983f000000000000000000000000ffff7fbf57369e3da08a583f
+    _typelessdata: d059babf9f8989bf000000000000000000000000000080bf36149d3dd014403e066947bfb61ddcbf000000000000000000000000000080bf690a8c3e000000000212023fb61ddcbf000000000000000000000000000080bf96d1253f00000000b612ba3f86449dbf000000000000000000000000000080bf21346c3f3030123e3e2aba3fbff7953f000000000000000000000000000080bfd0416c3f3d35573f2371163fb61ddc3f000000000000000000000000000080bfeabd2b3f0000803f47d701bfb61ddc3f000000000000000000000000000080bffb7eb43e0000803f721bbabfd042983f000000000000000000000000000080bf57369e3da08a583f
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -274,3 +165,112 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
+  m_Name: SM_Fence_1_Impostor
+  m_EditorClassIdentifier: 
+  Material: {fileID: 6693362851895736904}
+  Mesh: {fileID: -2025483697612107059}
+  Version: 9905
+  ImpostorType: 1
+  LockedSizes: 1
+  SelectedSize: 2048
+  TexSize: {x: 2048, y: 2048}
+  DecoupleAxisFrames: 0
+  HorizontalFrames: 16
+  VerticalFrames: 16
+  PixelPadding: 32
+  MaxVertices: 8
+  Tolerance: 0.15
+  NormalScale: 0.01
+  ShapePoints:
+  - {x: 0.076698706, y: 0.8124206}
+  - {x: 0.27351692, y: 1}
+  - {x: 0.6477293, y: 1}
+  - {x: 0.9226704, y: 0.85723805}
+  - {x: 0.9228792, y: 0.1593439}
+  - {x: 0.6708666, y: 0}
+  - {x: 0.35253128, y: 0}
+  - {x: 0.07725208, y: 0.15413475}
+  Preset: {fileID: 11400000, guid: 47b6b3dcefe0eaf4997acf89caf8c75e, type: 2}
+  OverrideOutput: []
+--- !u!21 &6693362851895736904
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SM_Fence_1_Impostor
+  m_Shader: {fileID: 4800000, guid: 56236dc63ad9b7949b63a27f0ad180b3, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: ef875e81ebd09c3409ad293d40585c68, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission:
+        m_Texture: {fileID: 2800000, guid: 525a2c1676829494a977a9be8df04b0e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Features:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals:
+        m_Texture: {fileID: 2800000, guid: 5be04c436a33afc46b6abc777babbae1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Specular:
+        m_Texture: {fileID: 2800000, guid: 1da86b9490991754fbd927d59852d0ea, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - AI_CLIP_NEIGHBOURS_FRAMES: 0
+    - _AI_AlphaToCoverage: 0
+    - _AI_ShadowBias: 0.25
+    - _AI_ShadowView: 1
+    - _ClipMask: 0.5
+    - _DepthSize: 3.4244063
+    - _EnergyConservingSpecularColor: 1
+    - _Frames: 16
+    - _Hemi: 0
+    - _Hue: 0
+    - _ImpostorSize: 3.4393134
+    - _Parallax: 1
+    - _StencilDepthMask: 8
+    - _StencilDepthRef: 8
+    - _StencilForwardMask: 6
+    - _StencilForwardRef: 0
+    - _StencilGBufferMask: 14
+    - _StencilGBufferRef: 10
+    - _StencilMotionMask: 40
+    - _StencilMotionRef: 40
+    - _TextureBias: -1
+    m_Colors:
+    - _AI_SizeOffset: {r: 3.4393134, g: 3.4244063, b: 0, a: 0}
+    - _HueVariation: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: -0.000003721565, g: 1.0000845, b: -1.3400891, a: -0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
