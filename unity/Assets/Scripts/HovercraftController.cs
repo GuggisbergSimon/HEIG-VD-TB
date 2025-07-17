@@ -24,12 +24,13 @@ public class HovercraftController : MonoBehaviour {
 
     [Tooltip("A multiplier applied to the damping force to reduce oscillation."), SerializeField]
     private float dampingForceMultiplier = 5f;
-    
+
     [SerializeField] private float maxSpeedParticles = 100f;
     [SerializeField] private float minSpeedParticles = 50f;
     [SerializeField] private float minSpeedRateOverTime = 0f;
     [SerializeField] private float maxSpeedRateOverTime = 100f;
 
+    private bool _isRepositioning;
     private bool _isJuiceEnabled = true;
     private Rigidbody _rb;
     private InputAction _moveAction;
@@ -40,7 +41,7 @@ public class HovercraftController : MonoBehaviour {
         _rb = GetComponent<Rigidbody>();
         _rb.centerOfMass = centerOfMass.transform.localPosition;
         _moveAction = InputSystem.actions.FindAction("Move");
-        
+
         foreach (GameObject spring in springs) {
             TrailRenderer trail = spring.GetComponentInChildren<TrailRenderer>();
             if (_isJuiceEnabled) {
@@ -52,6 +53,9 @@ public class HovercraftController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        if (_isRepositioning) {
+            return;
+        }
         // Propulsion and torque
         Vector2 moveValue = _moveAction.ReadValue<Vector2>();
         Vector3 propulsionForce = transform.TransformDirection(Vector3.forward) *
@@ -106,6 +110,17 @@ public class HovercraftController : MonoBehaviour {
     }
     
     public void MoveToPosition(Vector3 position) {
+        Vector3 lastVelocity = _rb.linearVelocity;
+        Vector3 lastAngularVelocity = _rb.angularVelocity;
+        _isRepositioning = true;
         _rb.position = position;
+        _rb.linearVelocity = lastVelocity;
+        _rb.angularVelocity = lastAngularVelocity;
+        StartCoroutine(ClearRepositioningFlag());
+    }
+
+    private System.Collections.IEnumerator ClearRepositioningFlag() {
+        yield return new WaitForFixedUpdate();
+        _isRepositioning = false;
     }
 }
