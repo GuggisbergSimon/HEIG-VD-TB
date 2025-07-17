@@ -27,7 +27,8 @@ namespace Tests {
             SceneManager.LoadScene("MainMenu");
         }
 
-        public static void LoadSettings(bool recenterChunks, int viewDistance, bool enableLOD, bool enableImpostor, bool srpBatcher) {
+        public static void LoadSettings(bool recenterChunks, int viewDistance, bool enableLOD, bool enableImpostor,
+            bool srpBatcher) {
             GameManager.Instance.LoadSettings(new GameSettings {
                 RecenterChunks = recenterChunks,
                 ViewDistance = viewDistance,
@@ -83,6 +84,11 @@ namespace Tests {
         }
 
         public static IEnumerator MoveFast() {
+            return RunPerformanceTest(i =>
+                GameManager.Instance.ChunkManager.Player.transform.position += Vector3.forward * MoveFastDistance);
+        }
+
+        public static IEnumerator Teleport() {
             return RunPerformanceTest(
                 i => {
                     // Generate deterministic teleport positions in a square spiral pattern
@@ -98,17 +104,14 @@ namespace Tests {
             );
         }
 
-        public static IEnumerator Teleport() {
-            return RunPerformanceTest(i =>
-                GameManager.Instance.ChunkManager.Player.transform.position += Random.onUnitSphere * TeleportDistance);
-        }
-
         public static IEnumerator BackAndForth() {
             return RunPerformanceTest(i => {
                 if (i % 2 == 0) {
-                    GameManager.Instance.ChunkManager.Player.transform.position += new Vector3(1, 0, 1) * TeleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position +=
+                        new Vector3(1, 0, 1) * TeleportDistance;
                 } else {
-                    GameManager.Instance.ChunkManager.Player.transform.position -= new Vector3(1, 0, 1) * TeleportDistance;
+                    GameManager.Instance.ChunkManager.Player.transform.position -=
+                        new Vector3(1, 0, 1) * TeleportDistance;
                 }
             });
         }

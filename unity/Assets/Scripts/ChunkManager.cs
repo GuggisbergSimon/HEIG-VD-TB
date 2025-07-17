@@ -43,6 +43,7 @@ public class ChunkManager : MonoBehaviour {
 
     public Camera Camera { get; private set; }
 
+    private const float FogDistanceMult = 4f / 3f;
     private GameSettings _gameSettings;
     private string[][] _sortedScenes;
     private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
@@ -65,7 +66,7 @@ public class ChunkManager : MonoBehaviour {
         viewDistance = gameSettings.ViewDistance;
         playerCamera.Lens.FarClipPlane = gameSettings.ViewDistance * gridSize.x;
         volumeProfile.TryGet(out Fog fogSettings);
-        fogSettings.maxFogDistance.value = gameSettings.ViewDistance * gridSize.x * 4f / 3f;
+        fogSettings.maxFogDistance.value = gameSettings.ViewDistance * gridSize.x * FogDistanceMult;
         
         // ChunksToLoad, circular pattern with viewDistance as radius
         _viewGrid = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];

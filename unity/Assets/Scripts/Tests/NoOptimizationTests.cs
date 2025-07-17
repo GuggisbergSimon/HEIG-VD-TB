@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 
 namespace Tests {
     [TestFixture]
-    public class NiceToHaveSRPBatcherTests {
+    public class NoOptimizationTests {
         [OneTimeSetUp]
         public void OneTimeSetup() {
             Utils.OneTimeSetup();
@@ -14,7 +14,7 @@ namespace Tests {
 
         [SetUp]
         public void Setup() {
-            Utils.LoadSettings(true, 5, true, true, true);
+            Utils.LoadSettings(false, 25, false, false, false);
             Utils.Setup();
         }
 

@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 
 namespace Tests {
     [TestFixture]
-    public class RequiredTests {
+    public class ChunkLoadingTests {
         [OneTimeSetUp]
         public void OneTimeSetup() {
             Utils.OneTimeSetup();
@@ -14,7 +14,7 @@ namespace Tests {
 
         [SetUp]
         public void Setup() {
-            Utils.LoadSettings(false, 25, false, false, false);
+            Utils.LoadSettings(false, 3, false, false, false);
             Utils.Setup();
         }
 

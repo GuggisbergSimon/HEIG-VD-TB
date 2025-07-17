@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 
 namespace Tests {
     [TestFixture]
-    public class EssentialTests {
+    public class LODTests {
         [OneTimeSetUp]
         public void OneTimeSetup() {
             Utils.OneTimeSetup();
@@ -14,7 +14,7 @@ namespace Tests {
 
         [SetUp]
         public void Setup() {
-            Utils.LoadSettings(true, 5, true, false, false);
+            Utils.LoadSettings(false, 25, true, false, false);
             Utils.Setup();
         }
 
