@@ -2,11 +2,12 @@
 
 Author: Simon Guggisberg
 
-- [ ] TODO preview of a project with a picture
+| ![](.images/bg1.jpg) | ![](.images/bg2.jpg) |
+|-|-|
 
 This repository containing all information related to my Bachelor's thesis.
 
-- [ ] TODO summary of the TB 
+This bachelor's thesis is an exploration of many state-of-the-art performance techniques under the guise of an open world game prototype.
 
 ## First Formulation
 
