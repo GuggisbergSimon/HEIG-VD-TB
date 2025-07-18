@@ -534,9 +534,10 @@ Aussi, après plusieurs essais infructueux en raison à la complexité de charge
 )
 
 Conditions de test :
-- Les tests ont été réalisés avec une distance d'affiche de 25 chunks, sauf dans le cas du test `ChunkLoading`.
+- Les tests ont été réalisés avec une distance d'affichagee de 25 chunks, sauf dans le cas du test `ChunkLoading`.
 - Il n'y a pas de recentrage du monde effectué
-- Les tests `Impostors` impliquent également l'utilisation de LODs.
+- Les tests `Impostors`, ou `Imp.` impliquent également l'utilisation de LODs.
+  Deux catégories de tests sont effectués, avec GPU Instancing, la technique présente dans tous les autres tests, ou un avec SRP Batcher.
 
 #let parse_performance_data() = {
   let content = read("diagrams/PerformanceTestResults.csv")
@@ -590,20 +591,21 @@ Conditions de test :
       method = method.slice(0, method.len() - 1)
       
       if method == test_name {
-        let median_value = float(row.at("Median"))
+        let values = row.at("Values")
       
-        categories.insert(category, median_value)
+        categories.insert(category, values)
       }
     }
   }
   
   let category_names = categories.keys().sorted()
-  let median_values = category_names.map(cat => categories.at(cat))
+  let values = category_names.map(cat => categories.at(cat))
   category_names = category_names.map(cat => cat.replace("Tests", ""))
   category_names = category_names.map(cat => cat.replace("ChunkLoading", "Chunk Loading"))
   category_names = category_names.map(cat => cat.replace("ImpostorsGPUInstancing", "Imp. GPU I."))
   category_names = category_names.map(cat => cat.replace("ImpostorsSRPBatcher", "Imp. SRP B."))
   category_names = category_names.map(cat => cat.replace("NoOptimization", "No Opt."))
+  category_names.insert(0, "")
 
   lq.diagram(
     xaxis: (
@@ -617,15 +619,26 @@ Conditions de test :
     yaxis: (
       label: text(test_name + " [ms]", size: 0.8em),
     ),
-    lq.bar(
-      range(median_values.len()),
-      median_values,
+    lq.boxplot(
+      stroke: blue.darken(50%),
+      outliers: none,
+      ..values
     )
   )
 
+  return
+  lq.boxplot(
+    stroke: blue.darken(50%),
+    (1, 2, 3, 4, 5, 6, 7, 8, 9, 21, 19),
+    range(1, 30),
+    (1, 28, 25, 30),
+    (1, 2, 3, 4, 5, 6, 32),
+  )
 }
 
 #let data = parse_performance_data()
+
+#pagebreak()
 
 #figure(
   grid(
@@ -641,6 +654,8 @@ Conditions de test :
 
   caption: [Comparaison des médianes des statistiques, par test.],
 )
+
+#pagebreak()
 
 Observations :
 - Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
@@ -660,7 +675,7 @@ Observations :
 
 === Profile Debugger
 
-
+TODO remove section ?
 
 De plus, en raison des cas extrêmes dévoilés grâce à ces tests, une reproduction a été réalisée afin de pouvoir observer ces problèmes en temps réel.
 Le Profile Debugger, lors des frames jugées problématiques, a permis de visualiser en détails les appels et temps passé dans chaque fonction.
