@@ -411,12 +411,9 @@ Deux shaders sont proposés :
   C'est une solution assez complexe mais qui est aussi simple à implémenter que d'assigner un `Material` à un objet.
 - Une alternative plus simple, Compute, génère des points aléatoires sur une surface. 
   Cette solution ne se base pas que sur un `Material` mais demande à un script C\# de générer le maillage subdivisé de manière préliminaire.
-  Cela ne s'adaptte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
+  Cela ne s'adapte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
 
-La seconde solution, Compute, n'a néanmoins pas été patchée pour Unity 6.0 et demeure donc inutilisable.
-
-- TODO test/debug compute solution -> implement ?
-- TODO use compute terrain in demo scene
+TODO picture
 
 @emmetot-hdrpgrass
 
@@ -427,7 +424,7 @@ Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'inte
 
 Son implémentation a été assez aisée mais est adaptée à des plus petites tailles de terrains, telles que 50x50.
 
-TODO implement ?
+TODO picture
 
 @bruteforce-grass-shader
 
@@ -443,6 +440,8 @@ Cet outil permet de visualiser sous forme de graphe les performances pour les de
 Des raccourcis uniques à cet outil permettent de :
 - cycler dans les options de profiler : `ctrl + F10`
 - activer/désactiver le profiler : `ctrl + F11`
+
+TODO comparison grass
 
 @unity-graphy
 
@@ -506,8 +505,6 @@ Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut pa
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
 Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas utiliser Input System.
 
-TODO extrait histogramme test performance
-
 #figure(
   grid(
     columns: 2,
@@ -541,6 +538,110 @@ Conditions de test :
 - Il n'y a pas de recentrage du monde effectué
 - Les tests `Impostors` impliquent également l'utilisation de LODs.
 
+#let parse_performance_data() = {
+  let content = read("diagrams/PerformanceTestResults.csv")
+  
+  let lines = content.split("\n").filter(line => line.trim().len() > 0)
+  let start_idx = if lines.at(0).starts-with("//") { 1 } else { 0 }
+  let headers = lines.at(start_idx).split(",").map(s => s.trim())
+  
+  let data = ()
+  for (i, line) in lines.slice(start_idx + 1).enumerate() {
+    if line.trim() == "" { continue }
+    
+    let parts = line.split(",")
+    if parts.len() < 9 { continue } // Skip malformed lines
+    
+    let row = (:)
+    
+    // Extract the basic first fields
+    for j in range(9) {
+      row.insert(headers.at(j), parts.at(j))
+    }
+    
+    let values_str = parts.slice(9).join(",")
+    let values = if values_str.trim() != "" {
+      values_str.split(",")
+        .filter(s => s.trim() != "")
+        .map(s => float(s.trim()))
+    } else {
+      ()
+    }
+    
+    row.insert("Values", values)
+    
+    data.push(row)
+  }
+  
+  return (headers: headers, data: data)
+}
+
+#import "@preview/lilaq:0.4.0" as lq
+
+#let compare_test_across_categories(test_name, data) = {
+  let categories = (:)
+  for row in data {
+    let full_test_name = row.at("Test Name")
+    let parts = full_test_name.split(".")
+    
+    if parts.len() >= 3 {
+      let category = parts.at(1)
+      let method = parts.at(2)
+      method = method.slice(0, method.len() - 1)
+      
+      if method == test_name {
+        let median_value = float(row.at("Median"))
+      
+        categories.insert(category, median_value)
+      }
+    }
+  }
+  
+  let category_names = categories.keys().sorted()
+  let median_values = category_names.map(cat => categories.at(cat))
+  category_names = category_names.map(cat => cat.replace("Tests", ""))
+  category_names = category_names.map(cat => cat.replace("ChunkLoading", "Chunk Loading"))
+  category_names = category_names.map(cat => cat.replace("ImpostorsGPUInstancing", "Imp. GPU I."))
+  category_names = category_names.map(cat => cat.replace("ImpostorsSRPBatcher", "Imp. SRP B."))
+  category_names = category_names.map(cat => cat.replace("NoOptimization", "No Opt."))
+
+  lq.diagram(
+    xaxis: (
+      ticks: category_names
+        .map(text.with(size: 0.8em))
+        .map(rotate.with(-45deg, reflow: true))
+        .map(align.with(right))
+        .enumerate(),
+      subticks: none,
+    ),
+    yaxis: (
+      label: text(test_name + " [ms]", size: 0.8em),
+    ),
+    lq.bar(
+      range(median_values.len()),
+      median_values,
+    )
+  )
+
+}
+
+#let data = parse_performance_data()
+
+#figure(
+  grid(
+    columns: 2,
+    rows: 3,
+    compare_test_across_categories("HorizontalPan", data.data),
+    compare_test_across_categories("FastHorizontalPan", data.data),
+    compare_test_across_categories("MoveForward", data.data),
+    compare_test_across_categories("MoveFast", data.data),
+    compare_test_across_categories("BackAndForth", data.data),
+    compare_test_across_categories("Teleport", data.data),
+  ),
+
+  caption: [Comparaison des médianes des statistiques, par test.],
+)
+
 Observations :
 - Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
   Pour toutes les catégories de tests, possédant de l'optimisation, ou non, le test Teleport connaît la plus haute variance.
@@ -552,8 +653,14 @@ Observations :
 - Entre `LOD` et `Impostors` il n'y a également que peu de différences.
   Les imposteurs permettent de néanmoins de réduire le temps de calcul par frame par un sixième en moyenne.
   Cette différence mineure peut être expliquée par le fait que les imposteurs sont davantages efficaces sont pour les maillages complexes, typiquement de la végétation, et ce prototype en est dépourvu à longue distance au vu du paysage désertique, d'autant plus que les modèles distants sont ignorés et non rendus passé une certaine distance.
+- `Chunk Loading` est de loin la technique la plus efficace, en raison de la distance d'affichage modifié également en fonction du nombbre distant de chunks à afficher.
+  Diminuer cette valeur permet très rapidement d'atteindre des bons résultats, bien que légèrement moins bons dans le cas d'allers et retours rapides. 
+  En effet, `Chunk Loading` devra charger et décharger à répétition les mêmes chunks, tandis que dans les autres cas, ceux-ci sont déjà chargés en tout temps.
+  Cette différence n'est pas observable au niveau de `Teleport` car celui-ci est demandant pour toutes les techniques en terme de rendu.
 
 === Profile Debugger
+
+
 
 De plus, en raison des cas extrêmes dévoilés grâce à ces tests, une reproduction a été réalisée afin de pouvoir observer ces problèmes en temps réel.
 Le Profile Debugger, lors des frames jugées problématiques, a permis de visualiser en détails les appels et temps passé dans chaque fonction.
