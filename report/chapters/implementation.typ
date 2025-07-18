@@ -356,8 +356,12 @@ VFX Graph, un système complexe permettant de simuler des particules, pourrait �
 
 ==== Grass Mesh
 
-TODO write "advertised solution" how poor it is, bibliography asset
-TODO remove hdrpgrass from assets
+Unity Technologies met à disposition de nombreuses assets libre d'usage à fin de démontrer l'usage et la puissance de leur outils.
+Le package TerrainDemoScene HDRP propose un exemple d'implémentation d'herbe, pour la pipeline HDRP.
+Celui-ci est basé sur les meshes, via des Terrain Details.
+
+En l'état, ces buissons, plus que brins d'herbe, ne comportent pas d'imposteurs ni de `LOD Group` et sont donc très coûteux en performance.
+Leur affichage se fait via le Terrain sur lequel ils sont placés, et celui-ci possède des options de distance d'affichage pour les détails.
 
 #figure(
   image("images/grass_mesh.jpg", width: 60%),
