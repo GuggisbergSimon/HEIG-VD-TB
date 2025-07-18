@@ -126,8 +126,7 @@ for (int x = -viewDistance; x <= viewDistance; x++) {
 Une autre considération à prendre en compte est la distance d'affichage de la caméra, ou far clipping plane.
 Afin de disposer d'une mesure homogène entre la situation de test et celle du prototype, cette distance doit être la même.
 Elle est ajustée de concert avec la distance de vue des chunks à charger et la distance du brouillard, pour un rendu cohérent entre les trois paramètres.
-
-TODO slider
+Seule la distance maximale du brouillard est multipliée par un facteur $4/3$ pour éviter des problèmes visuels lorsque cette distance est trop proche de la distance d'affichage de la caméra.
 
 == Recentrer le monde
 
@@ -139,32 +138,6 @@ Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
 Cette implémentation pose néanmoins problème avec celle du chargement des chunks, qui prend en compte la position du joueur.
 En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, est de la forme : $(0, 0) arrow arrow("AB") arrow (0, 0)$.
 Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les chunks correspondants.
-
-```cs
-bool recenterChunks = true;
-Vector2Int gridOffset = Vector2Int.one * 8; // position initiale du joueur en tant qu'offset dans la grille
-// Recentrage du monde
-Vector3 playerPos = Player.transform.position;
-Vector2Int currentGridPos = GetGridPosition(playerPos);
-if (recenterChunks && currentGridPos != gridOffset) {
-    Vector2Int diff = currentGridPos - gridOffset;
-    Vector3 worldOffset = new Vector3(diff.x * gridSize.x, 0, diff.y * gridSize.y);
-
-    foreach (var coords in _chunksLoaded) {
-        Scene loadedScene = SceneManager.GetSceneByName(_sortedScenes[coords.x][coords.y]);
-        foreach (var rootObj in loadedScene.GetRootGameObjects()) {
-            rootObj.transform.position -= worldOffset;
-        }
-    }
-
-    Player.MoveToPosition(playerPos - worldOffset);
-    _playerGridPos += diff;
-    UpdateLoadedChunks();
-} else if (!recenterChunks && currentGridPos != _playerGridPos) {
-    _playerGridPos = currentGridPos;
-    UpdateLoadedChunks();
-}
-```
 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
 Dans Unity, les calculs physiques se produisent lors de l'étape `FixedUpdate`, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à atteindre le framerate requis.
@@ -204,17 +177,6 @@ Malheureusement, la répétition de plusieurs d'opérations `GetComponent` est c
 Procéder de la sorte implique une complexité d'appel à `GetComponent` en $O(n)$, où $n$ est le nombre d'objets dans le `Chunk`. 
 Pour pallier à cela, une script C\# `Chunk` contient les informations relatives à chaque chunk, permet un accès rapide aux composants, en $O(1)$ pour chaque `Chunk`.
 À noter néanmoins qu'une itération sur tous les objets d'un `Chunk` est tout de même nécessaire.
-
-```cs
-if (!enableLOD) {
-    foreach (var lodGroup in terrainObj.GetComponentsInChildren<LODGroup>(true)) {
-        lodGroup.ForceLOD(0);
-    }
-
-    Terrain terrain = terrainObj.GetComponent<Terrain>();
-    terrain.forceLOD(0);
-}
-```
 
 @blender-lod-maker
 
@@ -263,10 +225,8 @@ Le format correspondant, en terme d'API de script Unity, est appelé `RGBAHalf`.
 Une fois ceci fait, la texture rendu est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles, qui est lui également redimensionné pour correspondre aux limites du modèle 3D.
 
 ```cs
-float angleToRefresh = 10f;
-float distanceFromCamera = 50f;
-bool isEnabled = false;
-float lastAngleRefreshed;
+float angleToRefresh = 10f, distanceFromCamera = 50f;
+bool isEnabled = false, lastAngleRefreshed = false;
 // Comportement des imposteurs
 if (distance(cam.position, position) > distanceFromCamera) {
     float angle = Angle(this.forward, cam.position - position); 
@@ -303,7 +263,7 @@ Il est également possible de choisir que les imposteurs remplacent le niveau de
 Cela a donc comme le même désavantage, lorsque les imposteurs sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk. Cet overhead CPU a néanmoins comme complexité d'opération `GetComponent` en $O(1)$, à la manière du chargement des LODs désactivés.
 
 #figure(
-  image("images/impostor_example_atlas.jpg", width: 52%),
+  image("images/impostor_example_atlas.jpg", width: 50%),
   caption: [
     Exemple d'un atlas albedo pour des imposteurs octahèdres résultant de Amplify Impostors.
   ],
@@ -324,7 +284,7 @@ Voici les données les plus intéressantes parmi ces statistiques :
   Le plus bas, le mieux c'est.
 - Saved by batching correspond au nombre de batches que Unity a pu combiner entre deux batches.
   Cela se produit lorsqu'un `Material` est partagé entre plusieurs objets.
-  TODO cela se produit avec GPU instancing (?)
+  Cela se produit lorsque le GPU instancing est utilisé.
   Le plus haut, le mieux c'est.
 - SetPass calls correspond au moment où Unity charge un nouveau shader du CPU au GPU.
   Le plus bas, le mieux c'est.
@@ -392,10 +352,12 @@ Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pou
   Écrire de tels shaders ne peut être fait qu'en HLSL ou ShaderLab pour URP et HDRP.
 
 À noter que Unity URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé Shader Graph, mais que celui-ci ne traite que des opérations Vertex et Fragment.
-VFX Graph permet de créer des particules qui pourraient être utilisées pour simuler des brins d'herbe, mais cela est une solution détournée.
+VFX Graph, un système complexe permettant de simuler des particules, pourrait être utilisé pour simuler des brins d'herbe, mais cela est une solution détournée.
+
+==== Grass Mesh
 
 #figure(
-  image("images/grass_mesh.jpg", width: 52%),
+  image("images/grass_mesh.jpg", width: 60%),
   caption: [
     Exemple d'un buisson d'herbe et de son maillage, représenté par Mesh.
   ],
@@ -413,9 +375,14 @@ Deux shaders sont proposés :
   Cette solution ne se base pas que sur un `Material` mais demande à un script C\# de générer le maillage subdivisé de manière préliminaire.
   Cela ne s'adapte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
 
-TODO picture
-
 @emmetot-hdrpgrass
+
+#figure(
+  image("images/hdrpgrass_compute.png", width: 60%),
+  caption: [
+    Exemple d'herbe représenté à l'aide du shader Compute de EmmetOT HDRPGrass.
+  ],
+)
 
 ==== Bruteforce Grass Shader
 
@@ -424,9 +391,14 @@ Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'inte
 
 Son implémentation a été assez aisée mais est adaptée à des plus petites tailles de terrains, telles que 50x50.
 
-TODO picture
-
 @bruteforce-grass-shader
+
+#figure(
+  image("images/bruteforce_shader_grass.jpg", width: 60%),
+  caption: [
+    Exemple d'un terrain dont l'herbe est représenté par Bruteforce Grass Shader.
+  ],
+)
 
 == Mesures de performance
 
@@ -503,13 +475,22 @@ Des états sont permanents entre deux tests, notamment tout ce qui est du charge
 Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut passer par deux autres annotations `Setup` et `TearDown` qui indiquent respectivement les actions à effectuer avant et après chaque test.
 
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
-Aussi, après plusieurs essais infructueux en raison à la complexité de charger des scènes et de les décharger dans le cadre de tests utilisant des enttrées utilisateurs, il a été décidé de ne pas utiliser Input System.
+Aussi, après plusieurs essais infructueux de son implémentation, ajoutant une couche de complexité aux tests, il a été décidé de ne pas utiliser Input System.
+
+Conditions de test :
+- Les tests ont été réalisés avec une distance d'affichagee de 25 chunks, sauf dans le cas du test `ChunkLoading`.
+- Il n'y a pas de recentrage du monde effectué
+- Les tests `Impostors`, ou `Imp.` nécessitent également l'utilisation de LODs.
+  Ils ne sont donc pas représentables des imposteurs seuls.
+- Deux tests d'imposteurs existent afin de comparer les performances avec GPU Instancing, la technique présente par défaut dans tous les autres tests, ou avec SRP Batcher.
+
+==== Résultats
 
 #figure(
   grid(
     columns: 2,
-    image("images/NoOptimization.jpg", width: 100%),
-    image("images/LOD.jpg", width: 100%),
+    image("images/NoOptimization.jpg", width: 95%),
+    image("images/LOD.jpg", width: 95%),
   ),
 
   caption: [
@@ -522,8 +503,8 @@ Aussi, après plusieurs essais infructueux en raison à la complexité de charge
 #figure(
   grid(
     columns: 2,
-    image("images/ImpostorsGPU.jpg", width: 100%),
-    image("images/ImpostorsSRP.jpg", width: 100%),
+    image("images/ImpostorsGPU.jpg", width: 95%),
+    image("images/ImpostorsSRP.jpg", width: 95%),
   ),
 
   caption: [
@@ -533,11 +514,13 @@ Aussi, après plusieurs essais infructueux en raison à la complexité de charge
   ],
 )
 
-Conditions de test :
-- Les tests ont été réalisés avec une distance d'affichagee de 25 chunks, sauf dans le cas du test `ChunkLoading`.
-- Il n'y a pas de recentrage du monde effectué
-- Les tests `Impostors`, ou `Imp.` impliquent également l'utilisation de LODs.
-  Deux catégories de tests sont effectués, avec GPU Instancing, la technique présente dans tous les autres tests, ou un avec SRP Batcher.
+#figure(
+    image("images/ChunkLoading.jpg", width: 70%),
+
+  caption: [
+    Statistiques chunk loading.
+  ],
+)
 
 #let parse_performance_data() = {
   let content = read("diagrams/PerformanceTestResults.csv")
@@ -652,12 +635,13 @@ Conditions de test :
     compare_test_across_categories("Teleport", data.data),
   ),
 
-  caption: [Comparaison des médianes des statistiques, par test.],
+  caption: [Comparaison des statistiques, par test.],
 )
 
 #pagebreak()
 
-Observations :
+==== Discussion des résultats
+
 - Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
   Pour toutes les catégories de tests, possédant de l'optimisation, ou non, le test Teleport connaît la plus haute variance.
   Il s'agit du résultat escompté en raison de sa fréquence attendue faible lors d'une séquence de gameplay habituel.
@@ -672,14 +656,3 @@ Observations :
   Diminuer cette valeur permet très rapidement d'atteindre des bons résultats, bien que légèrement moins bons dans le cas d'allers et retours rapides. 
   En effet, `Chunk Loading` devra charger et décharger à répétition les mêmes chunks, tandis que dans les autres cas, ceux-ci sont déjà chargés en tout temps.
   Cette différence n'est pas observable au niveau de `Teleport` car celui-ci est demandant pour toutes les techniques en terme de rendu.
-
-=== Profile Debugger
-
-TODO remove section ?
-
-De plus, en raison des cas extrêmes dévoilés grâce à ces tests, une reproduction a été réalisée afin de pouvoir observer ces problèmes en temps réel.
-Le Profile Debugger, lors des frames jugées problématiques, a permis de visualiser en détails les appels et temps passé dans chaque fonction.
-
-TODO flamegraph
-
-TODO analyse résultat
