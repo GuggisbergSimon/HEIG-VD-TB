@@ -68,13 +68,22 @@
       - Tentatives d'implémentation de HDRPGrass et UnityHDRPTerrainDetailGrass
       - Implémentation d'ajout de détail d'herbe via Terrain Mesh Detail, assets en provenance de scènes de démos Unity
       - Rédaction rapport pour rester à jour",
-    "4", "12.07.2025", "- Recherche d'autres techniques d'optimisations GPU Unity : DOTS, SRP Batcher
+    "4", "13.07.2025", "- Recherche d'autres techniques d'optimisations GPU Unity : DOTS, SRP Batcher
       - Implémentation d'un cycle jour nuit pour démontrer possibilités de lumières dynamiques
       - Amélioration des tests de performances pour homogénéiser les résultats
       - Ajout de tests unitaires avec fonctionnalités nice to have et un optionnel pour comparer impact du SRP Batcher
       - Amélioration des performances lors du chargement de chunks via la sérialisations de données par scènes/chunks
       - Finition de l'implémentation de deux types d'herbe dans une scène de tests, à l'instar des imposteurs",
-    "4", "", "",
-    "4", "", "",
+    "4", "18.07.2025", "- Fix de HDRP Grass pour son utilisation avec unity 6.0
+  - Comparaison de différents types d'herbe dans scène dédiée
+      - Mise en place d'une structure de demo pour comparer éléments d'herbe/imposteurs
+      - Ajout de petits détails visuels concernant le joueur
+      - Fix des distances LODs pour éviter les pops up
+      - Fix de matériaux n'utilisant pas GPU Instancing
+      - Tests de performance et analyse des résultats dans le rapport
+      - Rédaction du rapport pour une première tentative de version finale",
+    "4", "24.07.2025", "- Relecture et corrections du rapport final
+      - Création de l'affiche
+      - Rédaction du résumé publiable",
   ),
 )

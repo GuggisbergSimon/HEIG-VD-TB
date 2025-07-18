@@ -356,6 +356,9 @@ VFX Graph, un système complexe permettant de simuler des particules, pourrait �
 
 ==== Grass Mesh
 
+TODO write "advertised solution" how poor it is, bibliography asset
+TODO remove hdrpgrass from assets
+
 #figure(
   image("images/grass_mesh.jpg", width: 60%),
   caption: [
@@ -413,9 +416,27 @@ Des raccourcis uniques à cet outil permettent de :
 - cycler dans les options de profiler : `ctrl + F10`
 - activer/désactiver le profiler : `ctrl + F11`
 
-TODO comparison grass
+Une scène de démonstration permet de comparer les performances de plusieurs techniques sous la forme d'un benchmark.
+Dans cette scène sont comparé les différentes implémentations d'herbe, ainsi que les imposteurs.
 
 @unity-graphy
+
+#figure(
+  table(
+    columns: 2,
+    table.header[Implémentation][FPS moyen],
+    "Écran vide", "~150",
+    "Mesh", "~100",
+    "Tesselation Shader", "~150",
+    "Compute Shader", "~100",
+    "BruteForce Grass Shader", "~150",
+  ),
+  caption: "Comparaison des performances des différentes implémentations d'herbe."
+)
+
+Ceci permet de constater que le compute shader est plus demandant que prévu, au même point qu'il est aussi peu optimisé que des simples meshes, sans imposteurs.
+
+#pagebreak()
 
 === Unity Test Framework
 
@@ -489,8 +510,8 @@ Conditions de test :
 #figure(
   grid(
     columns: 2,
-    image("images/NoOptimization.jpg", width: 95%),
-    image("images/LOD.jpg", width: 95%),
+    image("images/NoOptimization.jpg", width: 88%),
+    image("images/LOD.jpg", width: 88%),
   ),
 
   caption: [
@@ -503,8 +524,8 @@ Conditions de test :
 #figure(
   grid(
     columns: 2,
-    image("images/ImpostorsGPU.jpg", width: 95%),
-    image("images/ImpostorsSRP.jpg", width: 95%),
+    image("images/ImpostorsGPU.jpg", width: 88%),
+    image("images/ImpostorsSRP.jpg", width: 88%),
   ),
 
   caption: [
@@ -515,7 +536,7 @@ Conditions de test :
 )
 
 #figure(
-    image("images/ChunkLoading.jpg", width: 70%),
+    image("images/ChunkLoading.jpg", width: 50%),
 
   caption: [
     Statistiques chunk loading.
