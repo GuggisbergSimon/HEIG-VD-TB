@@ -10,7 +10,7 @@
 #let confidential = false
 
 #let TBtitle = "Open World Game Prototype"
-#let TBsubtitle = "Sous-titre"
+#let TBsubtitle = "Exploration et implémentation de l'état de l'art des techniques d'optimisation pour une application en temps réel"
 #let TByear = "2025"
 #let TBacademicYears = "2024-25"
 

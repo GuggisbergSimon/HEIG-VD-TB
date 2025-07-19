@@ -554,7 +554,7 @@ Conditions de test :
 )
 
 #figure(
-    image("images/ChunkLoading.jpg", width: 50%),
+    image("images/Chunkloading.jpg", width: 50%),
 
   caption: [
     Statistiques chunk loading.
