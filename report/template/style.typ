@@ -7,6 +7,9 @@
   show: codly-init.with()
   
   set heading(numbering: none)
+  
+  // Set justified text alignment for normal text
+  set par(justify: true)
 
   // Move all 1 level headings to new odd page
   show heading.where(

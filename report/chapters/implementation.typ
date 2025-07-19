@@ -9,13 +9,13 @@ Des assets provenant du Unity Asset Store et de Fab ont été utilisées pour le
 Ces assets sont listées et leur license est détaillée dans le fichier `unity/assets/CREDITS.md`
 
 Un premier contrôleur physique pour le joueur, assez sommaire, permet de facilement tester le chargement du monde.
-Celui-ci a été complètement remplacé par un second contrôleur, plus abouti, simulant la physique d'un hovercraft pour qu'il adhère au terrain.
+Celui-ci a été complètement remplacé par un second contrôleur, plus abouti, simulant la physique d'un hovercraft afin qu'il adhère au terrain.
 
-En raison de la contrainte de la taille de fichier maximum de 100Mo pour les assets, il a été requis de séparer la scène principale en plusieurs scènes, ou chunks, dès le début.
+En raison de la contrainte de GitHub pour la taille de fichier maximum de 100Mo pour les assets, il a été requis de séparer la scène principale en plusieurs scènes, ou chunks, dès le début.
 En effet, peupler un terrain de 8000x8000m avec toutes sortes de `Prefabs` atteint cette limite de taille de fichier.
 Réaliser le prototype final a donc requis d'implémenter la partie du chargement de chunks.
-Ainsi, la réalisation ne s'est pas produite de la manière prévue initialement, mais d'avantage sous la forme d'un aller et retour constant entre les prototype et optimisation de performance.
-Les tests de performance ont effectués à la fin du projet, plutôt qu'après chaque étape du projet.
+Ainsi, la réalisation ne s'est pas produite de la manière prévue initialement, mais d'avantage sous la forme d'un aller et retour constant entre le prototype et optimisation de performance.
+Par là même, les tests de performance ont effectués à la fin du projet, plutôt qu'après chaque étape du projet.
 
 === Séparation du monde en chunks
 
@@ -44,12 +44,12 @@ Finalement, pour un aspect visuel plus soigné, l'orientation de ces éléments 
 Charger les chunks est une opération qui s'effectue de manière asynchrone pour éviter de bloquer la thread principale de Unity.
 Ceci implique la gestion de la concurrence en cas de modification d'une ressource partagée.
 Ici celle-ci concerne la listes des chunks chargés, `chunksLoaded`.
-Cette liste est utilisée afin de garder en mémoir les chunks chargés, et de pouvoir les décharger par la suite.
+Cette liste est utilisée afin de garder en mémoire les chunks chargés, et de pouvoir les décharger par la suite.
 
 Une première modification consiste à n'ajouter et à supprimer dans la liste des chunks chargés que lorsque ceux-ci sont effectivement chargés ou déchargés, soit après réussite de l'opération asynchrone.
 Ceci est fait via une écoute de l'événement confirmant la fin de l'opération de chargement ou déchargement du chunk.
 
-De plus, pour accéder aux scènes plus rapidement, un double tableau `sortedScenes` contenant le nom des scènes correspondant aux des chunks est utilisé.
+De plus, pour accéder aux scènes plus rapidement, un double tableau `sortedScenes` contenant le nom des scènes correspondant aux chunks est utilisé.
 Les indices x et y de celui-ci représentent les coordonnées du chunk, pour un accès plus rapide.
 Ce tableau est créé une seule fois lors de l'initialisation de la scène composant le monde.
 Cette solution a été envisagée en raison de la taille limitée du monde.
@@ -57,8 +57,8 @@ Cette solution a été envisagée en raison de la taille limitée du monde.
 Avec cette structure, il est facile d'itérer sur les chunks chargés et de décharger ceux qui ne sont plus nécessaire.
 
 ```cs
-string[,] sortedScenes;
 // Déchargement des chunks
+string[,] sortedScenes;
 List<Vector2Int> chunksLoaded = new List<Vector2Int>();
 List<Vector2Int> chunksToUnload = FindChunksToUnload();
 foreach (var coords in chunksToUnload) {
@@ -68,7 +68,7 @@ foreach (var coords in chunksToUnload) {
 ```
 
 Pour régler d'autres problèmes de concurrence lors du chargement des chunks, le calcul du positionnement des chunks en fonction de la position du joueur n'est effectué qu'une fois l'opération de chargement terminée.
-Ce problème est survenu après l'implémentation du recentrage du monde, dont le code n'est pas détaillé
+Ce problème est survenu après l'implémentation du recentrage du monde, dont le code n'est pas détaillé ici.
 
 ```cs
 // Chargement des chunks
@@ -136,20 +136,21 @@ Ainsi, pour un déplacement du joueur d'un chunk A à B, nous avons un déplacem
 Le déplacement de chaque acteurs et du monde est donc $-delta d = arrow("BA")$.
 
 Cette implémentation pose néanmoins problème avec celle du chargement des chunks, qui prend en compte la position du joueur.
-En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, est de la forme : $(0, 0) arrow arrow("AB") arrow (0, 0)$.
+En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, ne conserve pas en mémoire le déplacement effectué $arrow("AB")$ puisque sa position est réinitialisée au centre du monde.
 Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les chunks correspondants.
 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
 Dans Unity, les calculs physiques se produisent lors de l'étape `FixedUpdate`, qui n'est exécutée qu'à des intervalles réguliers, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à atteindre le framerate requis.
 Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriété physiques que lors des frames `FixedUpdate`.
 Puisque le passage d'un chunk à un autre ne se produit que de manière ponctuelle, toute la logique de vérification de chunk se trouve dans l'étape `FixedUpdate`.
+Une seconde correction a été d'attendre la prochaine frame physique `FixedUpdate` lors d'un recentrage avant de résumer celles-ci, comme d'habitude.
 
 Quant à l'impact sur la performance qu'a cette modification, il n'est pas notable puisque seuls les objets à la racine sont modifiés.
 Dans le cadre de ce projet, il n'existe qu'un seul objet à la racine de chaque `Chunk`, le `Terrain`.
 Une autre limitation est que, pour pouvoir déplacer des objets, ceux-ci ne peuvent être statiques.
 Un `GameObject` étant taggé comme statique, dans Unity, permet d'accélérer certaines étapes de calculs pour améliorer les performances.
 Les étapes concernées ont trait au pathfinding, à la lumière précalculée, et à l'utilisation d'occlusion culling.
-Pour ce projet, aucun de ces trois éléments ne sont utilisés, mais dans le cas d'un jeu en monde ouvert certaines de ces techniques pourraient être utiles.
+Pour ce projet, aucun de ces trois éléments n'ont été implémentés, mais dans le cas d'un jeu en monde ouvert certaines de ces techniques pourraient être utiles.
 
 @unity-doc-script-execution-order
 
@@ -175,7 +176,8 @@ Il s'agit donc d'un compromis entre fidélité de résultats de tests et simplic
 
 Malheureusement, la répétition de plusieurs d'opérations `GetComponent` est coûteuse.
 Procéder de la sorte implique une complexité d'appel à `GetComponent` en $O(n)$, où $n$ est le nombre d'objets dans le `Chunk`. 
-Pour pallier à cela, une script C\# `Chunk` contient les informations relatives à chaque chunk, permet un accès rapide aux composants, en $O(1)$ pour chaque `Chunk`.
+Pour pallier à cela, un script C\# `Chunk` contenant les informations relatives à chaque chunk, permet un accès rapide aux composants.
+Ce script a une complexité $O(1)$ en opération `GetComponent` pour chaque `Chunk` à charger.
 À noter néanmoins qu'une itération sur tous les objets d'un `Chunk` est tout de même nécessaire.
 
 @blender-lod-maker
@@ -183,7 +185,7 @@ Pour pallier à cela, une script C\# `Chunk` contient les informations relatives
 == Imposteurs
 
 Unity considère ajouter une solution officielle d'imposteurs, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la roadmap du moteur de jeu.
-En l'absence d'une solution unique, plusieurs tentatives ont été faites.
+En l'absence d'une solution unique officielle, plusieurs tentatives d'implémentations ont été faites.
 
 @unity-roadmap
 
@@ -222,7 +224,7 @@ Il faut également choisir, dans les paramètres du projet, le format de couleur
 Ce format de couleur pour le projet est deux fois plus lourd en mémoire que celui par défaut `R11G11B10` en utilisant 64 bits plutôt que 32 bits pour chaque couleur.
 Le format correspondant, en terme d'API de script Unity, est appelé `RGBAHalf`.
 
-Une fois ceci fait, la texture rendu est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles, qui est lui également redimensionné pour correspondre aux limites du modèle 3D.
+Une fois ceci fait, la texture rendue est affichée sur un `Quad`, un modèle 3D représentant un plan constitué de deux triangles, qui est lui également redimensionné pour correspondre aux limites du modèle 3D.
 
 ```cs
 float angleToRefresh = 10f, distanceFromCamera = 50f;
@@ -247,12 +249,12 @@ Cet outil s'est révélé être aisé à prendre en main et de qualité signific
 Les jours de travail dédiés aux tentatives d'implémentations des imposteurs auraient pu être économisées en utilisant ce plugin dès le début.
 
 Amplify Impostors propose des imposteurs de plusieurs types : sphérique, octahèdre ou semi-octahèdre.
-Ceux-ci sont baked, pré-calculés, dans cinq fichiers de texture allant de 32x32 à 8192x8192 pixels.
+Ceux-ci sont baked dans cinq fichiers de texture allant de 32x32 à 8192x8192 pixels.
 Ces textures permettent un meilleur rendu visuel mais ont une incompatiblité au niveau des shaders.
 Les shaders utilisés par les matériaux des modèles à afficher en tant qu'imposteurs doivent exposer un chemin `Deferred`, à la manière des shaders Unity par défaut.
 Le cas échéant, un shader personnalisé de baking devra être écrit pour chaque shader de matériel utilisé.
 
-C'est ce qui s'est produit pour une asset utilisée dans le prototype. 
+C'est ce qui s'est produit pour un asset utilisé dans le prototype. 
 Convertir ses matériaux en matériaux standards HDRP a permis de résoudre le problème.
 
 Pour l'implémentation, les imposteurs Amplify se greffent sur un `LOD Group` existant.
@@ -262,6 +264,8 @@ Il est également possible de choisir que les imposteurs remplacent le niveau de
 À noter que, de la même manière que l'implémentation pour le LOD, les imposteurs sont implémentés au niveau des `Prefabs` pour une architecture simplifiée.
 Cela a donc comme le même désavantage, lorsque les imposteurs sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk. Cet overhead CPU a néanmoins comme complexité d'opération `GetComponent` en $O(1)$, à la manière du chargement des LODs désactivés.
 
+@amplify-impostors
+
 #figure(
   image("images/impostor_example_atlas.jpg", width: 50%),
   caption: [
@@ -269,14 +273,23 @@ Cela a donc comme le même désavantage, lorsque les imposteurs sont désactivé
   ],
 )
 
-@amplify-impostors
-
 == Optimisations GPU
 
 L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de visualiser rapidement les performances.
 
+
+#figure(
+  image("images/GameViewStats.png", width: 60%),
+  caption: [
+    Fenêtre de statistiques de rendu dans l'éditeur.
+  ],
+)
+
 Voici les données les plus intéressantes parmi ces statistiques :
-- FPS et CPU correspondent sont liés et représentent la même mesure, de deux manières différentes.
+- FPS et CPU sont liés et représentent la même mesure, de deux manières différentes.
+
+  $"FPS" = 1/"CPU"$
+
   FPS est le nombre de frames par secondes, tandis que CPU est le temps de rendu d'un frame en millisecondes.
   Le temps de rendu de la frame est une meilleure mesure, dans le contexte d'une frame unique, mais est moins parlant que celle des FPS.
   Le plus haut les FPS sont, le mieux c'est, et inversement le plus bas le temps CPU est, le mieux c'est.
@@ -322,19 +335,20 @@ Le SRP Batcher dispose d'un accès permettant une mise à jour directe du buffer
 === DOTS
 
 Data Oriented Technology Stack est l'implémentation dans Unity d'un pattern ECS afin de pouvoir traiter une grande quantité de données.
-Cela découple la logique des entités, de celles des composants et des systèmes.
+Cela découple la logique des Entités, de celles des Composants et des Systèmes.
 Il est également possible d'utiliser DOTS pour améliorer le rendu graphique en cas de nombreux objets à rendre dans une scène.
 Les fonctionnalités attendues des pipelines URP et HDRP ne sont néanmoins pas toutes implémentées dans DOTS.
 
 DOTS est un système complexe permettant de traiter la logique de nombreux éléments.
-Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant le cadre de celui-ci.
+Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant de loin le cadre de celui-ci.
 
 @unity-entities
 @unity-entities-graphics
 
 === Cas d'étude
 
-Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pour les représenter, notamment pour les instancer au travers de l'outil des `Terrains`.
+Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pour les représenter.
+Il existe notamment plusieurs solutions pour les instancer au travers de l'outil `Terrains`.
 - Mesh.
   Il est assez intuitif de vouloir représenter des brins d'herbe via des modèles 3D.
   Bien que l'on puisse envisager dans un premier temps de modéliser chaque brin d'herbe en 3D, il existe une meilleure solution, comme le montre le package de démonstration officiel de Unity TerrainDemoScene HDRP.
@@ -352,7 +366,7 @@ Pour le cas d'étude choisi, des brins d'herbe, plusieurs solutions existent pou
   Écrire de tels shaders ne peut être fait qu'en HLSL ou ShaderLab pour URP et HDRP.
 
 À noter que Unity URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé Shader Graph, mais que celui-ci ne traite que des opérations Vertex et Fragment.
-VFX Graph, un système complexe permettant de simuler des particules, pourrait être utilisé pour simuler des brins d'herbe, mais cela est une solution détournée.
+VFX Graph, un système complexe permettant de simuler des particules, pourrait être utilisé pour représenter des brins d'herbe, mais cela est un usage détourné de l'outil.
 
 ==== Grass Mesh
 
@@ -361,10 +375,10 @@ Le package TerrainDemoScene HDRP propose un exemple d'implémentation d'herbe, p
 Celui-ci est basé sur les meshes, via des Terrain Details.
 
 En l'état, ces buissons, plus que brins d'herbe, ne comportent pas d'imposteurs ni de `LOD Group` et sont donc très coûteux en performance.
-Leur affichage se fait via le Terrain sur lequel ils sont placés, et celui-ci possède des options de distance d'affichage pour les détails.
+Leur affichage se fait via le `Terrain` sur lequel ils sont placés, et celui-ci possède des options de distance d'affichage pour les détails.
 
 #figure(
-  image("images/grass_mesh.jpg", width: 60%),
+  image("images/grass_mesh.jpg", width: 55%),
   caption: [
     Exemple d'un buisson d'herbe et de son maillage, représenté par Mesh.
   ],
@@ -373,7 +387,7 @@ Leur affichage se fait via le Terrain sur lequel ils sont placés, et celui-ci p
 ==== EmmetOT HDRPGrass
 
 Ce répertoire public propose deux shaders utilisant l'étape de Geometry pour représenter de nombreux brins d'herbes.
-Un patchage de ce répertoire a été requis pour le rendre compatible avec les versions d'outils utilisés, cet outil n'étant pas mis à jour depuis 2021.
+Un patchage de ce répertoire a été requis pour le rendre compatible avec les versions d'outils modernes, cet outil n'ayant pas été mis à jour depuis 2021.
 
 Deux shaders sont proposés :
 - L'étape Tesselation est utilisée pour subdiviser le maillage d'un objet en des points où des brins d'herbe seront placés.
@@ -411,7 +425,7 @@ Son implémentation a été assez aisée mais est adaptée à des plus petites t
 
 === Graphy
 
-Pour mesurer les performances lors d'un build, bien qu'il soit possible, pour un build local, de le connecter au profiler Unity pour debugger, il est néanmoins plus agréable de profiter d'une solution visuelle permettant, en un coup d'oeil, de voir une estimation de la performance du jeu.
+Pour mesurer les performances lors d'un build, bien qu'il soit possible, pour un build local, de le connecter au profiler Unity pour débugger, il est néanmoins plus agréable de profiter d'une solution visuelle permettant, en un coup d'oeil, de voir une estimation de la performance du jeu.
 
 Un tel outil existe sous le nom de Graphy, 
 Cet outil permet de visualiser sous forme de graphe les performances pour les dernières frames afin d'observer les variations soudaines.
@@ -438,7 +452,7 @@ Dans cette scène sont comparé les différentes implémentations d'herbe, ainsi
   caption: "Comparaison des performances des différentes implémentations d'herbe."
 )
 
-Ceci permet de constater que le compute shader est plus demandant que prévu, au même point qu'il est aussi peu optimisé que des simples meshes, sans imposteurs.
+Ceci permet de constater que le compute shader est plus demandant que prévu; il est aussi peu optimisé que des simples meshes sans imposteurs.
 
 #pagebreak()
 
@@ -463,13 +477,12 @@ public class SimpleTests {
 }
 ```
 
-Créer des test, par contre, requière de créer différentes Assemblies pour les tests.
+Créer des test, par contre, requière de créer une Assembly pour les tests.
 Les Assemblies en C\# sont des collections de ressources compilées consistant en une unité logique de fonctionnalité.
 L'avantage des Assemblies est de diviser un large projet en plusieurs petites unités afin de réduire le temps de compilation à long terme.
 Les Assemblies n'ayant pas été modifiées depuis la dernière compilation ne sont en effet pas recompilées.
 
-Afin de pouvoir néanmoins continuer de référencer les méthodes des scripts existants dans le projet, il convient de référencer les Assemblies afin de pouvoir profiter de leur fonctionnalité.
-Une seconde Assembly pour les scripts du jeu lui-même a été créée.
+Afin de pouvoir référencer les méthodes des scripts existants dans le projet, il est nécessaire de disposer d'une seconde Assembly, pour les scripts du jeu lui-même.
 
 Les tests de performance, eux, permettent de mesurer plusieurs frames et d'évaluer la durée de chaque frame via un histogramme, pour chaque test.
 En raison de la capture de plusieurs frames, les méthodes de test utilisent l'annotation `UnityTest` et retourne un IEnumerator.
@@ -496,7 +509,8 @@ public IEnumerator MoveForward_PerformanceTest() {
 
 L'implémentation du package Input System pour les test s'est révélé bien plus complexe que prévu.
 En effet, les tests de performance de Unity ne s'effectuent pas exactement selon le pattern AAA - Arrange, Act, Assert.
-Des états sont permanents entre deux tests, notamment tout ce qui est du chargement de scènes, y compris la manière dont les entrées utilisateurs sont simulées.
+Des états sont permanents entre deux tests, notamment tout ce qui est du chargement de scènes.
+La manière dont les entrées utilisateurs sont simulées est également sujette à cette permanence.
 Ainsi, pour s'assurer que deux tests possèdent les mêmes conditions il faut passer par deux autres annotations `Setup` et `TearDown` qui indiquent respectivement les actions à effectuer avant et après chaque test.
 
 Quant à la plus-value d'utiliser Input System, elle est moindre dans le cadre des tests de performance, ici le coeur de ce projet.
@@ -667,17 +681,22 @@ Conditions de test :
 
 ==== Discussion des résultats
 
-- Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
-  Pour toutes les catégories de tests, possédant de l'optimisation, ou non, le test Teleport connaît la plus haute variance.
-  Il s'agit du résultat escompté en raison de sa fréquence attendue faible lors d'une séquence de gameplay habituel.
-- Chaque technique d'optimisation réduit significativement le temps dédié à chaque frame.
-  Sans aucune technique d'optimisation, le temps CPU est deux à trois fois plus grand qu'avec les techniques d'optimisation.
-- Il n'y a que peu de différences entre `GPU Instancing` et `SRP Batcher`.
-  Ceci peut s'expliquer car le prototype n'offre pas de situation apropriée où chacune de ces techniques pourrait briller.
-- Entre `LOD` et `Impostors` il n'y a également que peu de différences.
-  Les imposteurs permettent de néanmoins de réduire le temps de calcul par frame par un sixième en moyenne.
-  Cette différence mineure peut être expliquée par le fait que les imposteurs sont davantages efficaces sont pour les maillages complexes, typiquement de la végétation, et ce prototype en est dépourvu à longue distance au vu du paysage désertique, d'autant plus que les modèles distants sont ignorés et non rendus passé une certaine distance.
-- `Chunk Loading` est de loin la technique la plus efficace, en raison de la distance d'affichage modifié également en fonction du nombbre distant de chunks à afficher.
-  Diminuer cette valeur permet très rapidement d'atteindre des bons résultats, bien que légèrement moins bons dans le cas d'allers et retours rapides. 
-  En effet, `Chunk Loading` devra charger et décharger à répétition les mêmes chunks, tandis que dans les autres cas, ceux-ci sont déjà chargés en tout temps.
-  Cette différence n'est pas observable au niveau de `Teleport` car celui-ci est demandant pour toutes les techniques en terme de rendu.
+Le test Teleport est de loin le test le plus demandant avec un changement différent de chunk à chaque frame.
+Pour toutes les catégories de tests, possédant de l'optimisation, ou non, le test Teleport connaît la plus haute variance.
+Il s'agit du résultat escompté en raison de sa fréquence attendue faible lors d'une séquence de gameplay habituel.
+
+Chaque technique d'optimisation réduit significativement le temps dédié à chaque frame.
+Sans aucune technique d'optimisation, le temps CPU est deux à trois fois plus grand qu'avec les techniques d'optimisation.
+
+Il n'y a que peu de différences entre `GPU Instancing` et `SRP Batcher`.
+Ceci peut s'expliquer par le fait que le prototype n'offre pas de situation apropriée où chacune de ces techniques pourrait briller indépendamment.
+
+Entre `LOD` et `Impostors` il n'y a également que peu de différences.
+Les imposteurs permettent de néanmoins réduire le temps de calcul par frame par un sixième en moyenne.
+Cette différence mineure peut être expliquée par le fait que les imposteurs sont davantages efficaces pour des maillages complexes, typiquement de la végétation, et ce prototype en est dépourvu à longue distance au vu du paysage désertique, d'autant plus que les modèles distants sont ignorés et non rendus passé une certaine distance.
+
+`Chunk Loading` est de loin la technique la plus efficace en raison de la distance d'affichage réduite considérable.
+De plus, le nombre restreint de chunks à charger est également bénéfique.
+Diminuer la distance d'affichage permet très rapidement d'atteindre des bons résultats, bien que légèrement moins bons dans le cas d'allers et retours rapides.
+En effet, `Chunk Loading` devra charger et décharger à répétition les mêmes chunks, tandis que dans les autres cas, ceux-ci sont déjà chargés en tout temps.
+Cette différence n'est pas observable au niveau de `Teleport` car celui-ci est demandant pour toutes les techniques en terme de rendu.

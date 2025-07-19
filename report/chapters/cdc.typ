@@ -6,7 +6,7 @@ Les applications en temps réel présentent beaucoup de défis techniques.
 En plus de ceux-ci, la question du rendu graphique, en particulier celui 3D, est un enjeu de taille.
 Le milieu du jeu vidéo se situe au coeurs de ces défis.
 
-Néanmoins, un grand nombre de techniques ont vu le jour afin d’optimiser les performances, et l'expérience utilisateur, de ces programmes.
+Néanmoins, un grand nombre de techniques ont vu le jour afin d’optimiser les performances et l'expérience utilisateur de ces programmes.
 Cette optimisation, couplée au progrès technologique, a permis l'émergence de systèmes de plus en plus complexes.
 Les jeux dits en monde ouvert représentent le summum de cette complexité.
 
@@ -89,6 +89,8 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
 - Gestion d'une large quantité d'objets - *Optimisation par shader* :
   Un shader peut grandement améliorer les performances dans le cas de nombreux objets n'ayant qu'un impact visuel, tels que des brins d'herbe.
   Cela permet d'utiliser la puissance des GPUs en découplant la logique visuelle de celle d'un modèle 3D.
+
+#pagebreak()
 
 === Déroulement <déroulement>
 

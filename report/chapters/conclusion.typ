@@ -8,18 +8,18 @@ La pipeline HDRP s'est révélée en effet autant complexe que puissante.
 Mais un problème inattendu et majeur de son usage a été la difficulté à créer, ou à faire fonctionner, des outils au sein de celle-ci.
 Les spécificités HDRP du langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches nice-to-have plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
 
-De plus, travailler avec de nombreuses et larges assets, comme ce qui sied à un prototype _Open World_, a été un défi en soi.
-Trouver des assets compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisations de Unity ont grandement facilité la tâche.
+De plus, travailler avec de nombreux et larges assets, comme ce qui sied à un prototype _Open World_, a été un défi en soi.
+Trouver des assets compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
 Pour les tâches répétitives, je me suis appuyé sur la création d'outils de l'éditeur afin d'automatiser autant que faire se peut ces tâches.
 
 Dans l'ensemble, néanmoins, la totalité des objectifs du cahier des charges ont été atteints, ou, à défaut, traités de manière significative.
 Seule l'utilisation de shaders pour représenter l'herbe n'a pas pu être menée complètement à terme, en raison de la complexité de cette tâche.
-Une comparaison des différentes solutions reste, néanmoins, ainsi qu'une démonstration permettant de visualiser l'implémentation des différentes solutions, sans qu'elles soient implémentées dans le prototype en elles-mêmes.
+Une comparaison des différentes solutions ainsi qu'une démonstration permettant de visualiser l'implémentation des différentes solutions ont été implémentés dans le projet, sans qu'elles soient implémentées dans le prototype en elles-mêmes.
 
 Il a également été difficile de suivre la méthodologie de travail décrite dans le cahier des charges.
 L'utilisation de GitHub Project dès la milestone 1 était trop prématurée; le projet constituait principalement de recherches et de prototypage à ce moment-là.
 Mais une fois l'usage du GitHub Project mise en place, après le passage de la milestone 3, celui-ci a été utilisé de manière à consigner organiser les nombreuses tâches restantes à effectuer, et son usage a été plus que bénéfique.
-Les sprints de deux semaines lors de la milestone 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à réaliser faire le point chaque semaine, bien que moins formel qu'un sprint review.
+Les sprints de deux semaines lors de la milestone 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 
 Quant à Unity et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les imposteurs ou Streaming Virtual Textures.
 Mais en l'état tant Unity que la pipeline HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.

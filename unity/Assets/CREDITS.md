@@ -12,4 +12,3 @@
 | Impostors | Amplify Impostors | Amplify Creations | https://assetstore.unity.com/packages/tools/utilities/amplify-impostors-119877 | Unity EULA |
 | Grass Mesh | Terrain - HDRP Demo Scene | Unity Technologies | https://assetstore.unity.com/packages/3d/environments/unity-terrain-hdrp-demo-scene-213198 | Unity EULA |
 | Grass Shader | Brute Force - Grass Shader | Brute Force Studio | https://assetstore.unity.com/packages/vfx/shaders/brute-force-grass-shader-192388 | Unity EULA |
-| HDRPGrass | HDRPGrass | EmmetOT | https://github.com/EmmetOT/HDRPGrass | |
