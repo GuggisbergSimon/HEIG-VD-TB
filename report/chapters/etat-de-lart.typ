@@ -34,16 +34,22 @@ C'est pour cette raison et de sa caractéristique d'un moteur de jeu open source
 
 Godot est un moteur de jeu open source, principalement axé 2D, mais dont la partie 3D a connu une amélioration significative ces dernières années.
 
-Très léger et bien plus compact que les deux autres moteurs, il manque néanmoins de beaucoup de fonctionnalités.
+Très léger et bien plus compact que les deux autres moteurs, il manque néanmoins de certaines fonctionnalités.
+Godot ne dispose pas de Raytracing, pas de Mesh Shader, pas d'Imposteurs, pas de Terrains, pas de build consoles, pas de système de package, etc. 
 Il est alors souvent nécessaire de passer par des workarounds ou de développer soi-même les fonctionnalités manquantes afin d'éventuellement, par la suite, en faire part le reste de la communité, ce qui s'inscrit dans la philosophie FOSS du projet.
 
 Les contributions par pull request sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de bugs, certaines ignorées jusqu'à une année.
 Le moteur présente néanmoins un certain manque de matûrité et les rares projets commerciaux ayant rencontré le succès sont des projets indépendants de petite envergure, pour le moment.
+La grande majorité des projets commerciaux réalisés avec ce moteur sont des jeux 2D.
+Parmi les nombreux jeux Godot 3D modernes mis en avant dans le reel 2024 du moteur, seuls des récents projets, encore en développement, tendent vers l'open world, à savoir _Zitifono_, _No Gasoline_, _Paw Rescuers_ et _Road to Vostok_.
+Seul ce dernier possède un rendu proche du photoréalisme, tandis que les autres ont un rendu stylisé.
+
+@steamdb
 
 === Unity
 
 Unity représente \~50% des jeux sortis en 2024 sur la plateforme de vente Steam.
-C'est un moteur polyvalent capable de faire autant 2D que 3D, populaire autant parmis les amateurs que parmis les professionnels.
+C'est un moteur polyvalent capable de faire autant 2D que 3D, populaire parmis les amateurs et les professionnels.
 
 Des projets complexes open world live service tels que Genshin Impact ont été réalisés avec ce moteur et chaque année de nombreux projets commerciaux de moindre envergure rencontrent le succès.
 Il est facile à prendre en main et d'une très large documentation malgré un code source partiellement indisponible, code source qui peut être acheté par une entreprise, au besoin.
@@ -58,7 +64,7 @@ Unreal Engine représente \~30% des jeux sortis en 2024 sur la plateforme de ven
 C'est un moteur axé 3D dont le rendu se veut principalement photoréaliste, et ce au travers de nombreuses techniques de rendu et d'optimisation.
 
 Au contraire de Unity, il dispose de nombreux outils et d'une bien meilleure gestion des assets et des équipes, ce qui rend son utilisation plus aisée pour des projets à grande échelle.
-Epic Games, la société derrière Unreal Engine, travaille également sur des jeux vidéo, tels que Fortnite, et ajoutent au moteur les nombreuses fonctionnalités développées pour ces projets.
+Epic Games, la société derrière Unreal Engine, travaille également sur des jeux vidéo, tels que Fortnite, et ajoute au moteur les nombreuses fonctionnalités développées pour ces projets.
 
 Malheureusement, Unreal Engine est plus difficile d'accès et demande souvent de modifier le code source quand les rares fonctionnalités prévues ne suffisent pas.
 Réaliser une pull request pour ajouter sa contribution au moteur est possible mais est bien souvent ignoré.
@@ -71,6 +77,7 @@ Certains sont plus adaptés pour des projets très spécifiques, tel que Ren'Py 
 
 Pour un projet tel que ce travail de Bachelor, Godot ou Unity seraient appropriés en terme d'échelle et de facilité de prise en main.
 Le premier manque malheureusement encore de fonctionnalités 3D et représente une prise de risque quant à la réussite de ce projet, là où Unity est déjà bien établi.
+De plus, Godot ne dispose pas, pour le moment, d'outils permettant un rendu haute fidélité qui permettrait de pousser les limites du prototype et de tester réellement les techniques d'optimisation, selon l'état de l'art.
 
 Pour ces raisons, il a été d'utiliser *Unity* pour le développement de ce projet.
 
@@ -234,6 +241,8 @@ Pour une échelle humaine cela n'est plus tolérable et pourrait même être dir
 Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
 Certaines sont devenues de facto standard tardent encore à être implémentées par les moteurs de jeux.
 Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom, tel que les megatexture, maintenant plus connues sous le nom de Streaming Virtual Texturing.
+
+Certaines de ces techniques devront être implémentées dans le prototype afin de satisfaire le cahier des charges.
 
 #figure(
   table(
@@ -475,7 +484,7 @@ Bien que l'échelle des mondes virtuels varie grandement, il est possible de dis
 - Une échelle à taille véhicule est moins habituelle et dispose d'une grande variation.
   En effet, cela peut autant couvrir la zone d'une ville, la surface d'un continent, voire même de la planète Terre entière.
   Que ce soit voiture, hélicoptère, avion, le mode de transport choisi va grandement influencer la taille du monde virtuel.
-  Les assets pour cette échelle seront souvent moins détaillées puisque celles-ci seront ou trop éloignées de la caméra, ou le joueur ne pourra pas les examiner attentivement en raison de la vitesse du véhicule.
+  Les assets pour cette échelle seront souvent moins détaillés puisque ceux-ci seront ou trop éloignés de la caméra, ou le joueur ne pourra pas les examiner attentivement en raison de la vitesse du véhicule.
 
   Jeux notables : 
     - The Crew - 5 200 km²
@@ -531,8 +540,8 @@ Ces outils utilisent l'édition via noeuds pour pouvoir et représenter chaque �
   ],
 )
 
-En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation.
-Le cas échéant, certaines fonctionnalitées restent indisponibles, limités aux tiers payants.
+En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation comme pour le cas de ce projet.
+Le cas échéant, certaines fonctionnalitées restent indisponibles, telles que la génération par tile, limitées aux tiers payants.
 
 @world-machine
 @world-creator

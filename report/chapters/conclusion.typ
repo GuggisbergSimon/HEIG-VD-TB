@@ -1,14 +1,17 @@
 = Conclusion <conclusion>
 
-Ce travail de bachelor m'a permis de suivre les différentes étapes de création d'un projet Unity complexe et ambitieux.
-Quand bien même celui-ci n'est au final qu'un prototype, qu'une simple démonstration technique, il adhère autant que faire se peut à l'état de l'art du métier.
+// Notes A : la conclusion doit résumer, sans prendre parti, et sans parler de son expérience personnelle. Il est bon de récapituler les actions réalisées avant de rentrer dans les conclusions de ton analyse.
 
-C'est en tentant de respecter l'état de l'art que plusieurs difficultés ont été rencontrées.
+Ce rapport présente le travail de recherche et d'exploration de l'état de l'art des techniques d'optimisation dans un premier temps.
+Puis, dans un second temps, le rapport détaille l'implémentation d'un prototype de jeu vidéo en monde ouvert et de certaines de ces techniques, lorsqu'appropriées.
+
+C'est en tentant de respecter l'état de l'art du métier que plusieurs difficultés ont été rencontrées.
 La pipeline HDRP s'est révélée en effet autant complexe que puissante.
 Mais un problème inattendu et majeur de son usage a été la difficulté à créer, ou à faire fonctionner, des outils avec celle-ci.
-Les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches nice-to-have plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
+La majorité des ressources libres sont disponibles pour la pipeline Standard uniquement.
+De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches nice-to-have plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
 
-De plus, travailler avec de nombreux et larges assets, comme ce qui sied à un prototype _Open World_, a été un défi en soi.
+Travailler avec de nombreux et larges assets, comme ce qui sied à un prototype _Open World_, a également été un défi en soi.
 Trouver des assets compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
 Pour les tâches répétitives, je me suis appuyé sur la création d'outils de l'éditeur afin d'automatiser autant que faire se peut ces tâches.
 
@@ -22,8 +25,9 @@ Mais une fois l'usage du GitHub Project mise en place, après le passage de la m
 Son usage a été plus que bénéfique.
 Les sprints de deux semaines lors de la milestone 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 
-Quant à Unity et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les imposteurs ou Streaming Virtual Textures.
-Mais en l'état tant Unity que la pipeline HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
+Quant à Unity et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les imposteurs, mesh shaders, ou Streaming Virtual Textures.
+Mais, en l'état, tant Unity que la pipeline HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
+Les techniques standard d'optimisation restent d'actualité, avec les LODs amenant un gain considérable de performance, et ce malgré une fidélité réaliste toujours plus grande.
 
 @unity-roadmap
 
@@ -35,11 +39,11 @@ Si un projet de cette envergure devrait dépasser le cadre du prototype, je ne p
 Finalement, ce travail met en valeur l'importance de l'optimisation des performances, via anciennes et nouvelles techniques.
 Le rendu graphique en temps réel est un domaine complexe.
 Les challenges rencontrés à la course au photoréalisme vont de pair avec ceux qui en découlent pour les performances.
-Cette course sur deux fronts est un équilibre délicat à maintenir pour tout projet.
+Cette course sur deux fronts est un équilibre délicat à maintenir pour tout projet d'application en temps réel.
 
 == Remerciements
 
 Je tiens à remercier *Bertil Chapuis* pour son encadrement et ses conseils tout au long de ce travail.
 Sans sa grande confiance dans ce projet ambitieux, celui-ci n'aurait pas vu le jour sous cette forme.
 
-Je remercie également ma famille et mes proches pour leur soutien et leur indéfectable patience durant ce travail.
+Je remercie également ma famille et mes proches pour leur soutien et leur indéfectible patience durant ce travail.

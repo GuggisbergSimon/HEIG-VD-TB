@@ -5,6 +5,9 @@ Néanmoins, un grand nombre de techniques ont vu le jour afin d'optimiser les pe
 Cette optimisation, couplée au progrès technologique, a permis l'émergence de systèmes de plus en plus complexes.
 Les jeux dits en monde ouvert représentent le summum de cette complexité.
 
-Ce travail de bachelor vise, dans un premier temps, à développer un prototype de jeu en monde ouvert.
-Dans un second temps, ce projet a pour but d'explorer l'état de l'art des techniques d'optimisation pour un tel prototype.
-Finalement, certaines de ces techniques seront implémentées en suivant l'état de l'art.
+Ce travail de bachelor explore, dans un premier temps, l'état de l'art des techniques d'optimisation, pour un jeu en monde ouvert, ou non.
+Dans un second temps, ce projet détaille le développement d'un prototype de jeu en monde ouvert.
+
+Puis, certaines de ces techniques sont implémentées en suivant l'état de l'art.
+Les techniques choisies sont LODs, chargement du monde asynchrone, imposteurs, et optimisation par shader.
+Finalement, une mesure des performance permet de déterminer l'impact de chacune de ces techniques implémentées.

@@ -10,15 +10,13 @@
     Enseignant responsable : #TBsupervisor\
   ]
 
-  v(10%)
+  v(3%)
 
   align(center)[Travail de Bachelor #TBacademicYears]
-  v(1%)
   align(center)[#TBtitle]
-  v(1%)
   hr()
 
-  v(3%)
+  v(2%)
   
   [
     *Résumé publiable*\
@@ -36,7 +34,7 @@
     [Étudiant :], [Date et lieu :], [Signature :],
     [#TBauthor], [#hr_dotted()], [#hr_dotted()]
   )
-  v(2%)
+  v(1%)
   table(
     stroke: none,
     columns: (40%, 30%, 30%),

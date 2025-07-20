@@ -6,7 +6,7 @@
 == Prototype
 
 Des assets provenant du Unity Asset Store et de Fab ont été utilisées pour le prototype.
-Ces assets sont listées et leur license est détaillée dans le fichier `unity/assets/CREDITS.md`
+Ces assets sont listés et leur license est détaillée dans le fichier `unity/assets/CREDITS.md`
 
 Un premier contrôleur physique pour le joueur, assez sommaire, permet de facilement tester le chargement du monde.
 Celui-ci a été complètement remplacé par un second contrôleur, plus abouti, simulant la physique d'un hovercraft afin qu'il adhère au terrain.
@@ -166,7 +166,7 @@ Finalement, il est possible de disposer d'un Cross Fade entre deux niveaux de d�
 
 Quant à la génération de LODs, puisque ceux-ci possèdent une topologie différente des modèles 3D originaux, il n'est pas possible de conserver les textures existantes pour ceux-ci, puisque le mappage UV ne correspondra plus.
 Pour des modèles non texturés, un simple modificateur decimate sous Blender pourrait suffire, mais une extension telle que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche.
-C'est pour cette raison d'incompatibilité des textures entre les LODs, que des assets existantes ont été utilisées pour ce projet.
+C'est pour cette raison d'incompatibilité des textures entre les LODs, que des assets existants ont été utilisées pour ce projet.
 Ces assets contiennent 2 ou 3 niveau de détails.
 
 En raison de l'architecture du projet, bien qu'il serait possible de disposer d'une série de chunks peuplés de modèles 3D avec et sans LOD, ceci requière néanmoins un duplicata des ressources `Scenes`, `ScriptableObjects`, et `Prefabs`.
@@ -368,6 +368,10 @@ Il existe notamment plusieurs solutions pour les instancer au travers de l'outil
 À noter que Unity URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé Shader Graph, mais que celui-ci ne traite que des opérations Vertex et Fragment.
 VFX Graph, un système complexe permettant de simuler des particules, pourrait être utilisé pour représenter des brins d'herbe, mais cela est un usage détourné de l'outil.
 
+En raison de manque de temps, une implémentation partielle de certaines de ces solutions a été réalisée.
+Celles-ci se présentent sous la forme d'un Terrain, ou d'un plan, sur lequel de l'herbe est placée.
+Afin de comparer chacune de ces solutions, une mesure de performance a été établie, mais ces techniques n'ont pas été implémentées au sein du prototype en lui-même.
+
 ==== Grass Mesh
 
 Unity Technologies met à disposition de nombreuses assets libre d'usage à fin de démontrer l'usage et la puissance de leur outils.
@@ -434,25 +438,30 @@ Des raccourcis uniques à cet outil permettent de :
 - cycler dans les options de profiler : `ctrl + F10`
 - activer/désactiver le profiler : `ctrl + F11`
 
-Une scène de démonstration permet de comparer les performances de plusieurs techniques sous la forme d'un benchmark.
-Dans cette scène sont comparé les différentes implémentations d'herbe, ainsi que les imposteurs.
-
 @unity-graphy
+
+=== Demo
+
+Une scène de démonstration permet de comparer les performances de plusieurs techniques sous la forme d'un benchmark.
+Le joueur n'a aucun contrôle durant celui-ci, si ce n'est la touche `Esc` pour ouvrir le menu pause et revenir au menu principal.
+Dans cette scène sont comparé les différentes implémentations d'herbe, ainsi que les imposteurs.
 
 #figure(
   table(
     columns: 2,
-    table.header[Implémentation][FPS moyen],
-    "Écran vide", "~150",
-    "Mesh", "~100",
-    "Tesselation Shader", "~150",
-    "Compute Shader", "~100",
-    "BruteForce Grass Shader", "~150",
+    table.header[Implémentation][FPS moyen][Batches][SetPassCalls][Tris][Vert],
+    "Écran vide", "~150","~30","~30","~4k","~2k",
+    "Mesh", "~100","~1500","~40","~500k","~500k",
+    "Tesselation Shader", "~150","~50"," ~50","~10k","~6k",
+    "Compute Shader", "~100","~2000","~40","~750k","~2M",
+    "BruteForce Grass Shader", "~150","~40","~40","~6k","~4k",
   ),
-  caption: "Comparaison des performances des différentes implémentations d'herbe."
+  caption: "Comparaison des statistiques de rendu des différentes implémentations d'herbe."
 )
 
-Ceci permet de constater que le compute shader est plus demandant que prévu; il est aussi peu optimisé que des simples meshes sans imposteurs.
+Ces mesures permettent de constater que le compute shader est plus demandant que prévu; il est aussi peu optimisé que des simples meshes sans imposteurs.
+La solution BruteForce dispose des meilleures performances, mais sa complexité monte avec la taille d'un terrain, ce qui sort du cadre de la démonstration et des tests.
+Le shader de tesselation présente aussi des performances intéressantes, mais est incompatible avec les `Terrains`, à l'inverse du shader Compute, tous deux du pacakge EmmetOT HDRPGrass.
 
 #pagebreak()
 
@@ -561,6 +570,14 @@ Conditions de test :
   ],
 )
 
+À travers les cinq catégories de tests, des mêmes variances sont observées pour les cinq premiers tests durant les premières frames.
+Des variances considérables sont également observées pour le test `Teleport`, dans les cas d'usage de LOD ou imposteurs, mais uniquement pour passé les premières frames.
+Finalement, à l'inverse des autres tests, le test `ChunkLoading` connaît une variance significative durant les premières frames du test `Teleport`.
+
+En considérant les valeurs médianes et les 25ème et 75ème percentiles, il est plus facile d'examiner l'évolution des performances selon les schémas ci-dessous.
+
+#pagebreak()
+
 #let parse_performance_data() = {
   let content = read("diagrams/PerformanceTestResults.csv")
   
@@ -660,8 +677,6 @@ Conditions de test :
 
 #let data = parse_performance_data()
 
-#pagebreak()
-
 #figure(
   grid(
     columns: 2,
@@ -700,3 +715,11 @@ De plus, le nombre restreint de chunks à charger est également bénéfique.
 Diminuer la distance d'affichage permet très rapidement d'atteindre des bons résultats, bien que légèrement moins bons dans le cas d'allers et retours rapides.
 En effet, `Chunk Loading` devra charger et décharger à répétition les mêmes chunks, tandis que dans les autres cas, ceux-ci sont déjà chargés en tout temps.
 Cette différence n'est pas observable au niveau de `Teleport` car celui-ci est demandant pour toutes les techniques en terme de rendu.
+
+Au final, réduire la distance d'affichage autant que cela soit possible devrait être une priorité pour un jeu en monde ouvert.
+Bien que cela aille à l'encontre des principes d'un jeu de ce type, ceci se rapproche de l'occlusion culling, non implémentée pour ce projet.
+Un placement intelligent des assets dans le projet ou une architecture sous forme montagneuse permettant de cacher des éléments du décor invisible permettraient de drastiquement améliorer les performances à la manière de la réduction de la distance d'affichage.
+La technique de `LOD` est également singulièrement efficace mais demande un paramétrage soigneux, en plus d'un travail de modélisation supplémentaire pour la création des modèles basses résolutions.
+Le paramètre de loin le plus important est celui à partir duquel les assets ne sont plus affichées.
+Une valeur habituelle pour celle-ci est 1% de la hauteur de l'écran. Ceci permet de garantir que les objets distants ne vont pas disparaître de manière subite.
+
