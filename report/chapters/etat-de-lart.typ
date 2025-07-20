@@ -164,7 +164,7 @@ Mais ils peuvent, par exemple, prendre un vecteur en entrée pour représenter l
 @opengl-khronos
 
 #figure(
-  image("images/shader_pipeline.png", width: 18%),
+  image("images/shader_pipeline.png", width: 20%),
   caption: [
     Pipeline de rendu d'un shader OpenGL, en bleu les étapes programmables.
   ],

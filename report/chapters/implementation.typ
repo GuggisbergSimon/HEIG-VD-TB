@@ -182,6 +182,8 @@ Ce script a une complexité $O(1)$ en opération `GetComponent` pour chaque `Chu
 
 @blender-lod-maker
 
+#pagebreak()
+
 == Imposteurs
 
 Unity considère ajouter une solution officielle d'imposteurs, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la roadmap du moteur de jeu.
