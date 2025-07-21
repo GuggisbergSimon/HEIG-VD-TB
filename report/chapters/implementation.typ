@@ -141,7 +141,7 @@ Il faut donc garder en mémoire la position relative du joueur, et la mettre à 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
 Dans _Unity_, les calculs physiques se produisent lors de l'étape `FixedUpdate`.
 Cette étape n'est exécutée qu'à des intervalles réguliers fixes, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à atteindre le _framerate_ requis.
-Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriété physiques que lors des frames `FixedUpdate`.
+Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriétés physiques que lors des frames `FixedUpdate`.
 Puisque le passage d'un chunk à un autre ne se produit que de manière ponctuelle, toute la logique de vérification de chunk se trouve dans l'étape `FixedUpdate`.
 Une seconde correction a été d'attendre la prochaine frame physique `FixedUpdate` lors d'un recentrage avant de résumer celles-ci, comme d'habitude.
 
@@ -153,6 +153,8 @@ Les étapes concernées ont trait au pathfinding, à la lumière précalculée, 
 Pour ce projet, aucun de ces trois éléments n'ont été implémentés, mais dans le cas d'un jeu en monde ouvert certaines de ces techniques pourraient être utiles.
 
 @unity-doc-script-execution-order
+
+#pagebreak()
 
 == LOD
 
@@ -188,7 +190,7 @@ Ce script a une complexité $O(1)$ en opération `GetComponent` pour chaque `Chu
 
 == Impostors
 
-_Unity_ considère ajouter une solution officielle d'_Impostors_, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la _roadmap_ du moteur de jeu.
+_Unity_ propose d'ajouter une solution officielle d'_Impostors_, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la _roadmap_ du moteur de jeu.
 En l'absence d'une solution unique officielle, plusieurs tentatives d'implémentations ont été faites.
 
 @unity-roadmap
@@ -279,13 +281,15 @@ Cela a donc comme le même désavantage, lorsque les _Impostors_ sont désactiv�
   ],
 )
 
+#pagebreak()
+
 == Optimisations GPU
 
 L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de visualiser rapidement les performances.
 
 
 #figure(
-  image("images/GameViewStats.png", width: 60%),
+  image("images/GameViewStats.png", width: 50%),
   caption: [
     Fenêtre de statistiques de rendu dans l'éditeur.
   ],
@@ -293,12 +297,11 @@ L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de v
 
 Voici les données les plus intéressantes parmi ces statistiques :
 - FPS et CPU sont liés et représentent la même mesure, de deux manières différentes.
-
-  $"FPS" = 1/"CPU"$
-
   FPS est le nombre de frames par secondes, tandis que CPU est le temps de rendu d'un frame en millisecondes.
   Le temps de rendu de la frame est une meilleure mesure, dans le contexte d'une frame unique, mais est moins parlant que celle des FPS.
-  Le plus haut les FPS sont, le mieux c'est, et inversement le plus bas le temps CPU est, le mieux c'est.
+  Le plus haut la mesure de FPS est, le mieux c'est.
+  Et inversement, le plus bas le temps CPU est, le mieux c'est.
+  Leur rapport est de la forme : $"FPS" = 1/"CPU"$
 - _Batches_ correspond au nombre total de batches de draw call effectués durant une frame.
   Le plus bas, le mieux c'est.
 - _Saved by batching_ correspond au nombre de batches que Unity a pu combiner entre deux batches.
@@ -329,14 +332,14 @@ Cette méthode est donc plus efficace en cas de peu d'utilisation de variantes d
 
 Le _SRP Batcher_ dispose d'un accès permettant une mise à jour directe du _buffer_ du GPU.
 
+@unity-doc-srp-batcher
+
 #figure(
-  image("images/SROShaderPass.png", width: 100%),
+  image("images/SROShaderPass.png", width: 74%),
   caption: [
     Préparation d'un _batch_ pour un _draw call_ standard versus utilisation du _SPR Batcher_
   ],
 )
-
-@unity-doc-srp-batcher
 
 === DOTS
 
@@ -359,7 +362,7 @@ Il existe notamment plusieurs solutions pour les instancer au travers de l'outil
   Il est assez intuitif de vouloir représenter des brins d'herbe via des modèles 3D.
   Bien que l'on puisse envisager dans un premier temps de modéliser chaque brin d'herbe en 3D, il existe une meilleure solution, comme le montre le package de démonstration officiel de _Unity TerrainDemoScene HDRP_.
   Il convient d'utiliser la transparence de textures pour simuler le volume.
-  Les brins d'herbe sont, en réalités, des _quads_ complexes.
+  Les brins d'herbe sont, en réalité, des _quads_ complexes.
   Pour les `Terrains` dans Unity, cette solution correspond à l'option `Detail Mesh`.
 - _Billboard_.
   Pour éviter de ne disposer que de brins d'herbes plats il est possible de disposer de plusieurs `Quads` pour chaque brin d'herbe.
@@ -453,7 +456,7 @@ Des raccourcis uniques à cet outil permettent de :
 
 Une scène de démonstration permet de comparer les performances de plusieurs techniques sous la forme d'un _benchmark_.
 Le joueur n'a aucun contrôle durant celui-ci, si ce n'est la touche `Esc` pour ouvrir le menu pause et revenir au menu principal.
-Dans cette scène sont comparé les différentes implémentations d'herbe, ainsi que les _Impostors_.
+Dans cette scène sont comparées les différentes implémentations d'herbe, ainsi que les _Impostors_.
 
 #figure(
   table(
@@ -525,7 +528,7 @@ public IEnumerator MoveForward_PerformanceTest() {
 }
 ```
 
-L'implémentation du package _Input System_ pour les test s'est révélé bien plus complexe que prévu.
+L'implémentation du package _Input System_ pour les tests s'est révélée bien plus complexe que prévu.
 En effet, les tests de performance de _Unity_ ne s'effectuent pas exactement selon le pattern AAA - _Arrange, Act, Assert_.
 Des états sont permanents entre deux tests, notamment tout ce qui est du chargement de scènes.
 La manière dont les entrées utilisateurs sont simulées est également sujette à cette permanence.
@@ -713,7 +716,7 @@ Chaque technique d'optimisation réduit significativement le temps dédié à ch
 Sans aucune technique d'optimisation, le temps CPU est deux à trois fois plus grand qu'avec les techniques d'optimisation.
 
 Il n'y a que peu de différences entre `GPU Instancing` et `SRP Batcher`.
-Ceci peut s'expliquer par le fait que le prototype n'offre pas de situation apropriée où chacune de ces techniques pourrait briller indépendamment.
+Ceci peut s'expliquer par le fait que le prototype n'offre pas de situation appropriée où chacune de ces techniques pourrait briller indépendamment.
 
 Entre `LOD` et `Impostors` il n'y a également que peu de différences.
 Les _Impostors_ permettent de néanmoins réduire le temps de calcul par frame par un sixième en moyenne.
@@ -729,7 +732,11 @@ Au final, réduire la distance d'affichage autant que cela soit possible devrait
 Bien que cela aille à l'encontre des principes d'un jeu de ce type, ceci se rapproche de la technique d'_occlusion culling_, non implémentée pour ce projet.
 Un placement intelligent des assets dans le projet ou une architecture sous forme montagneuse permettant de cacher des éléments du décor invisible permettraient de drastiquement améliorer les performances à la manière de la réduction de la distance d'affichage.
 
+#pagebreak()
+
 La technique de LOD est également singulièrement efficace mais demande un paramétrage soigneux, en plus d'un travail de modélisation supplémentaire pour la création des modèles basses résolutions.
 Le paramètre de loin le plus important est celui-ci à partir duquel les `Meshes` ne sont plus affichées.
 Une valeur habituelle pour celle-ci est 1% de la hauteur de l'écran. Ceci permet de garantir que les objets distants ne vont pas disparaître de manière subite.
 
+Ces résultats démontrent l'utilité des techniques implémentées ainsi que leur impact sur un prototype _open world_.
+Procéder à de plus nombreux tests pour d'autres prototypes permettrait de nuancer ces résultats, ou les affirmer au contraire, mais cela sort du cadre de ce travail de Bachelor.

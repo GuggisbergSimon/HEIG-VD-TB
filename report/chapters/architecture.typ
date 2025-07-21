@@ -10,7 +10,7 @@ Cette échelle laisse la plus grande liberté d'implémentation, tout en facilit
 En effet, le joueur ne sera représenté que par un véhicule, sans animation, et au vu de la taille des objets les joueurs seront plus à même de tolérer des défauts de comportement physique.
 
 Par souci de simplification, l'idée d'un _hovercraft_ explorant des dunes d'un paysage post-apocalyptique a été retenue.
-Cette idée permet l'utilisation d'une grande variété d'assets existantes, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
+Cette idée permet l'utilisation d'une grande variété d'assets existants, sous prétexte que le monde soit désertique et que des ruines de tout genre parsèment le paysage.
 Le désert, de plus, simplifiera considérablement le rendu graphique en excluant des arbres. Ceux-ci pourront être ajoutés, dans un second temps, si les imposteurs sont implémentés.
 La caméra sera positionnée à distance du véhicule et suivra celui-ci à la troisième personne.
 
@@ -48,7 +48,7 @@ La plupart des jeux vidéo préfèrent se tourner vers des solutions plus adapt�
 Ce travail fera de même, d'autant plus que la complexité des outils de _Cesium_ ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
 En effet, _Cesium for Unity_ implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
 
-En raison de ces contraintes d'outils et de la décision de la taille du prototype, il a été décidé de se limiter à un terrain de taille minimal de 64km².
+En raison de ces contraintes d'outils et de la décision de la taille du prototype, ce projet se limitera à un terrain de taille minimale de 64km².
 _Unity_ ne supporte malheureusement que l'import d'une _heightmap_ de taille maximale de 8192x8192 pixels.
 L'élevation pour un mètre est donc donnée par un pixel de la _heightmap_, ce qui correspond à un compromis acceptable entre taille et précision du terrain.
 La résolution de la _heightmap_ est donc environ de 1 pixel par mètre.
@@ -196,7 +196,7 @@ Si des problèmes plus complexes venaient à survenir, par exemple dans le rendu
 
 Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du _framerate_ mais le 95ème, ou 99ème percentile afin de pouvoir isoler les outliers.
 Mettre en évidence ceci permet de suivre les chutes de performances.
-Une chute brutale du _framerate_, en dehors des temps de chargement, est particulièrement désagréable comme expérience.
+Une chute brutale du _framerate_ en dehors des temps de chargement est particulièrement désagréable comme expérience et nuit à l'immersion du joueur.
 
 En raison de la nature du projet, il est difficile d'implémenter des outils tels que _Cinemachine_ et _Timeline_ pour tester le chargement des chunks, en particulier à cause du recentrage automatique du joueur, ce qui est contraire à l'idée d'un parcours dirigé.
 Mais puisque ce prototype ne contient aucunes fonctionnalités avancées, il est possible de rationaliser les différents types de tests à effectuer.

@@ -1,6 +1,6 @@
 //reformuler ou ici ou cdc
 
-Les applications en temps réel présentent de nombreux de défis techniques.
+Les applications en temps réel présentent de nombreux défis techniques.
 En plus de ceux-ci, la fidélité du rendu graphique, en particulier celui 3D, est un enjeu de taille.
 
 Néanmoins, un grand nombre de techniques ont vu le jour afin d'optimiser les performances et l'expérience utilisateur de ces programmes.

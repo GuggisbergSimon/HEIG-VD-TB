@@ -1,15 +1,13 @@
 = Conclusion <conclusion>
 
-// Notes A : la conclusion doit résumer, sans prendre parti, et sans parler de son expérience personnelle. Il est bon de récapituler les actions réalisées avant de rentrer dans les conclusions de ton analyse.
-
 Ce rapport présente le travail de recherche et d'exploration de l'état de l'art des techniques d'optimisation dans un premier temps.
-Puis, dans un second temps, le rapport détaille l'implémentation d'un prototype de jeu vidéo en monde ouvert et de certaines de ces techniques, lorsqu'appropriées.
+Puis, dans un second temps, le rapport détaille l'implémentation d'un prototype de jeu vidéo en monde ouvert et de certaines de ces techniques, lorsque celles-ci sont appropriées.
 
-C'est en tentant de respecter l'état de l'art du métier que plusieurs difficultés ont été rencontrées.
+C'est en tentant de respecter l'état de l'art du métier que j'ai rencontré plusieurs difficultés.
 La _pipeline_ HDRP s'est révélée en effet autant complexe que puissante.
 Mais un problème inattendu et majeur de son usage a été la difficulté à créer, ou à faire fonctionner, des outils avec celle-ci.
 La majorité des ressources libres sont disponibles pour la _pipeline_ Standard uniquement.
-De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches _nice-to-have_ plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
+De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches _nice-to-have_ plus compliqué que prévu, me forçant à revoir mes priorités et à me rabattre sur des solutions pré-existantes, réalisables durant le délai imparti.
 
 Travailler avec de nombreuses et larges ressources, comme ce qui sied à un prototype _Open World_, a également été un défi en soi.
 Trouver des ressources compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
@@ -20,8 +18,8 @@ Seule l'utilisation de shaders pour représenter l'herbe n'a pas pu être menée
 Une comparaison des différentes solutions ainsi qu'une démonstration permettant de visualiser l'implémentation de celles-ci ont été implémentés dans le projet, sans qu'elles soient implémentées dans le prototype en elles-mêmes.
 
 Il a également été difficile de suivre la méthodologie de travail décrite dans le cahier des charges.
-L'utilisation de _GitHub Project_ dès la _milestone_ 1 était trop prématurée; le projet constituait principalement de recherches et de prototypage à ce moment-là.
-Mais une fois l'usage du _GitHub Project_ mise en place, après le passage de la _milestone_ 3, celui-ci a été utilisé de manière à consigner et organiser les nombreuses tâches restantes à effectuer.
+L'utilisation de _GitHub Project_ dès la _milestone_ 1 était trop prématurée; le projet constituait principalement de recherche et de prototypage à ce moment-là.
+Mais une fois l'usage du _GitHub Project_ mis en place, après le passage de la _milestone_ 3, celui-ci a été utilisé de manière à consigner et organiser les nombreuses tâches restantes à effectuer.
 Son usage a été plus que bénéfique.
 Les sprints de deux semaines lors de la _milestone_ 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 

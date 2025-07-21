@@ -2,7 +2,7 @@
 
 == Introduction <introduction>
 
-Les applications en temps réel présentent beaucoup de défis techniques.
+Les applications en temps réel présentent de nombreux défis techniques.
 En plus de ceux-ci, la question du rendu graphique, en particulier celui 3D, est un enjeu de taille.
 Le milieu du jeu vidéo se situe au coeurs de ces défis.
 
@@ -41,7 +41,7 @@ En plus de laisser une grande liberté de déplacement au joueur, les jeux en mo
 
 == Problématique <problématique>
 
-Les jeux vidéo ont toujours eu comme problématique centrale d'atteindre un compromis acceptable entre performances et fidélité visuelle.
+Les jeux vidéo ont souvent eu comme problématique centrale d'atteindre un compromis acceptable entre performance et fidélité visuelle.
 
 La problématique de ce travail de Bachelor est d'implémenter les composants de base permettant de créer un jeu 3D en monde ouvert dans un moteur de jeu existant.
 Cette implémentation initiale servira à un travail d'optimisation de performances basé sur l'état de l'art de ce domaine.

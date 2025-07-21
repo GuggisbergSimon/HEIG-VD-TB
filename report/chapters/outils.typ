@@ -18,13 +18,15 @@ Des tâches sont créées selon les bugs rencontrés ou en cas de subdivision de
 
 @game-ci
 
+#pagebreak()
+
 == Unity
 
 Unity a eu, pendant plusieurs années, un cycle de développement où 3, puis 2, versions majeures étaient sorties par an, avec une version LTS annuelle.
 Ce n'est que récemment que ce cycle a été altéré avec une seule version majeure sortie par an, qui est ensuite supportée via LTS pendant deux ans.
 Ainsi, en 2024 est sorti Unity 6.0, et début 2025 la version 6.1.
 
-Pour ce travail de bachelor il a été décidé d'utiliser la dernière version stable : *Unity 6.0 LTS*.
+Pour ce travail de bachelor la dernière version stable de _Unity_ a été choisie : *Unity 6.0 LTS*.
 
 Quant à installer Unity et gérer différents projets ou éditeurs, Unity Hub permet ceci en offrant également de nombreux templates de projets.
 
@@ -51,7 +53,7 @@ Patcher ces assets peut en partie être automatisé par Unity.
       Cette pipeline est plus compliquée à prendre en main au vu de la grande quantités d'outils uniques à celle-ci.
       Il s'agit de la pipeline permettant d'utiliser du ray tracing, entre autre.
 
-Ce travail de bachelor a pour volonté d'implémenter les méthode de l'art du métier et donc d'utiliser une pipeline moderne, cela exclue la pipeline Standard.
+Ce travail de bachelor a pour volonté d'implémenter les méthodes de l'art du métier et donc d'utiliser une pipeline moderne, cela exclue la pipeline Standard.
 La pipeline HDRP possède de nombreuses assets photoréalistes tandis que celle URP tend vers la stylisation avec des assets moins lourdes, avec un compte de polygones moins élevé, pour un style souvent dénommé low poly.
 Il est néanmoins possible de développer des jeux haute fidélité avec URP.
 

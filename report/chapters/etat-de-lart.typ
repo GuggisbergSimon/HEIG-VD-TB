@@ -4,7 +4,7 @@
 
 Le développement de jeux vidéos est complexe car il demande une spécialisation dans de nombreux domaines : programmation en temps réel, rendu graphique, gestion du son, plusieurs types d'inputs utilisateur, simulation d'intelligence artificielle, etc. 
 
-Les moteurs de jeux ont grandement évolué, incorporant de nombreuses fonctionnalités et outiles pour facilier le développement.
+Les moteurs de jeux ont grandement évolué, incorporant de nombreuses fonctionnalités et outils pour faciliter le développement.
 L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de jeu _in-house_ exclusif à une compagnie, permet de disposer d'un large panel de fonctionnalités pour toutes sortes d'échelles et types de projets. L'intégration de nouveaux employés et le partage de connaissances est également simplifié, à la condition qu'ils soient familiers avec le moteur de jeu utilisé, bien entendu.
 
 #figure(
@@ -52,11 +52,12 @@ _Unity_ représente \~50% des jeux sortis en 2024 sur la plateforme de vente _St
 C'est un moteur polyvalent capable de faire autant 2D que 3D, populaire parmis les amateurs et les professionnels.
 
 Des projets complexes _open world live service_ tels que _Genshin Impact_ ont été réalisés avec ce moteur et chaque année de nombreux projets commerciaux de moindre envergure connaissent le succès.
-Facile à prendre en main, le moteur dispose d'une large documentation malgré un code source partiellement indisponible, code source qui peut être acheté par une entreprise, au besoin.
+Facile à prendre en main, le moteur dispose d'une large documentation malgré un code source partiellement indisponible.
+Celui-ci peut être acheté par une entreprise, au besoin.
 
 Malheureusement, _Unity_ a de la difficulté à s'adapter à une grande quantité d'assets ainsi qu'une large équipe.
 De plus, un grand nombre de fonctionnalités importantes, disponibles via des _packages_ officiels externes, ne sont pas toujours bien intégrés, restant souvent sans mises à jour ou en _preview_ pendant de longues années.
-Pour ne rien arranger, la communication de _Unity_ en 2024 concernant des changements majeurs de prix a laissé à désirer, entraînant perte de confiance et exode vers d'autres moteurs de jeux, tel que _Godot_.
+Pour ne rien arranger, la communication de _Unity_ en 2024 concernant des changements majeurs de prix a laissé à désirer, entraînant perte de confiance et l'exode vers d'autres moteurs de jeux, tel que _Godot_.
 
 === Unreal Engine
 
@@ -108,7 +109,7 @@ _Overdraw_ est le terme désignant le fait de rendre à l'écran un pixel plusie
 À grande échelle, c'est une perte de performance massive car le GPU doit traiter plusieurs fois chaque pixel de l'écran.
 Ce problème explose de manière quadratique en cas de résolution plus élevée.
 
-Cela peut être dû à des objets transparents, superposés, ou un maillage trop complexe.
+Cela peut être dû à des objets transparents, superposés, ou à un maillage trop complexe.
 En effet, chaque triangle visible d'un maillage va produire un appel au GPU pour calculer les pixels qu'il occupe à l'écran.
 
 === Lumières
@@ -240,8 +241,8 @@ Pour une échelle humaine cela n'est plus tolérable et pourrait même être dir
 
 == Techniques
 
-Un grand nombre de techniques visant à améliorer les performances ont vues le jour au fil des années.
-Certaines sont devenues de facto standard tandis que d'autres tardent encore à être implémentées par les moteurs de jeux.
+Un grand nombre de techniques visant à améliorer les performances ont vu le jour au fil des années.
+Certaines sont devenues de facto standardes tandis que d'autres tardent encore à être implémentées par les moteurs de jeux.
 Parfois des techniques disparaissent de l'horizon pour revenir sous un autre nom, tel que les _megatexture_, maintenant plus connues sous le nom de _Streaming Virtual Texturing_.
 
 Certaines de ces techniques devront être implémentées dans le prototype afin de satisfaire le cahier des charges.
@@ -308,7 +309,7 @@ _Unreal Engine_ permet une utilisation dynamique de cette technique, qui peut n�
 === Lightmap
 
 Il s'agit d'une texture contenant les informations précalculées de l'éclairage et des ombres.
-Cette technique permet une excellente combinaison entre fidélité de rendu graphique et performances.
+Cette technique permet une excellente combinaison entre fidélité de rendu graphique et performance.
 Cela s'effectue au prix de :
 - En amont :
   - Mise en place de différents composants.
@@ -317,10 +318,11 @@ Cela s'effectue au prix de :
   - Espace mémoire utilisé pour stocker la texture.
   - Impossibilité de changer la lumière dynamiquement.
 
-Certains moteurs de jeux, tels que _Unity_, permettent de mélanger différents modes de rendus de lumière.
+Certains moteurs de jeux, tels que _Unity_, permettent de mélanger différents modes de rendu de lumière.
 Ainsi, un objet serait sensible à la lumière d'une _lightmap_, mais également à une lumière dynamique, afin d'ajouter, par exemple, un éclairage dramatique dans un endroit précis.
 
-Néanmoins, la contrainte la plus importante des _lightmaps_ reste que, pour une lumière globale comme un soleil pour simuler un cycle jour-nuit, la technique de _lightmap_ ne peut pas être utilisée.
+La contrainte la plus importante des _lightmaps_ reste la rigidité face aux lumières dynamiques.
+Simuler un cycle jour-nuit est incompatible avec cette technique, en raison de la lumière dynamique globale du soleil.
 Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumière dynamique, tels que des intérieurs.
 
 @unity-doc-lightmap
@@ -329,7 +331,7 @@ Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumi�
 
 === Streaming Virtual Texturing
 
-Il s'agit d'une technique aussi connu sous le nom de _Megatexture_ dans le moteur _idTech_, pré-datant leurs implémentations modernes dans _Unity_ et _Unreal Engine_.
+Il s'agit d'une technique aussi connue sous le nom de _Megatexture_ dans le moteur _idTech_, pré-datant leurs implémentations modernes dans _Unity_ et _Unreal Engine_.
 Elle consiste à disposer d'une seule grande texture avec des coordonnées UV pour l'indexer.
 En runtime, cette texture est ensuite streamée et mise en mémoire selon les besoins.
 Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps.
@@ -358,9 +360,10 @@ Il s'agit d'un problème typique d'_overdraw_.
 
 Les LODs ou _Level of Detail_ sont des modèles 3D basse résolution, qui, comme leur nom l'indique, possèdent plusieurs niveaux de détails.
 La technique est similaire aux _mipmaps_, mais pour les modèles.
+Ainsi, un modèle faible résolution est chargé lorsque la caméra est éloignée, et inversement.
 Le niveau de détail original est LOD 0 tandis qu'un moins détaillé serait LOD 1 puis LOD 2, etc.
-Une autre amélioration est de supprimer les objets entièrements passés une certaine distance.
-Ceci est particulièrement utile pour des objets de petites tailles, dont leur absence ne sera pas visible par l'utilisateur passé une certaine distance.
+Une autre amélioration est de ne plus afficher totalement les objets entièrement passés une certaine distance.
+Ceci est particulièrement utile pour des objets de petites tailles, dont leur absence à une distance éloignée ne sera pas remarquée par l'utilisateur.
 
 Cette technique a néanmoins plusieurs coûts :
 - Espace disque. 
@@ -538,7 +541,7 @@ Plusieurs types de tiles existent :
 Il existe de nombreux outils de générations procédurale de terrains.
 Ceux-ci se présentent sous la forme de _plugins_ dans un moteur de jeu ou en tant qu'outils externes.
 Parmi les outils externes, _Gaea_, _Houdini_ et _World Creator_ sont les plus importants dans l'état de l'art.
-Ces outils permettent, entre autres, de simuler effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront exploitables par les moteurs de jeux.
+Ces outils permettent, entre autres, de simuler des effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront exploitables par les moteurs de jeux.
 Ces outils utilisent l'édition via noeuds pour pouvoir et représenter chaque étape intermédiaire de manière intuitive pour les artistes, et permettre aux opérations de ne pas être destructives.
 
 #figure(
