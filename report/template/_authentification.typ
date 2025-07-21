@@ -2,7 +2,7 @@
 
 = Authentification
 
-Le soussigné, #TBauthor, atteste par la présente avoir réalisé ce travail et n’avoir utilisé aucune autre source que celles expressément mentionnées
+Le soussigné, #TBauthor, atteste par la présente avoir réalisé ce travail et n’avoir utilisé aucune autre source que celles expressément mentionnées.
 
 #v(10%)
 
