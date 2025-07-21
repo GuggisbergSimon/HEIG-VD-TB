@@ -38,7 +38,7 @@ Ce choix n'impacte que le rendu graphique et pas les performances mais certains 
 
 === Render Pipeline
 
-Unity dispose de trois pipelines de rendus graphique. À noter que certaines assets sont compatibles avec plusieurs pipelines, mais demandent un patch.
+Unity dispose de trois pipelines de rendus graphique. À noter que certains assets sont compatibles avec plusieurs pipelines, mais demandent un patch.
 Patcher ces assets peut en partie être automatisé par Unity.
 - Standard - Cette pipeline est aussi connue sous le nom built-in.
   Il s'agit d'une option legacy mais n'est plus mise à jour depuis plusieurs années, destinée à être remplacée par les deux suivantes.

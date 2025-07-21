@@ -6,13 +6,13 @@ Ce rapport présente le travail de recherche et d'exploration de l'état de l'ar
 Puis, dans un second temps, le rapport détaille l'implémentation d'un prototype de jeu vidéo en monde ouvert et de certaines de ces techniques, lorsqu'appropriées.
 
 C'est en tentant de respecter l'état de l'art du métier que plusieurs difficultés ont été rencontrées.
-La pipeline HDRP s'est révélée en effet autant complexe que puissante.
+La _pipeline_ HDRP s'est révélée en effet autant complexe que puissante.
 Mais un problème inattendu et majeur de son usage a été la difficulté à créer, ou à faire fonctionner, des outils avec celle-ci.
-La majorité des ressources libres sont disponibles pour la pipeline Standard uniquement.
-De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches nice-to-have plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
+La majorité des ressources libres sont disponibles pour la _pipeline_ Standard uniquement.
+De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches _nice-to-have_ plus compliqué que prévu, me forçant à revoir mes priorités et à me rabbatre sur des solutions pré-existantes, réalisables durant le délai imparti.
 
-Travailler avec de nombreux et larges assets, comme ce qui sied à un prototype _Open World_, a également été un défi en soi.
-Trouver des assets compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
+Travailler avec de nombreuses et larges ressources, comme ce qui sied à un prototype _Open World_, a également été un défi en soi.
+Trouver des ressources compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
 Pour les tâches répétitives, je me suis appuyé sur la création d'outils de l'éditeur afin d'automatiser autant que faire se peut ces tâches.
 
 Dans l'ensemble, néanmoins, la totalité des objectifs du cahier des charges ont été atteints, ou, à défaut, traités de manière significative.
@@ -20,21 +20,18 @@ Seule l'utilisation de shaders pour représenter l'herbe n'a pas pu être menée
 Une comparaison des différentes solutions ainsi qu'une démonstration permettant de visualiser l'implémentation de celles-ci ont été implémentés dans le projet, sans qu'elles soient implémentées dans le prototype en elles-mêmes.
 
 Il a également été difficile de suivre la méthodologie de travail décrite dans le cahier des charges.
-L'utilisation de GitHub Project dès la milestone 1 était trop prématurée; le projet constituait principalement de recherches et de prototypage à ce moment-là.
-Mais une fois l'usage du GitHub Project mise en place, après le passage de la milestone 3, celui-ci a été utilisé de manière à consigner et organiser les nombreuses tâches restantes à effectuer.
+L'utilisation de _GitHub Project_ dès la _milestone_ 1 était trop prématurée; le projet constituait principalement de recherches et de prototypage à ce moment-là.
+Mais une fois l'usage du _GitHub Project_ mise en place, après le passage de la _milestone_ 3, celui-ci a été utilisé de manière à consigner et organiser les nombreuses tâches restantes à effectuer.
 Son usage a été plus que bénéfique.
-Les sprints de deux semaines lors de la milestone 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
+Les sprints de deux semaines lors de la _milestone_ 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 
-Quant à Unity et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les imposteurs, mesh shaders, ou Streaming Virtual Textures.
-Mais, en l'état, tant Unity que la pipeline HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
+Quant à _Unity_ et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les _Impostors_, _mesh shaders_, ou _Streaming Virtual Textures_.
+Mais, en l'état, tant _Unity_ que la _pipeline_ HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
 Les techniques standard d'optimisation restent d'actualité, avec les LODs amenant un gain considérable de performance, et ce malgré une fidélité réaliste toujours plus grande.
 
 @unity-roadmap
 
-La compétition Unreal Engine et ses nombreuses solutions disponibles directement dans le moteur fait pâle figure à Unity.
-De plus si l'on compare le moteur avec son concurrent open source, Godot, force est de constater que la communauté de Unity, tant au niveau des assets que des outils mis à disposition, est en grande partie divisée, la faute probablement aux différentes pipelines de rendu.
-
-Si un projet de cette envergure devrait dépasser le cadre du prototype, je ne peux qu'encourager de procéder à des recherches similaires pour les autres moteurs, en particulier Unreal Engine pour un rendu haute fidélité.
+Si un projet de cette envergure devrait dépasser le cadre du prototype, je ne peux qu'encourager de procéder à des recherches similaires pour les autres moteurs, en particulier _Unreal Engine_ pour un rendu haute fidélité et de nombreux outils déjà présents au sein de celui-ci.
 
 Finalement, ce travail met en valeur l'importance de l'optimisation des performances, via anciennes et nouvelles techniques.
 Le rendu graphique en temps réel est un domaine complexe.

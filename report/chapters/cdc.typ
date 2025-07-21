@@ -16,11 +16,11 @@ Un jeu en monde ouvert a comme caractéristique essentielle que le joueur n'est 
 Ceci implique toute une série de caractéristiques et contraintes :
 + Vaste environnement :
   Dans lequel les joueurs et autres agents peuvent évoluer.
-  Puisque la mémoire vive est limitée et que son impact sur la performance pour des expériences complexes est crucial, il faut charger et décharger les ressources requises de manière dynamique.
+  Puisque la mémoire vidéo est limitée et que son impact sur la performance pour des expériences complexes est crucial, il faut charger et décharger les ressources requises de manière dynamique.
 + Large quantité d'objets :
-  Que ce soient des objets interactifs, décoratifs, ou d'autres agents, il convient de gérer ceux-ci efficacement.
+  Que ce soient des objets interactifs, décoratifs, ou d'autres acteurs que le joueur, il convient de gérer ceux-ci efficacement.
 + Large distance d'affichage :
-  Les techniques établies telles que l'occlusion culling qui allégeraient les problèmes d'affichage ne peuvent que difficilement être appliquées.
+  Les techniques établies telles que l'_occlusion culling_ qui allégeraient les problèmes d'affichage ne peuvent que difficilement être appliquées.
 
 En plus de laisser une grande liberté de déplacement au joueur, les jeux en monde ouvert vont souvent mettre en place des systèmes offrant une liberté de choix mécanique.
 + Modifications par le joueur :
@@ -31,10 +31,10 @@ En plus de laisser une grande liberté de déplacement au joueur, les jeux en mo
   Choisir la bonne architecture pour supporter différentes fonctionnalités, comme les interactions physiques, est crucial.
 + Génération procédurale :
   Certains environnements de jeux en monde ouvert sont générés de manière procédurale. 
-  Cette génération peut utiliser différents algorithmes afin d'aboutir à une large palette de résultats, tels que Cellular Automata, Perlin Noise, Voronoi Tesselation, Binary Space Partitioning, etc.
+  Cette génération peut utiliser différents algorithmes afin d'aboutir à une large palette de résultats.
 + Adaptabilité aux changements :
   + Cycle jour-nuit :
-    Certaines techniques d'optimisation, telles que les lightmaps, ne peuvent pas être utilisées dans des conditions de lumière dynamique.
+    Certaines techniques d'optimisation, telles que les _lightmaps_, ne peuvent pas être utilisées dans des conditions de lumière dynamique.
   + Environnemental :
     Certains changements peuvent se produire au travers de la météo ou de saison.
     Il est souhaitable de disposer d'une architecture qui permet de facilement représenter cette catégorie de changements.
@@ -43,7 +43,7 @@ En plus de laisser une grande liberté de déplacement au joueur, les jeux en mo
 
 Les jeux vidéo ont toujours eu comme problématique centrale d'atteindre un compromis acceptable entre performances et fidélité visuelle.
 
-La problématique de ce travail de bachelor est d'implémenter les composants de base permettant de créer un jeu 3D en monde ouvert dans un moteur de jeu existant.
+La problématique de ce travail de Bachelor est d'implémenter les composants de base permettant de créer un jeu 3D en monde ouvert dans un moteur de jeu existant.
 Cette implémentation initiale servira à un travail d'optimisation de performances basé sur l'état de l'art de ce domaine.
 
 == Objectifs <objectifs>
@@ -56,7 +56,7 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
 
 === Requis
 
--	Vaste environnement - *Assets et World Loading* :
+-	Vaste environnement - *_Assets_ et _World Loading_* :
   Il s'agit du fait de charger les ressources locales et les prochaines parties du monde requises par le jeu de manière asynchrone.
   Ceci dans le but d'éviter des temps de chargement à la moindre nouvelle ressource ou parcelle du monde rencontrée.
 - *Création d'un prototype de jeu vidéo en monde ouvert* :
@@ -64,13 +64,13 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
   Il devra contenir différents modèles 3D et composants afin de simuler le comportement attendu pour un jeu en monde ouvert.
 - *Performances acceptables* :
   Il faudra améliorer les performances du prototype de jeu vidéo dénué de toute optimisation. 
-  De plus, un ordre de grandeur sera à respecter, plus de 30 frames par seconde tout en évitant les chutes de framerate hors d'écran de chargement.
+  De plus, un ordre de grandeur sera à respecter, plus de 30 frames par seconde tout en évitant les chutes de _framerate_ hors d'écran de chargement.
 
 === Essentiels
 
--	Vaste environnement - *Float approximation* :
-  Les moteurs de jeu utilisent des float en lieu de double pour réduire le temps de calcul. 
-  Avec de grandes distances, des erreurs d'approximation peuvent se produire. Une solution standard consiste à centrer l'origine du monde sur le joueur en tout temps.
+-	Vaste environnement - *_Float approximation_* :
+  Les moteurs de jeu utilisent des _float_ en lieu de _double_ pour réduire le temps de calcul. 
+  Avec de grandes distances, des erreurs d'approximation peuvent se produire.
 -	Longue distance d'affichage - *LOD* :
   Les LODs servent à améliorer les performances en substituant des modèles complexes distants de la caméra par des moins détaillés.
 -	*Contrôle* de la *caméra* et d'un *avatar* :
@@ -94,13 +94,13 @@ En outre, les points suivants définis en tant que composante d'un jeu en monde 
 
 === Déroulement <déroulement>
 
-Le projet est séparé en plusieurs étapes charnières, des milestones, qui suivent les étapes majeures du calendrier des travaux de bachelor.
+Le projet est séparé en plusieurs étapes charnières, des _milestones_, qui suivent les étapes majeures du calendrier des travaux de Bachelor.
 
-Un projet GitHub sera créé afin de suivre l'avancement de l'implémentation technique du projet, une fois la milestone 1 effectuée.
+Un projet GitHub sera créé afin de suivre l'avancement de l'implémentation technique du projet, une fois la _milestone_ 1 effectuée.
 Des issues seront créées afin de représenter les différentes tâches d'implémentations à effectuer.
 
-À noter que la milestone 4 correspond à la partie dédiée au travail à 100% sur le projet.
-Pour cette milestone, des sprints de 2 semaines permettront d'itérer et d'évaluer l'avancement.
+À noter que la _milestone_ 4 correspond à la partie dédiée au travail à 100% sur le projet.
+Pour cette _milestone_, des sprints de 2 semaines permettront d'itérer et d'évaluer l'avancement.
 
 ==== Milestone 1 : 10.04
 
@@ -111,7 +111,7 @@ Pour cette milestone, des sprints de 2 semaines permettront d'itérer et d'éval
 
 ==== Milestone 2 : 23.05
 
-- Rédaction d’un rapport intermédiaire détaillant la conception des systèmes à implémenter.
+- Rédaction d'un rapport intermédiaire détaillant la conception des systèmes à implémenter.
 - Rédaction des techniques offertes par l'état de l'art.
 - Prototypage des fonctionnalités d'optimisation.
 - Évaluation des performances initiales.
@@ -136,8 +136,8 @@ Pour cette milestone, des sprints de 2 semaines permettront d'itérer et d'éval
 
 === Livrables <livrables>
 
-Les délivrables seront les suivants :
+Les livrables seront les suivants :
 - Un *rapport intermédiaire* détaillant la conception du système.
 - Un *rapport final* détaillant la conception et l'implémentation du système.
-- Un *résumé publiable* et un *poster*
+- Un *résumé publiable* et un *poster*.
 - Un *prototype* de jeu vidéo en monde ouvert en 3D, avec son *code source*.

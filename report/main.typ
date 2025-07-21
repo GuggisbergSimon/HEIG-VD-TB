@@ -19,7 +19,7 @@
 #let TBorient = "Informatique logicielle"
 
 #let TBauthor = studentFirstname + " " + studentLastname
-#let TBsupervisor = "Prof. Bertil Chapuis"
+#let TBsupervisor = "Professeur Bertil Chapuis"
 
 #let TBresumePubliable = [
   #include "chapters/resume.typ"
