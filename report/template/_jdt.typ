@@ -1,7 +1,6 @@
 == Journal de travail
 
-#figure(
-  table(
+#table(
     columns: (auto, auto, auto),
     align: (left, left, left),
     table.header[Milestone][Date][Réalisation],
@@ -85,7 +84,5 @@
 - Rédaction du rapport pour une première tentative de version finale",
     "4", "24.07.2025", "- Relecture et corrections du rapport final
 - Création de l'affiche
-- Rédaction du résumé publiable",
-  ),
-  caption: "Journal de travail hebdomadaire",
+- Rédaction du résumé publiable"
 )
