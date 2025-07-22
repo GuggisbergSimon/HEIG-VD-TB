@@ -23,11 +23,9 @@ Mais une fois l'usage du _GitHub Project_ mis en place, après le passage de la 
 Son usage a été plus que bénéfique.
 Les sprints de deux semaines lors de la _milestone_ 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 
-Quant à _Unity_ et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les _Impostors_, _mesh shaders_, ou _Streaming Virtual Textures_.
+Quant à _Unity_ et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les _Impostors_, _mesh shaders_, ou _Streaming Virtual Textures_ @unity-roadmap.
 Mais, en l'état, tant _Unity_ que la _pipeline_ HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
 Les techniques standard d'optimisation restent d'actualité, avec les LODs amenant un gain considérable de performance, et ce malgré une fidélité réaliste toujours plus grande.
-
-@unity-roadmap
 
 Si un projet de cette envergure devrait dépasser le cadre du prototype, je ne peux qu'encourager de procéder à des recherches similaires pour les autres moteurs, en particulier _Unreal Engine_ pour un rendu haute fidélité et de nombreux outils déjà présents au sein de celui-ci.
 

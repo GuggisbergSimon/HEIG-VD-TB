@@ -49,15 +49,13 @@ Ce travail fera de même, d'autant plus que la complexité des outils de _Cesium
 En effet, _Cesium for Unity_ implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
 
 En raison de ces contraintes d'outils et de la décision de la taille du prototype, ce projet se limitera à un terrain de taille minimale de 64km².
-_Unity_ ne supporte malheureusement que l'import d'une _heightmap_ de taille maximale de 8192x8192 pixels.
+_Unity_ ne supporte malheureusement que l'import d'une _heightmap_ de taille maximale de 8192x8192 pixels @unity-doc-terrain.
 L'élevation pour un mètre est donc donnée par un pixel de la _heightmap_, ce qui correspond à un compromis acceptable entre taille et précision du terrain.
 La résolution de la _heightmap_ est donc environ de 1 pixel par mètre.
 
 La disposition d'éléments dans le monde est réalisé en fonction de l'inclinaison de la pente de ce terrain.
 De plus des _clusters_ d'objets seront placés dans certains endroits, afin de simuler des conditions de stress test.
 En raison de la complexité de la génération procédurale et des enjeux de ce travail de Bachelor, il n'a pas été donné un soin plus particulier à la réflexion de la disposition procédurale des éléments du décor sur le terrain.
-
-@unity-doc-terrain
 
 == Structure
 
@@ -117,7 +115,7 @@ Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être
 
 Une solution très populaire pour charger en mémoire un monde virtuel par élément, plutôt que dans son ensemble, est de le diviser en parties, appelées _chunks_.
 
-Chaque _chunk_ correspond à un fichier `Scene` séparé de _Unity_ afin de pouvoir être chargé de manière additive et asynchrone.
+Chaque _chunk_ correspond à un fichier `Scene` séparé de _Unity_ afin de pouvoir être chargé de manière additive et asynchrone @unity-doc-scenemanager.
 Ceci permet aux _chunks_ de posséder moults `GameObjects` qui peuvent représenter toutes sortes d'éléments du décor.
 Un terrain de 8000x8000 peut être divisé en _chunks_ de 500x500 formant ainsi une sous-grille de 16x16.
 
@@ -156,15 +154,12 @@ Les agents incluent toutes formes d'objets capables de mouvement.
 Ceux-ci sont usuellement chargés avec une scène, ici un _chunk_.
 Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un _chunk_ à l'autre.
 
-Une manière de résoudre ce problème serait de créer un `AgentManager` qui tiendrait à jour la liste des agents présents dans le monde et les chargerait ou déchargerait en fonction des _chunks_ chargés.
+Une manière de résoudre ce problème serait de créer un `AgentManager` qui tiendrait à jour la liste des agents présents dans le monde et les chargerait ou déchargerait en fonction des _chunks_ chargés @rain-world-gdc.
 Cette approche permettrait une permanence des agents ainsi qu'une consistence accrue mais ne permettrait pas de simuler des comportements en background, hors de portée du joueur.
 Pour arriver à un résultat pareil, il faudrait que l'`AgentManager` mette à jour les agents non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
 Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de Bachelor et ne sera donc pas abordée plus en détail.
-
-@unity-doc-scenemanager
-@rain-world-gdc
 
 ==== Grandes coordonnées
 

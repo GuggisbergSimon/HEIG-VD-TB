@@ -101,10 +101,7 @@ Ceci va entraîner une coupure entre l'espace modélisé et l'espace vide, tente
 
 Une approche est de disposer d'un relief montagneux distant permettant de camoufler cette coupure.
 Couplé à cela une seconde technique consiste à ajouter du brouillard distant, qui permet une transition douce entre ces deux.
-_Unity_ propose une telle option pour la _pipeline_ HDRP au travers d'un `Volume`, qui offre toutes sortes d'options graphiques, dont le brouillard.
-
-@unity-doc-hdrp-volume
-@unity-doc-hdrp-fog
+_Unity_ propose une telle option pour la _pipeline_ HDRP au travers d'un `Volume`, qui offre toutes sortes d'options graphiques, dont le brouillard @unity-doc-hdrp-volume @unity-doc-hdrp-fog.
 
 Quant à la matrice filtre de _chunks_ à charger, elle est représentée par un tableau à double dimension de booléens.
 Une manière simple de la remplir est de définir une distance de vue qui détermine le rayon du cercle de _chunks_ à charger autour du joueur.
@@ -139,7 +136,7 @@ En effet, le déplacement du joueur, avec le recentrage du monde sur celui-ci, n
 Il faut donc garder en mémoire la position relative du joueur, et la mettre à jour pour charger les _chunks_ correspondants.
 
 Un autre problème avec le recentrage du joueur a été le comportement des corps physiques lors de la frame de recentrage.
-Dans _Unity_, les calculs physiques se produisent lors de l'étape `FixedUpdate`.
+Dans _Unity_, les calculs physiques se produisent lors de l'étape `FixedUpdate` @unity-doc-script-execution-order.
 Cette étape n'est exécutée qu'à des intervalles réguliers fixes, en opposition à l'étape `Update`, qui est exécutée autant que possible, jusqu'à atteindre le _framerate_ requis.
 Pour éviter des comportements physiques aberrants il faut s'assurer de ne modifier les propriétés physiques que lors des frames `FixedUpdate`.
 Puisque le passage d'un chunk à un autre ne se produit que de manière ponctuelle, toute la logique de vérification de chunk se trouve dans l'étape `FixedUpdate`.
@@ -152,13 +149,11 @@ Dans _Unity_, un `GameObject` étant taggé comme statique permet d'accélérer 
 Les étapes concernées ont trait au pathfinding, à la lumière précalculée, et à l'utilisation d'_occlusion culling_.
 Pour ce projet, aucun de ces trois éléments n'ont été implémentés, mais dans le cas d'un jeu en monde ouvert certaines de ces techniques pourraient être utiles.
 
-@unity-doc-script-execution-order
-
 #pagebreak()
 
 == LOD
 
-_Unity_ dispose d'un composant appelé `LOD Group` qui permet d'automatiser le changement de niveau de détail d'un modèle 3D en fonction de la distance à la caméra.
+_Unity_ dispose d'un composant appelé `LOD Group` qui permet d'automatiser le changement de niveau de détail d'un modèle 3D en fonction de la distance à la caméra @unity-doc-lod-group.
 Ceux-ci prennent plusieurs `GameObjects` en argument, un par niveau de détail.
 De plus, pour chaque niveau de détail une distance maximale doit être définie indiquant quand la caméra devra changer le niveau de détail.
 Si plus aucun niveau de détail n'est défini et que la distance maximale n'est pas infinie, alors le modèle 3D sera complètement désactivé, on parle alors de _culling_.
@@ -168,7 +163,7 @@ Finalement, il est possible de disposer d'un _cross fade_ entre deux niveaux de 
 
 Quant à la génération de LODs, puisque ceux-ci possèdent une topologie différente des modèles 3D originaux, il n'est pas possible de conserver les textures existantes pour ceux-ci, puisque le mappage UV ne correspondra plus.
 Pour des modèles non texturés, un simple modificateur _decimate_ sous _Blender_ pourrait suffire. 
-Une extension telle que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche.
+Une extension telle que `Level Of Detail Generator | Lods Maker` permet de simplifier et automatiser la tâche @blender-lod-maker.
 Pour un prototype haute fidélité, posséder des textures est requis.
 Cette raison oblige à utiliser des modèles LODs déjà texturés, tels que les `Assets` mentionnés plus haut.
 Ces `Assets` contiennent 2 ou 3 niveau de détails.
@@ -184,21 +179,17 @@ Pour pallier à cela, un script C\# `Chunk` contenant les informations relatives
 Ce script a une complexité $O(1)$ en opération `GetComponent` pour chaque `Chunk` à charger.
 À noter néanmoins qu'une itération sur tous les objets d'un `Chunk` est tout de même nécessaire.
 
-@blender-lod-maker
-
 #pagebreak()
 
 == Impostors
 
-_Unity_ propose d'ajouter une solution officielle d'_Impostors_, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la _roadmap_ du moteur de jeu.
+_Unity_ propose d'ajouter une solution officielle d'_Impostors_, mais celle-ci n'est pas encore planifiée au contraire des nombreuses autres fonctionnalités présentes sur la _roadmap_ du moteur de jeu @unity-roadmap.
 En l'absence d'une solution unique officielle, plusieurs tentatives d'implémentations ont été faites.
-
-@unity-roadmap
 
 === IMP
 
-Parmi les solutions existantes pour des _Impostors_ dans Unity, le répertoire public IMP propose, pour la pipeline Standard, une solution complète.
-Ce répertoire a également été forké pour URP sous le nom de URPIMP.
+Parmi les solutions existantes pour des _Impostors_ dans Unity, le répertoire public IMP propose, pour la pipeline Standard, une solution complète @imp.
+Ce répertoire a également été forké pour URP sous le nom de URPIMP @urpimp.
 Mais ce répertoire URP a été archivé et manque de fichiers pour atteindre un niveau fonctionnel.
 
 Une première tentative a été de porter IMP vers HDRP.
@@ -207,9 +198,6 @@ De plus, la documentation et les ressources pour les shaders HDRP favorisent l'u
 Mais cet outil ne permet pas de créer des shaders complexes comme pour un _Impostor_.
 
 Cette solution a été mise de côté, tandis que d'autres essais ont été explorés.
-
-@imp
-@urpimp
 
 === Approche naïve
 
@@ -252,7 +240,7 @@ if (distance(cam.position, position) > distanceFromCamera) {
 
 === Amplify Impostors
 
-Finalement, une solution payante mais constituant, en soi, l'état de l'art pour Unity est celle proposée par _Amplify_.
+Finalement, une solution payante mais constituant, en soi, l'état de l'art pour Unity est celle proposée par _Amplify_ @amplify-impostors.
 Cet outil s'est révélé être aisé à prendre en main et de qualité significative.
 Les jours de travail dédiés aux tentatives d'implémentations des _Impostors_ auraient pu être économisées en utilisant ce plugin dès le début.
 
@@ -272,8 +260,6 @@ Il est également possible de choisir que les _Impostors_ remplacent le niveau d
 À noter que, de la même manière que l'implémentation pour le LOD, les _Impostors_ sont implémentés au niveau des `Prefabs` pour une architecture simplifiée.
 Cela a donc comme le même désavantage, lorsque les _Impostors_ sont désactivés, de devoir parcourir chaque instance de `Prefab` pour désactiver ceux-ci lors du chargement d'un chunk. Cet overhead CPU a néanmoins comme complexité d'opération `GetComponent` en $O(1)$, à la manière du chargement des LODs désactivés.
 
-@amplify-impostors
-
 #figure(
   image("images/impostor_example_atlas.jpg", width: 50%),
   caption: [
@@ -285,13 +271,13 @@ Cela a donc comme le même désavantage, lorsque les _Impostors_ sont désactiv�
 
 == Optimisations GPU
 
-L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de visualiser rapidement les performances.
+L'outil de statistiques de rendu disponible dans l'éditeur de Unity permet de visualiser rapidement les performances @unity-doc-rendering-stats.
 
 
 #figure(
   image("images/GameViewStats.png", width: 50%),
   caption: [
-    Fenêtre de statistiques de rendu dans l'éditeur.
+    Fenêtre de statistiques de rendu dans l'éditeur @unity-doc-rendering-stats.
   ],
 )
 
@@ -313,17 +299,13 @@ Voici les données les plus intéressantes parmi ces statistiques :
 - _Tris_ et _Verts_ correspondent, respectivement, au nombre de triangles et de sommets rendus.
   Le plus bas, le mieux c'est.
 
-@unity-doc-rendering-stats
-
 === GPU Instancing
 
-Dans des moteurs de jeux tels que _Unity_, cette technique est déjà implémentée par les shaders par défaut et peut être activée individuellement pour chaque matériel utilisant ce shader.
-
-@unity-doc-gpu-instancing
+Dans des moteurs de jeux tels que _Unity_, La technique du _GPU Instancing_ est déjà implémentée par les shaders par défaut et peut être activée individuellement pour chaque matériel utilisant ce shader @unity-doc-gpu-instancing.
 
 === SRP Batcher
 
-_SRP Batcher_ est une manière de préparer et transmettre les données qui est incompatible avec _GPU Instancing_.
+_SRP Batcher_ est une manière de préparer et transmettre les données qui est incompatible avec _GPU Instancing_ @unity-doc-srp-batcher.
 Cette méthode est uniquement possible avec les _Scriptable Render Pipeline_ de _Unity_, dont URP et HDRP font partie.
 Elle consiste à réduire le nombre de _render-state_ effectué entre deux appels via l'utilisation d'un _buffer_.
 Ces opérations sont en effet coûteuse puisqu'un nouveau `Material` doit être transmis à chaque fois du CPU au GPU.
@@ -331,8 +313,6 @@ Ici, le _SRP Batcher_ va garder un lien persistent vers un _buffer_ `Material` j
 Cette méthode est donc plus efficace en cas de peu d'utilisation de variantes de `Material`.
 
 Le _SRP Batcher_ dispose d'un accès permettant une mise à jour directe du _buffer_ du GPU.
-
-@unity-doc-srp-batcher
 
 #figure(
   image("images/SROShaderPass.png", width: 74%),
@@ -343,16 +323,13 @@ Le _SRP Batcher_ dispose d'un accès permettant une mise à jour directe du _buf
 
 === DOTS
 
-_Data Oriented Technology Stack_ est l'implémentation dans _Unity_ d'un _pattern_ ECS afin de pouvoir traiter une grande quantité de données.
+_Data Oriented Technology Stack_ est l'implémentation dans _Unity_ d'un _pattern_ ECS afin de pouvoir traiter une grande quantité de données @unity-entities.
 Cela découple la logique des Entités, de celles des Composants et des Systèmes.
-Il est également possible d'utiliser DOTS pour améliorer le rendu graphique en cas de nombreux objets à rendre dans une scène.
+Il est également possible d'utiliser DOTS pour améliorer le rendu graphique en cas de nombreux objets à rendre dans une scène @unity-entities-graphics.
 Les fonctionnalités attendues des pipelines URP et HDRP ne sont néanmoins pas toutes implémentées dans DOTS.
 
 DOTS est un système complexe permettant de traiter la logique de nombreux éléments.
 Malgré la promesse de pouvoir améliorer les performances en cas de nombreux objets, il n'a pas été jugé pertinent de l'utiliser pour ce projet, son utilisation dépassant de loin le cadre de celui-ci.
-
-@unity-entities
-@unity-entities-graphics
 
 === Cas d'étude
 
@@ -374,9 +351,9 @@ Il existe notamment plusieurs solutions pour les instancer au travers de l'outil
   Les _geometry shaders_ sont néanmoins bien plus complexes à mettre en place et plus demandants en performance.
   Écrire de tels shaders ne peut être fait qu'en HLSL ou ShaderLab pour URP et HDRP.
 
-À noter que URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé _Shader Graph_, mais que celui-ci ne traite que des opérations _Vertex_ et _Fragment_.
+À noter que URP et HDRP proposent un outil d'édition de shaders par noeuds, appelé _Shader Graph_, mais que celui-ci ne traite que des opérations _Vertex_ et _Fragment_ @unity-shader-graph.
 
-_VFX Graph_ est un autre outil qui offre un système complexe permettant de simuler des particules.
+_VFX Graph_ est un autre outil qui offre un système complexe permettant de simuler des particules @unity-vfx-graph.
 Celui-ci pourrait être utilisé pour représenter des brins d'herbe, mais cela est un usage détourné de l'outil.
 
 En raison de manque de temps, une implémentation partielle de certaines de ces solutions a été réalisée.
@@ -401,7 +378,7 @@ Leur affichage se fait via le `Terrain` sur lequel ils sont placés, et celui-ci
 
 ==== EmmetOT HDRPGrass
 
-Ce répertoire public propose deux shaders utilisant l'étape de _Geometry_ pour représenter de nombreux brins d'herbes.
+Le répertoire public EmmetOT HDRPGrass propose deux shaders utilisant l'étape de _Geometry_ pour représenter de nombreux brins d'herbes @emmetot-hdrpgrass.
 Une correction de ce répertoire a été requis pour le rendre compatible avec les versions d'outils modernes, cet outil n'ayant pas été mis à jour depuis 2021.
 
 Deux shaders sont proposés :
@@ -411,8 +388,6 @@ Deux shaders sont proposés :
   Cette solution ne se base pas que sur un `Material` mais demande à un script C\# de générer le maillage subdivisé de manière préliminaire.
   Cela ne s'adapte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
 
-@emmetot-hdrpgrass
-
 #figure(
   image("images/hdrpgrass_compute.png", width: 60%),
   caption: [
@@ -420,14 +395,13 @@ Deux shaders sont proposés :
   ],
 )
 
-==== Bruteforce Grass Shader
+==== BruteForce Grass Shader
 
-Cette solution disponible sur le _Unity Asset Store_ n'en est qu'une parmi de nombreuses autres, mais elle offre un support HDRP via _geometry shader_.
+BruteForce Grass Shader est une solution disponible sur le _Unity Asset Store_ @bruteforce-grass-shader.
+Elle n'en est qu'une parmi de nombreuses autres, mais se démarque par un support HDRP via _geometry shader_.
 Elle est de plus compatible avec les `Terrains` et permet plusieurs types d'interaction tels qu'un aplatissement suivant le parcours d'un agent, ou même une coupe de l'herbe.
 
 Son implémentation a été assez aisée mais est adaptée à des plus petites tailles de `Terrains`, telles que 50x50.
-
-@bruteforce-grass-shader
 
 #figure(
   image("images/bruteforce_shader_grass.jpg", width: 60%),
@@ -440,17 +414,15 @@ Son implémentation a été assez aisée mais est adaptée à des plus petites t
 
 === Graphy
 
-Pour mesurer les performances d'un _build_ local, il est possible de le connecter au profiler _Unity_.
+Pour mesurer les performances d'un _build_ local, il est possible de se connecter au profiler _Unity_.
 Pour les _builds_ non locaux il est agréable de profiter d'une solution visuelle permettant, en un coup d'oeil, d'estimer la performance du jeu.
 
-Un tel outil existe sous le nom de _Graphy_. 
+Un tel outil existe sous le nom de _Graphy_ @unity-graphy.
 Cet outil permet de visualiser sous forme de graphe les performances pour les dernières frames afin d'observer les variations soudaines.
 
 Des raccourcis uniques à cet outil permettent de :
 - cycler dans les options de _profiler_ : `ctrl + F10`
 - activer/désactiver le _profiler_ : `ctrl + F11`
-
-@unity-graphy
 
 === Demo
 

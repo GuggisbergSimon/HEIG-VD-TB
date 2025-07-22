@@ -22,13 +22,11 @@ L'utilisation de moteurs de jeux établis et populaires, plutôt qu'un moteur de
     "idTech", "1993", "3D", "C++", "Partiellement", "Partiellement", "14",
     "CryEngine", "2002", "3D", "C++ C#", "Non", "Oui", "1",
   ),
-  caption: "Liste non exhaustive de moteurs de jeux, par nombre de sorties steam 2024, estimées selon steamDB"
+  caption: [Liste non exhaustive de moteurs de jeux, par nombre de sorties steam 2024, estimées selon steamDB @steamdb.]
 )
 
 À noter que, pour le cas de Godot, le nombre de sorties a doublé depuis 2023.
 C'est pour cette raison et de sa caractéristique d'un moteur de jeu _open source_ 3D qu'il a été étudié ci-dessous, avec _Unity_ et _Unreal Engine_.
-
-@steamdb
 
 === Godot
 
@@ -40,11 +38,9 @@ Il est alors souvent nécessaire de passer par des _workarounds_ ou de développ
 
 Les contributions par _pull request_ sont possibles, mais ne sont pas toujours acceptées si celles-ci sortent du cadre des corrections de _bugs_, certaines ignorées jusqu'à une année.
 Le moteur présente néanmoins un certain manque de maturité et les rares projets commerciaux ayant rencontré le succès sont des projets indépendants de petite envergure, pour le moment.
-La grande majorité des projets commerciaux réalisés avec ce moteur sont des jeux 2D.
-Parmi les nombreux jeux _Godot_ 3D modernes mis en avant dans le _reel_ 2024 du moteur, seuls des récents projets, encore en développement, tendent vers l'_open world_, à savoir _Zitifono_, _No Gasoline_, _Paw Rescuers_ et _Road to Vostok_.
+La grande majorité des projets commerciaux réalisés avec ce moteur sont des jeux 2D @steamdb.
+Parmi les nombreux jeux _Godot_ 3D modernes mis en avant dans le _reel_ 2024 du moteur, seuls des récents projets, encore en développement, tendent vers l'_open world_, à savoir _Zitifono_, _No Gasoline_, _Paw Rescuers_ et _Road to Vostok_ @godot-showcase.
 Seul ce dernier possède un rendu proche du photoréalisme, tandis que les autres ont un rendu stylisé.
-
-@steamdb
 
 === Unity
 
@@ -88,9 +84,9 @@ Cette section liste de manière succinte plusieurs concepts importants dans le r
 
 === glTF
 
-glTF, _Graphics Library Transmission Format_, est un standard développé par _Khronos Group_, aussi connu pour _OpenXR_, _OpenGL_, _Vulkan_ et _WebGL_. 
+glTF, _Graphics Library Transmission Format_, est un standard développé par _Khronos Group_, aussi connu pour _OpenXR_, _OpenGL_, _Vulkan_ et _WebGL_ @gltf-khronos. 
 Il s'agit d'un standard de format de fichier 3D qui permet de transmettre de manière efficiente des modèles, scènes 3D, et animations.
-Le format est entre autres connu pour son standard de matériaux _PBR_, _Physically Based Rendering_.
+Le format est entre autres connu pour son standard de matériaux _PBR_, _Physically Based Rendering_ @pbr-khronos.
 Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un rendu réaliste en implémentant différentes fonctionnalités telles que :
 - _Emissive_
 - _Metallic_
@@ -99,9 +95,6 @@ Ce standard a pour but d'homogénéiser les valeurs et de le rapprocher d'un ren
 - _Specular_
 Ces propriétés sont présentes dans la plupart des moteurs de jeu et de logiciels de modélisation 3D mais ne suivent pas forcément les mêmes standards de nom ou de valeurs.
 Ce standard, en particulier le _subset PBR_, a été largement adopté par l'industrie du jeu vidéo.
-
-@gltf-khronos
-@pbr-khronos
 
 === Overdraw
 
@@ -164,12 +157,10 @@ Les sorties peuvent être détournées de différente manière, par exemple en �
 Les shaders ne peuvent pas être utilisés pour affecter le comportement d'autres systèmes indépendants, tel qu'un moteur physique.
 Mais ils peuvent, par exemple, prendre un vecteur en entrée pour représenter le vent et simuler l'impact de celui-ci sur des brins d'herbe.
 
-@opengl-khronos
-
 #figure(
   image("images/shader_pipeline.png", width: 20%),
   caption: [
-    Pipeline de rendu d'un shader OpenGL, en bleu les étapes programmables.
+    Pipeline de rendu d'un shader OpenGL, en bleu les étapes programmables @opengl-khronos.
   ],
 )
 
@@ -181,18 +172,16 @@ Pour chaque objet à représenter le CPU communique avec le GPU, et ceci représ
 En effet, bien que le GPU soit très puissant pour de nombreux calculs répétitifs, transmettre de nombreuses informations de CPU à GPU est une opération coûteuse.
 
 Une solution habituellement utilisée est de diminuer les appels de rendu, appelés _draw call_, via une instantiation de données sur le GPU.
-Ceci est d'avantage connu sous le nom de _GPU Instancing_.
+Ceci est d'avantage connu sous le nom de _GPU Instancing_ @unity-doc-gpu-instancing.
 Au lieu de transmettre les informations de maillage et de matériaux à chaque fois, il est possible, pour un même modèle 3D, de transmettre uniquement les informations spécifiques à chaque instance de celui-ci, telles que la position, rotation et échelle.
 Ceci permettra ensuite, du côté GPU, de réutiliser les informations du modèle 3D pour rendre chaque instance à un coût moindre en échange de données.
-
-@unity-doc-gpu-instancing
 
 === Textures
 
 Lorsqu'un pixel de l'écran couvre de nombreux pixels de texture, appelé texels, il est difficile de déterminer rapidement la couleur du pixel à afficher.
 La manière correcte revient à établir la moyenne de chaque texel présent dans le pixel, mais c'est une opération coûteuse pour n'afficher, au final, qu'un pixel pour un modèle distant.
 
-La technique des _mipmaps_ consiste à pré-calculer un set de textures de résolutions plus petites que celle originale à afficher.
+La technique des _mipmaps_ consiste à pré-calculer un set de textures de résolutions plus petites que celle originale à afficher @unity-doc-mipmap.
 La texture correspondant à la distance de la caméra est ensuite chargée, pour éviter ces problèmes de rendu visuel, tout en garantissant une bonne performance.
 Pour une texture originale de 64x64, la _mipmap_ 0, alors les niveaux suivants seraient une _mipmap_ 1 de 32x32, 2 de 16x16, 3 de 8x8, etc.
 
@@ -207,12 +196,10 @@ Une contrainte pour ces deux techniques est de disposer de textures dont la tail
 Cette particularité est entre autres utilisée par la technique d'optimisation d'assets appelée _Crunch Compression_.
 Celle-ci permet une compression des assets très agressive pour l'espace disque du _build_ tout en ayant de très bonnes performances en runtime.
 
-@unity-doc-mipmap
-
 #figure(
   image("images/mipmaps.png", width: 60%),
   caption: [
-    Exemples de différentes mipmaps par taille décroissante.
+    Exemples de différentes mipmaps par taille décroissante @unity-doc-mipmap.
   ],
 )
 
@@ -223,12 +210,12 @@ Cette précision n'est pas requise pour la plupart des calculs.
 Néanmoins, lorsque l'échelle des mondes virtuels atteint une taille immense, ou minuscule, la précision des _floats_ peut poser problème.
 Une manière commune de contourner ces problèmes est de changer la taille initiale du monde virtuel, par exemple, en le réduisant de 1000x, mais pour un monde virtuel possédant plusieurs échelles de grandeur à respecter, ceci n'est pas une solution viable.
 
-La manière dont un _float_ 32 est encodé en mémoire est la suivante : 
+La manière dont un _float_ 32 est encodé en mémoire est la suivante @oracle-float.
 - 1 _bit_ pour le signe
 - 8 _bits_ pour l'exponent
 - 23 _bits_ pour la fraction
 
-Un nombre _float_ 32 est donné sous la forme : 
+Un nombre _float_ 32 est donné sous la forme :
 $(-1)^{"signe"} dot 2^{"exponent"-127} dot (1 + "fraction")$
 
 La formule pour l'erreur est donnée sous la forme :
@@ -236,8 +223,6 @@ $~2^(floor(log_2("distance"))-"fraction")$
 
 Ainsi, pour une valeur telle que le rayon de la terre, ~6378 km, la précision d'un _float_ 32 est de \~0.5m.
 Pour une échelle humaine cela n'est plus tolérable et pourrait même être directement observable.
-
-@oracle-float
 
 == Techniques
 
@@ -265,7 +250,7 @@ Certaines de ces techniques devront être implémentées dans le prototype afin 
 
 === Viewing-Frustum Culling
 
-Cette technique consiste à limiter l'affichage à ce qui est visible par la caméra dans un hexaèdre.
+_Viewing-Frustum Culling_ est une technique qui consiste à limiter l'affichage à ce qui est visible par la caméra dans un hexaèdre @unity-doc-occlusion-culling @godot-doc-occlusion-culling @unreal-doc-visibility-culling.
 Cet hexaèdre est plus communément connu sous le nom de _bounding box_.
 Cette _box_ contient un _near clipping plane_, un _far clipping plane_, et les bords de la caméra, consistant, ainsi, une boîte à 6 faces.
 Seuls les éléments présents dans celle-ci vont être affichés.
@@ -275,20 +260,16 @@ Les valeurs telles que les bords de la caméra sont directement dépendantes de 
 Le _near_ et _far clipping plane_ sont des valeurs définies par l'utilisateur. 
 Des valeurs trop petites pour le _near clipping plane_ créeraient des artefacts graphiques proches d'un modèle tandis que des valeurs trop grandes pour le _far clipping plane_ nécessiterait de rendre à l'écran des objets distants à peine visible.
 
-@unity-doc-occlusion-culling
-@godot-doc-occlusion-culling
-@unreal-doc-visibility-culling
-
 #figure(
   image("images/frustum_culling.png", width: 60%),
   caption: [
-    _Frustum culling_ en action, en rouge les objets ayant été retirés.
+    _Frustum culling_ en action, en rouge les objets ayant été retirés @unreal-doc-visibility-culling.
   ],
 )
 
 === Hidden-surface determination (Occlusion culling)
 
-Cette technique consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'_overdraw_.
+_ Occlusion culling_ est une technique qui consiste à ne pas afficher un élément étant caché par un autre afin d'éviter les problèmes d'_overdraw_ @unity-doc-occlusion-culling @godot-doc-occlusion-culling @unreal-doc-visibility-culling.
 Cela est très efficace dans les espaces intérieurs mais nécessite une mise en place particulière dans la plupart des moteurs de jeux.
 En effet, pour pouvoir indiquer au moteur de jeu quelles parties omettre, ou non, il faut que la scène soit constituée de plusieurs éléments, plutôt que d'un seul modèle 3D.
 De plus, il faudra ensuite indiquer quels éléments peuvent déclencher une occlusion, un mur typiquement, et quels éléments seraient sujets à cela, des objets cachés derrière un mur, par exemple. 
@@ -296,19 +277,15 @@ De plus, il faudra ensuite indiquer quels éléments peuvent déclencher une occ
 #figure(
   image("images/occlusion_culling.png", width: 60%),
   caption: [
-    _Occlusion culling_ en action, en bleu les objets ayant été retirés.
+    _Occlusion culling_ en action, en bleu les objets ayant été retirés @unreal-doc-visibility-culling.
   ],
 )
 
 _Unreal Engine_ permet une utilisation dynamique de cette technique, qui peut néanmoins être désactivée.
 
-@unity-doc-occlusion-culling
-@godot-doc-occlusion-culling
-@unreal-doc-visibility-culling
-
 === Lightmap
 
-Il s'agit d'une texture contenant les informations précalculées de l'éclairage et des ombres.
+Une _Lightmap_ est une texture contenant les informations précalculées de l'éclairage et des ombres @unity-doc-lightmap @godot-doc-lightmap @unreal-doc-lightmap.
 Cette technique permet une excellente combinaison entre fidélité de rendu graphique et performance.
 Cela s'effectue au prix de :
 - En amont :
@@ -325,32 +302,21 @@ La contrainte la plus importante des _lightmaps_ reste la rigidité face aux lum
 Simuler un cycle jour-nuit est incompatible avec cette technique, en raison de la lumière dynamique globale du soleil.
 Cette technique reste néanmoins utile pour tous les milieux dépourvus de lumière dynamique, tels que des intérieurs.
 
-@unity-doc-lightmap
-@godot-doc-lightmap
-@unreal-doc-lightmap
+=== Streaming Virtual Textures
 
-=== Streaming Virtual Texturing
-
-Il s'agit d'une technique aussi connue sous le nom de _Megatexture_ dans le moteur _idTech_, pré-datant leurs implémentations modernes dans _Unity_ et _Unreal Engine_.
+_Streaming Virtual Textures_ est une technique aussi connue sous le nom de _Megatexture_ dans le moteur _idTech_, pré-datant leurs implémentations modernes dans _Unity_ et _Unreal Engine_ @unity-doc-svt @unreal-doc-svt.
 Elle consiste à disposer d'une seule grande texture avec des coordonnées UV pour l'indexer.
 En runtime, cette texture est ensuite streamée et mise en mémoire selon les besoins.
 Cela a comme avantage visuel de bénéficier de textures uniques pour chaque surface ainsi que de limiter le chargement et déchargement de textures en mémoire, puisqu'une seule est chargée en tout temps.
 
-@unity-doc-svt
-@unreal-doc-svt
-
 === Mesh Shader
 
-Cette technologie n'a pour le moment qu'une implémentation dans le moteur _Unreal Engine_ sous le nom de _Nanite_.
+_Mesh Shader_ est une technologie qui n'a pour le moment qu'une implémentation dans le moteur _Unreal Engine_ sous le nom de _Nanite_ @nvidia-mesh-shader @unreal-doc-nanite.
 Elle ne s'applique que pour les objets statiques, ceux qui ne bougent pas, typiquement un environnement fixe.
 Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles au niveau de détail requis.
 Cela permet l'affichage de modèles 3D très complexes, en s'affranchissant du nombre de polygones comme métrique de ralentissement, et donc d'améliorer grandement la fidélité visuelle.
 
-Une implémentation future de cette technique est en considération par _Unity_ pour le moment.
-
-@nvidia-mesh-shader
-@unreal-doc-nanite
-@unity-roadmap
+Une implémentation future de cette technique est en considération par _Unity_ pour le moment @unity-roadmap.
 
 === Level of detail (LOD)
 
@@ -358,7 +324,7 @@ Lorsque des modèles au maillage complexe sont affichés à l'écran de manière
 Afficher des modèles complexes distants est donc très coûteux en terme de performances et n'apporte pas une grande valeur au rendu graphique.
 Il s'agit d'un problème typique d'_overdraw_.
 
-Les LODs ou _Level of Detail_ sont des modèles 3D basse résolution, qui, comme leur nom l'indique, possèdent plusieurs niveaux de détails.
+Les LODs ou _Level of Detail_ sont des modèles 3D basse résolution, qui, comme leur nom l'indique, possèdent plusieurs niveaux de détails @lod-3d-graphics.
 La technique est similaire aux _mipmaps_, mais pour les modèles.
 Ainsi, un modèle faible résolution est chargé lorsque la caméra est éloignée, et inversement.
 Le niveau de détail original est LOD 0 tandis qu'un moins détaillé serait LOD 1 puis LOD 2, etc.
@@ -383,18 +349,16 @@ Le _dithering_, ou diffusion d'erreur, est une technique de rendu graphique qui 
 Ici, le LOD disparaissant verra sa transparence progressivement augmenter via le _dithering_.
 Cette technique a néanmoins un coût puisque cela ajoute de l'_overdraw_ entre les deux LODs, l'un deux semi-transparent.
 
-@lod-3d-graphics
-
 #figure(
   image("images/LOD0Image.png", width: 60%),
   caption: [
-    Exemple de deux LODs d'un même modèle 3D.
+    Exemple de deux LODs d'un même modèle 3D @unity-doc-lod.
   ],
 )
 
 === Impostor
 
-Les _Impostors_ sont une forme avancée de _Billboards_ qui tentent de résoudre le problème de l'_overdraw_.
+Les _Impostors_ sont une forme avancée de _Billboards_ qui tentent de résoudre le problème de l'_overdraw_ @nvidia-true-impostors.
 Les _Billboards_ consistent en un _quad_ où une texture représentant un modèle distant est affiché.
 La rotation d'un _Billboard_ peut être ajustée pour toujours faire face à la caméra.
 Différentes variantes existent, certaines permettant aux _Billboards_ de figer la rotation d'un ou plusieurs axes.
@@ -405,18 +369,18 @@ Afin de rendre l'image d'un modèle 3D dans un environnement 3D, il faut dessine
 Lorsque l'angle entre la caméra et l'objet est trop grand par rapport à celui-ci initial pour l'imposteur actuel, alors un second imposteur est dessiné.
 Les GPUs modernes disposent d'API facilitant la génération d'imposteurs, en raison de la popularité de la technique.
 
-_Unity_, au contraire de _Unreal Engine_, ne propose pas de solution facile d'accès pour les imposteurs.
+_Unity_, au contraire de _Unreal Engine_, ne propose pas de solution facile d'accès pour les imposteurs @unreal-doc-impostor.
 Une solution existe pour les utilisateurs souscrivant à _Unity Industry_ seulement.
-Le _package_ offrant cette option est _Pixyz_, un outil permettant l'import de modèles CAD sous plusieurs formes, telles qu'un nuage de points.
+Le _package_ offrant cette option est _Pixyz_, un outil permettant l'import de modèles CAD sous plusieurs formes, telles qu'un nuage de points @unity-pixyz-impostor.
 
-Une autre solution notable pour _Unity_ est l'utilisation d'un _plugin_ inofficiel, tel que _Amplify Impostors_, disponible sur _Unity Asset Store_.
+Une autre solution notable pour _Unity_ est l'utilisation d'un _plugin_ inofficiel, tel que _Amplify Impostors_, disponible sur _Unity Asset Store_ @amplify-impostors.
 
 ==== Types d'imposteurs
 
 Une première solution est de rendre les imposteurs en _runtime_ via une caméra virtuelle capturant ceux-ci.
 Cela a comme avantage d'être plus simple à implémenter et de rendre correctement les conditions de lumières, d'éventuelles animations procédurales, textures animées, etc.
 
-Une seconde solution possible est celle précalculée, _Baked_.
+Une seconde solution possible est celle précalculée, _Baked_ @medium-octahedral-impostors.
 Ce type d'imposteurs est bien moins coûteux en performance, mais est plus complexe à mettre en place.
 
 Cela consiste à générer des atlas de textures représentant le modèle 3D d'un imposteur selon différents angles de vue.
@@ -433,12 +397,6 @@ Chaque capture de perspective est effectuée à un angle défini par un sommet.
 Pour une meilleure qualité d'image l'octahèdre est recommandé, ou semi-octahèdre si les imposteurs ne seront pas vus depuis le bas.
 La répartition sphérique est souvent plus rapide mais présente des défauts visuels lors du changement d'un imposteur à un autre.
 
-@amplify-impostors
-@medium-octahedral-impostors
-@nvidia-true-impostors
-@unreal-doc-impostor
-@unity-pixyz-impostor
-
 #figure(
   grid(
     columns: 3,
@@ -447,7 +405,7 @@ La répartition sphérique est souvent plus rapide mais présente des défauts v
     image("images/HemiOctahedron.png", width: 50%),
   ),
   caption: [
-    Les différents types d'imposteurs _Baked_, de gauche à droite : sphérique, octahèdre et semi-octahèdre.
+    Les différents types d'imposteurs _Baked_, de gauche à droite : sphérique, octahèdre et semi-octahèdre @amplify-impostors.
   ],
 )
 
@@ -460,7 +418,7 @@ La répartition sphérique est souvent plus rapide mais présente des défauts v
   caption: [
     À gauche: Placement de caméras pour le rendu _Baked_ d'un imposteur semi-octahèdre.
     
-    À droite: Atlas de textures pour un imposteur _Baked_ semi-octahèdre.
+    À droite: Atlas de textures pour un imposteur _Baked_ semi-octahèdre @medium-octahedral-impostors.
   ],
 )
 
@@ -476,12 +434,8 @@ Parmi lesquelles :
 - Des détails qui sont des objets 3D placés sur le terrain, tels que de la végétation, rochers, etc.
 
 Chacun des trois moteurs de jeu dispose de sa propre solution pour afficher un environnement 3D.
-Que ce soient les _Landscapes_ dans _Unreal Engine_ ou les _Terrains_ dans _Unity_, ceux-ci remplissent la même fonction.
-À noter que _Godot_ ne dispose pas de solution intégrée directement, mais plusieurs _plugins_ permettent de pallier à ce manque.
-
-@unity-doc-terrain
-@unreal-doc-landscape
-@godot-terrain3D
+Que ce soient les _Landscapes_ dans _Unreal Engine_ ou les _Terrains_ dans _Unity_, ceux-ci remplissent la même fonction @unreal-doc-landscape @unity-doc-terrain.
+À noter que _Godot_ ne dispose pas de solution intégrée directement, mais plusieurs _plugins_ permettent de pallier à ce manque @godot-terrain3D.
 
 ==== Catégories d'échelles de grandeur
 
@@ -516,8 +470,8 @@ Leur taille, quant à elle, explose et est difficilement quantifiable, allant du
 
 ==== Cesium
 
-_Cesium_ est une plate-forme mettant différentes ressources à disposition pour le rendu géospatial.
-Cela inclue une large base de données de _3DTiles_ ou d'imageries satellites.
+_Cesium_ est une plate-forme mettant différentes ressources à disposition pour le rendu géospatial @cesium.
+Cela inclue une large base de données de _3DTiles_ ou d'imageries satellites @3D-tiles.
 Plusieurs implémentations existent, que ce soit pour le web avec _CesiumJS_, ou pour les moteurs de jeux avec _Unreal_ et _Unity_.
 Cet outil requière néanmoins une connexion internet pour streamer les données, et est donc dépendant d'un service tiers, ce qui n'est pas forcément souhaitable pour un jeu vidéo.
 
@@ -533,28 +487,20 @@ Plusieurs types de tiles existent :
   Ce format permet d'approximer la surface d'un objet 3D en représentant, dans l'espace, l'ensemble du nuage de points.
 - Tiles composites : Il est également possible de mélanger les différents types de tiles ensemble.
 
-@cesium
-@3D-tiles
-
 ==== Génération procédurale de terrain
 
 Il existe de nombreux outils de générations procédurale de terrains.
 Ceux-ci se présentent sous la forme de _plugins_ dans un moteur de jeu ou en tant qu'outils externes.
-Parmi les outils externes, _Gaea_, _Houdini_ et _World Creator_ sont les plus importants dans l'état de l'art.
+Parmi les outils externes, _Gaea_, _Houdini_ et _World Creator_ sont les plus importants dans l'état de l'art @world-machine @world-creator @houdini.
 Ces outils permettent, entre autres, de simuler des effets de météo tel que l'érosion, de générer un terrain de manière infinie, et d'exporter les ressources nécessaires dans différents formats qui seront exploitables par les moteurs de jeux.
 Ces outils utilisent l'édition via noeuds pour pouvoir et représenter chaque étape intermédiaire de manière intuitive pour les artistes, et permettre aux opérations de ne pas être destructives.
 
 #figure(
   image("images/gaea_example.jpg", width: 100%),
   caption: [
-    Interface de Gaea, avec un terrain généré en exemple.
+    Interface de Gaea, avec un terrain généré en exemple @gaea.
   ],
 )
 
 En raison de l'utilisation industrielle de ces outils, ils ne sont néanmoins pas tous mis à disposition à des fins d'éducation comme pour le cas de ce projet.
 Le cas échéant, certaines fonctionnalités restent indisponibles, telles que la génération par tile, limitées à un accès payant.
-
-@world-machine
-@world-creator
-@gaea
-@houdini
