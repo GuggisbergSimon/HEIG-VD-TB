@@ -411,6 +411,8 @@ Son implémentation a été assez aisée mais est adaptée à des plus petites t
   ],
 )
 
+#pagebreak()
+
 == Mesures de performance
 
 === Graphy
@@ -433,7 +435,7 @@ Dans cette scène sont comparées les différentes implémentations d'herbe, ain
 
 #figure(
   table(
-    columns: 2,
+    columns: 6,
     table.header[Implémentation][FPS moyen][Batches][SetPassCalls][Tris][Vert],
     "Écran vide", "~150","~30","~30","~4k","~2k",
     "Mesh", "~100","~1500","~40","~500k","~500k",
@@ -444,11 +446,9 @@ Dans cette scène sont comparées les différentes implémentations d'herbe, ain
   caption: "Comparaison des statistiques de rendu des différentes implémentations d'herbe."
 )
 
-Ces mesures permettent de constater que le _compute shader_ est plus demandant que prévu; il est aussi peu optimisé que des simples `Meshes` sans _Impostors_.
+Ces mesures permettent de constater que le _Compute Shader_ est plus demandant que prévu; il est aussi peu optimisé que des simples `Meshes` sans _Impostors_.
 La solution _BruteForce_ dispose des meilleures performances, mais sa complexité monte avec la taille d'un terrain, ce qui sort du cadre de la démonstration et des tests.
 Le shader de _Tesselation_ présente aussi des performances intéressantes, mais est incompatible avec les `Terrains`.
-
-#pagebreak()
 
 === Unity Test Framework
 
