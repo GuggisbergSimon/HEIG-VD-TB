@@ -384,9 +384,10 @@ Une correction de ce répertoire a été requis pour le rendre compatible avec l
 Deux shaders sont proposés :
 - L'étape _Tesselation_ est utilisée pour subdiviser le maillage d'un objet en des points où des brins d'herbe seront placés.
   C'est une solution assez complexe mais qui est aussi simple à implémenter que d'assigner un `Material` à un objet.
-- Une alternative plus simple, _Compute_, génère des points aléatoires sur une surface. 
+- Une alternative plus simple, _Compute_, génère des points aléatoires sur une surface.
+  Les shaders de type _Compute_, dans _Unity_, sont des shaders qui s'exécutent sur le GPU mais ne suivent pas la pipeline _Vertex_ standard @unity-compute-shader.
   Cette solution ne se base pas que sur un `Material` mais demande à un script C\# de générer le maillage subdivisé de manière préliminaire.
-  Cela ne s'adapte donc pas pour les modèles sujets à des modifications en runtime, sous peine de devoir recalculer le maillage à chaque fois. 
+  Ce shader est, par conséquent, compatible avec les `Terrains` à l'inverse de celui-ci _Tesselation_.
 
 #figure(
   image("images/hdrpgrass_compute.png", width: 60%),

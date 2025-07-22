@@ -13,6 +13,7 @@
   v(8%)
 
   align(center)[Travail de Bachelor #TBacademicYears]
+  v(2%)
   align(center)[#TBtitle]
   v(8%)
 

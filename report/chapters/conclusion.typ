@@ -23,11 +23,12 @@ Mais une fois l'usage du _GitHub Project_ mis en place, après le passage de la 
 Son usage a été plus que bénéfique.
 Les sprints de deux semaines lors de la _milestone_ 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
 
-Quant à _Unity_ et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les _Impostors_, _mesh shaders_, ou _Streaming Virtual Textures_ @unity-roadmap.
+Quant à _Unity_ et les prochaines avancées technologiques mentionnées dans l'état de l'art, certaines sont considérées pour le moteur, telles que les _Impostors_, _Mesh Shaders_, ou _Streaming Virtual Textures_ @unity-roadmap.
 Mais, en l'état, tant _Unity_ que la _pipeline_ HDRP n'offrent pas des solutions miracles pour améliorer les performances si ce n'est une lecture attentive de la documentation et tests de performances réguliers pour évaluer l'état du projet.
-Les techniques standard d'optimisation restent d'actualité, avec les LODs amenant un gain considérable de performance, et ce malgré une fidélité réaliste toujours plus grande.
+Les techniques classiques d'optimisation restent d'actualité, avec les LODs amenant un gain considérable de performance, et ce malgré une fidélité réaliste toujours plus grande.
 
-Si un projet de cette envergure devrait dépasser le cadre du prototype, je ne peux qu'encourager de procéder à des recherches similaires pour les autres moteurs, en particulier _Unreal Engine_ pour un rendu haute fidélité et de nombreux outils déjà présents au sein de celui-ci.
+Si un projet de cette envergure devait dépasser le cadre du prototype, je ne peux qu'encourager de procéder à des recherches similaires pour d'autres technologies, en particulier celle des _Mesh Shader_ implémentée uniquement dans _Unreal Engine_ pour le moment sous nom de _Nanite_.
+Ce moteur est plus adapté à un rendu haute fidélité et permettrait de porter un projet de ce calibre plus loin via ses nombreux outils.
 
 Finalement, ce travail met en valeur l'importance de l'optimisation des performances, via anciennes et nouvelles techniques.
 Le rendu graphique en temps réel est un domaine complexe.
@@ -39,4 +40,4 @@ Cette course sur deux fronts est un équilibre délicat à maintenir pour tout p
 Je tiens à remercier *Bertil Chapuis* pour son encadrement et ses conseils tout au long de ce travail.
 Sans sa grande confiance dans ce projet ambitieux, celui-ci n'aurait pas vu le jour sous cette forme.
 
-Je remercie également ma famille et mes proches pour leur soutien et leur indéfectible patience durant ce travail.
+Je remercie également ma famille et mes proches pour leur soutien et leur indéfectible patience.
