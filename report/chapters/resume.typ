@@ -8,7 +8,7 @@ Lorsqu'un jeu couple une telle architecture à un rendu haute fidélité photor�
 
 
 Ce travail de Bachelor explore, dans un premier temps, l'état de l'art des techniques d'optimisation de performance ainsi que leur usage dans les moteurs de jeux populaires.
-Dans un second temps, ce projet détaille le développement d'un prototype de jeu en monde ouvert ainsi que l'implémention de certaines fonctionnalités attendues pour un tel jeu.
+Dans un second temps, ce projet détaille le développement d'un prototype de jeu en monde ouvert ainsi que l'implémentation de certaines fonctionnalités attendues pour un tel jeu.
 Puis, certaines des techniques recherchées sont implémentées en adhérant autant que faire se peut à l'état de l'art.
 Les techniques choisies sont LODs, chargement du monde asynchrone, imposteurs et optimisation par shader.
 Finalement, une mesure des performance permet de déterminer l'impact de chacune de ces techniques implémentées et de les comparer entre elles.
