@@ -69,11 +69,14 @@ En raison de problèmes de ce package, il a été retiré du projet une fois son
 == Autres
 
 La rédaction du rapport a été fait avec l'aide de Typst et en particulier d'un template pour les travaux de bachelor HEIG-VD @typst-template.
-La rédaction en elle-même a été réalisée avec Visual Studio Code et l'extension Tinymist pour l'affichage et export Typst en local @tinymist.
-De plus, pour les passages de code, l'extension Codly a été utilisée pour la mise en forme @typst-codly.
-Pour l'affichage de plots, l'extension lilaq a été utilisée @typst-lilaq.
+La rédaction en elle-même a été réalisée avec _Visual Studio Code_ et l'extension _Tinymist_ pour l'affichage et export Typst en local @tinymist.
+De plus, pour les passages de code, l'extension _codly_ a été utilisée pour la mise en forme @typst-codly.
+Pour l'affichage de plots, l'extension _lilaq_ a été utilisée @typst-lilaq.
 
-La rédaction du code a été réalisé avec Jetbrains Rider et l'extension GiHub Copilot @jetbrains @github-copilot.
+La rédaction du code a été réalisé avec _Jetbrains Rider_ et l'extension _GitHub Copilot_ @jetbrains @github-copilot.
+_GitHub Copilot_ a été utilisé tant pour l'autocomplétion de code _boilerplate_ que pour la rédaction de code avancé Typst.
+Il a également été utilisé pour prototyper rapidement le script en charge de la population des _chunks_ par divers objets.
+Cette partie du code n'étant pas compilée en dehors de l'éditeur, cela n'affecte pas les performances du jeu.
 
 Le logiciel GIMP a été utilisé pour la création ou l'édition d'images, qu'il s'agisse de sprites, textures ou d'images destinées au rapport @gimp.
 
