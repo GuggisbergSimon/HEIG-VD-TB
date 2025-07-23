@@ -21,6 +21,11 @@ A PDF export is available for each release of the project.
 
 The typst files are located in the [report](/report/main.typ) subfolder.
 
+## Poster
+
+A poster summarizing the work is available as `.pptx` and `.pdf`
+Both are located in the [poster](/poster/TB_SG_affiche.pdf) subfolder.
+
 ## Application
 
 The application is built using `Unity 6000.0.39f1`.
