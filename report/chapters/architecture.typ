@@ -105,7 +105,7 @@ Pour s'assurer qu'un `GameManager` soit présent dans une scène, une structure 
 Le chargement de scènes plus complexes, telles qu'un menu ou le jeu, peut être fait de manière additive lors d'un écran de chargement, afin d'éviter que l'application ne soit immobilisée lors du chargement initial.
 
 #figure(
-  image("images/boot_loading.png", width: 73%),
+  image("images/boot_loading.png", width: 80%),
   caption: [
     Exemple de structure d'initialisation de scène.
   ],

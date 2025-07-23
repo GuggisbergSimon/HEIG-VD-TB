@@ -275,7 +275,7 @@ En effet, pour pouvoir indiquer au moteur de jeu quelles parties omettre, ou non
 De plus, il faudra ensuite indiquer quels éléments peuvent déclencher une occlusion, un mur typiquement, et quels éléments seraient sujets à cela, des objets cachés derrière un mur, par exemple. 
 
 #figure(
-  image("images/occlusion_culling.png", width: 60%),
+  image("images/occlusion_culling.png", width: 59%),
   caption: [
     _Occlusion culling_ en action, en bleu les objets ayant été retirés @unreal-doc-visibility-culling.
   ],
