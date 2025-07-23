@@ -1,3 +1,7 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +11,9 @@ using UnityEditor.SceneManagement;
 using System.IO;
 #endif
 
+/*
+ * Class Populating terrains from the Editor with buildings, clutter and grass.
+ */
 public class TerrainPopulator : MonoBehaviour {
 #if UNITY_EDITOR
     [SerializeField] private int seed = 42;

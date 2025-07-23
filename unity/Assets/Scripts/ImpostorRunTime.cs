@@ -1,5 +1,13 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using UnityEngine;
 
+
+/*
+ * Class handling the behaviour of an Impostor, at runtime.
+ */
 public class ImpostorRunTime : MonoBehaviour {
     [SerializeField] private GameObject fullModel;
     [SerializeField] private GameObject imposterModel;

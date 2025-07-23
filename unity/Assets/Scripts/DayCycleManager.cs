@@ -1,8 +1,15 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
-using UnityEngine.Serialization;
 
+/*
+ * Class managing a day-night cycle.
+ * Created using this basis : https://www.youtube.com/watch?v=is-OijFIC9o
+ */
 public class DayCycleManager : MonoBehaviour {
     [Header("Time")]
     [SerializeField, Range(0f, 24f)] private float currentTime;
@@ -32,8 +39,6 @@ public class DayCycleManager : MonoBehaviour {
     [SerializeField] private AnimationCurve starsCurve;
     
     private PhysicallyBasedSky _skySettings;
-    
-    private bool _isDay = true;
 
     private void Start() {
         volumeProfile.TryGet(out _skySettings);
@@ -81,7 +86,6 @@ public class DayCycleManager : MonoBehaviour {
     private void ToggleShadows(bool isDay) {
         sunLightData.EnableShadows(isDay);
         moonLightData.EnableShadows(!isDay);
-        _isDay = isDay;
     }
     
     private void CheckShadowStatus() {

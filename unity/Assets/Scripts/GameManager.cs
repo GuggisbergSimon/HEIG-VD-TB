@@ -1,16 +1,13 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public struct GameSettings {
-    public bool RecenterChunks;
-    public int ViewDistance;
-    public bool EnableLOD;
-    public bool EnableImpostor;
-    public bool SRPBatcher;
-    public bool Juice;
-    public bool IsInitialized;
-}
-
+/*
+ * Singleton class that help manage different components of the game during various states.
+ */
 public class GameManager : MonoBehaviour {
     [Tooltip("The UI Manager located as a child of the Game Manager."), SerializeField]
     private UIManager uIManager;
@@ -21,7 +18,7 @@ public class GameManager : MonoBehaviour {
 
     public UIManager UIManager => uIManager;
 
-    private GameSettings _gameSettings;
+    private ChunkManagerSettings _chunkManagerSettings;
 
     private void Awake() {
         if (Instance == null) {
@@ -54,17 +51,17 @@ public class GameManager : MonoBehaviour {
         if (ChunkManager == null && chunkManager != null) {
             UIManager.ToggleCursor(false);
             ChunkManager = chunkManager;
-            if (_gameSettings.IsInitialized) {
-                chunkManager.Setup(_gameSettings);
+            if (_chunkManagerSettings.IsInitialized) {
+                chunkManager.Setup(_chunkManagerSettings);
             } else {
                 chunkManager.Setup();
             }
         }
     }
 
-    public void LoadSettings(GameSettings gameSettings) {
-        _gameSettings = gameSettings;
-        _gameSettings.IsInitialized = true;
+    public void LoadSettings(ChunkManagerSettings chunkManagerSettings) {
+        _chunkManagerSettings = chunkManagerSettings;
+        _chunkManagerSettings.IsInitialized = true;
     }
 
     public void QuitGame() {

@@ -1,7 +1,15 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/*
+ * Class controlling a hovercraft physically-based using a magnetic model simulation.
+ */
+[RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(PlayerInput))]
 public class HovercraftController : MonoBehaviour {
     [Tooltip("The location of the springs located around the hovercraft to push back when meeting ground."),
      SerializeField]
@@ -35,7 +43,7 @@ public class HovercraftController : MonoBehaviour {
     private Rigidbody _rb;
     private InputAction _moveAction;
 
-    private Dictionary<GameObject, TrailRenderer> _trails = new Dictionary<GameObject, TrailRenderer>();
+    private readonly Dictionary<GameObject, TrailRenderer> _trails = new Dictionary<GameObject, TrailRenderer>();
 
     private void Start() {
         _rb = GetComponent<Rigidbody>();
@@ -108,7 +116,7 @@ public class HovercraftController : MonoBehaviour {
     public void ToggleJuice(bool value) {
         _isJuiceEnabled = value;
     }
-    
+
     public void MoveToPosition(Vector3 position) {
         Vector3 lastVelocity = _rb.linearVelocity;
         Vector3 lastAngularVelocity = _rb.angularVelocity;

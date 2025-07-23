@@ -1,4 +1,8 @@
-﻿#if UNITY_EDITOR
+﻿/*
+ * Author: Simon Guggisberg
+ */
+
+#if UNITY_EDITOR
 using System.Collections;
 using Unity.Cinemachine;
 using Unity.PerformanceTesting;
@@ -6,6 +10,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Tests {
+    /*
+     * Class containing shared utility methods for performance tests.
+     */
     public static class Utils {
         private const int WarmUpCount = 30;
         private const int MeasurementCount = 100;
@@ -29,7 +36,7 @@ namespace Tests {
 
         public static void LoadSettings(bool recenterChunks, int viewDistance, bool enableLOD, bool enableImpostor,
             bool srpBatcher) {
-            GameManager.Instance.LoadSettings(new GameSettings {
+            GameManager.Instance.LoadSettings(new ChunkManagerSettings {
                 RecenterChunks = recenterChunks,
                 ViewDistance = viewDistance,
                 EnableLOD = enableLOD,

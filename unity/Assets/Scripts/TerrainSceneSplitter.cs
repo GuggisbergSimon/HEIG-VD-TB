@@ -1,3 +1,7 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -5,6 +9,9 @@ using UnityEditor.SceneManagement;
 using System.IO;
 using UnityEditor;
 
+/*
+ * Class splitting terrains into separate scenes from the Editor.
+ */
 public class TerrainSceneSplitter : MonoBehaviour {
 #if UNITY_EDITOR
     [ContextMenu("Split Terrains Into Scenes")]

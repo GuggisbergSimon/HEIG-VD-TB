@@ -1,3 +1,7 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 #if UNITY_EDITOR
 using System.Collections;
 using NUnit.Framework;
@@ -5,6 +9,9 @@ using Unity.PerformanceTesting;
 using UnityEngine.TestTools;
 
 namespace Tests {
+    /*
+     * Test Class for testing chunk loading.
+     */
     [TestFixture]
     public class ChunkLoadingTests {
         [OneTimeSetUp]

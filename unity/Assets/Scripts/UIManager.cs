@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour {
     public void LoadScene() {
         ToggleLoadingPanel();
         ToggleMenu();
-        GameSettings gameSettings = new GameSettings {
+        ChunkManagerSettings chunkManagerSettings = new ChunkManagerSettings {
             RecenterChunks = recenterWorldToggle.isOn,
             ViewDistance = (int)viewDistanceSlider.value,
             EnableLOD = lodToggle.isOn,
@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour {
             SRPBatcher = srpBatcherToggle.isOn,
             Juice = juiceToggle.isOn
         };
-        GameManager.Instance.LoadSettings(gameSettings);
+        GameManager.Instance.LoadSettings(chunkManagerSettings);
         AsyncOperation operation = SceneManager.LoadSceneAsync(compositingSceneName);
         SceneManager.UnloadSceneAsync(menuSceneName);
         if (operation != null) {

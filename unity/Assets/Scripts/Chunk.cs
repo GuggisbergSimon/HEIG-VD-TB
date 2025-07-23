@@ -1,6 +1,13 @@
-﻿using AmplifyImpostors;
+﻿/*
+ * Author: Simon Guggisberg
+ */
+
+using AmplifyImpostors;
 using UnityEngine;
 
+/*
+ * Class holding references to LODGroups, Impostors, and Terrain components presents in a chunk.
+ */
 public class Chunk : MonoBehaviour {
     [SerializeField] private LODGroup[] lodGroups;
     [SerializeField] private AmplifyImpostor[] impostors;
@@ -15,6 +22,6 @@ public class Chunk : MonoBehaviour {
     public void Build() {
         lodGroups = GetComponentsInChildren<LODGroup>(true);
         impostors = GetComponentsInChildren<AmplifyImpostor>(true);
-        terrain = GetComponentInChildren<Terrain>();
+        terrain = GetComponent<Terrain>();
     }
 }

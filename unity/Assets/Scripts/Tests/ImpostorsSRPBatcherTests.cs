@@ -1,3 +1,7 @@
+/*
+ * Author: Simon Guggisberg
+ */
+
 #if UNITY_EDITOR
 using System.Collections;
 using NUnit.Framework;
@@ -5,6 +9,9 @@ using Unity.PerformanceTesting;
 using UnityEngine.TestTools;
 
 namespace Tests {
+    /*
+     * Test Class for testing Impostors SRP Batcher.
+     */
     [TestFixture]
     public class ImpostorsSRPBatcherTests {
         [OneTimeSetUp]

@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*
+ * Author: Simon Guggisberg
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using AmplifyImpostors;
@@ -8,6 +11,22 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
 
+/*
+ * Struct holding ChunkManager settings.
+ */
+public struct ChunkManagerSettings {
+    public bool RecenterChunks;
+    public int ViewDistance;
+    public bool EnableLOD;
+    public bool EnableImpostor;
+    public bool SRPBatcher;
+    public bool Juice;
+    public bool IsInitialized;
+}
+
+/*
+ * Class managing loading of several chunks based on the player's position.
+ */
 public class ChunkManager : MonoBehaviour {
     [Tooltip("Whether the chunks shall be recentered to origin of the world when moving to another chunk, or not."),
      SerializeField]
@@ -44,14 +63,14 @@ public class ChunkManager : MonoBehaviour {
     public Camera Camera { get; private set; }
 
     private const float FogDistanceMult = 4f / 3f;
-    private GameSettings _gameSettings;
+    private ChunkManagerSettings _chunkManagerSettings;
     private string[][] _sortedScenes;
     private readonly List<Vector2Int> _chunksLoaded = new List<Vector2Int>();
     private Vector2Int _playerGridPos;
     private bool[,] _viewGrid;
 
     public void Setup() {
-        GameSettings settings = new GameSettings {
+        ChunkManagerSettings settings = new ChunkManagerSettings {
             RecenterChunks = recenterChunks,
             ViewDistance = viewDistance,
             EnableLOD = enableLOD,
@@ -62,11 +81,11 @@ public class ChunkManager : MonoBehaviour {
         Setup(settings);
     }
 
-    public void Setup(GameSettings gameSettings) {
-        viewDistance = gameSettings.ViewDistance;
-        playerCamera.Lens.FarClipPlane = gameSettings.ViewDistance * gridSize.x;
+    public void Setup(ChunkManagerSettings chunkManagerSettings) {
+        viewDistance = chunkManagerSettings.ViewDistance;
+        playerCamera.Lens.FarClipPlane = chunkManagerSettings.ViewDistance * gridSize.x;
         volumeProfile.TryGet(out Fog fogSettings);
-        fogSettings.maxFogDistance.value = gameSettings.ViewDistance * gridSize.x * FogDistanceMult;
+        fogSettings.maxFogDistance.value = chunkManagerSettings.ViewDistance * gridSize.x * FogDistanceMult;
         
         // ChunksToLoad, circular pattern with viewDistance as radius
         _viewGrid = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
@@ -95,12 +114,12 @@ public class ChunkManager : MonoBehaviour {
             _sortedScenes[scene.coords.x][scene.coords.y] = scene.sceneName;
         }
 
-        enableLOD = gameSettings.EnableLOD;
-        enableImpostor = gameSettings.EnableImpostor;
-        GraphicsSettings.useScriptableRenderPipelineBatching = gameSettings.SRPBatcher;
-        SpeedParticles.gameObject.SetActive(gameSettings.Juice);
-        recenterChunks = gameSettings.RecenterChunks;
-        _gameSettings = gameSettings;
+        enableLOD = chunkManagerSettings.EnableLOD;
+        enableImpostor = chunkManagerSettings.EnableImpostor;
+        GraphicsSettings.useScriptableRenderPipelineBatching = chunkManagerSettings.SRPBatcher;
+        SpeedParticles.gameObject.SetActive(chunkManagerSettings.Juice);
+        recenterChunks = chunkManagerSettings.RecenterChunks;
+        _chunkManagerSettings = chunkManagerSettings;
         StartCoroutine(LoadInitialChunk());
     }
 
@@ -113,7 +132,7 @@ public class ChunkManager : MonoBehaviour {
 
     private IEnumerator LoadInitialChunk() {
         Player = GameObject.FindWithTag("Player").GetComponent<HovercraftController>();
-        Player.ToggleJuice(_gameSettings.Juice);
+        Player.ToggleJuice(_chunkManagerSettings.Juice);
         Camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         _playerGridPos = GetGridPosition(Player.transform.position);
         GameManager.Instance.UIManager.ToggleLoadingPanel();
