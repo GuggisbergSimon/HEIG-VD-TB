@@ -12,7 +12,9 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Test disabled as no unit tests were implemented but only performance ones which make no sense to run in a CI pipeline
   test:
+    if: false
     name: Test my project 🧪
     runs-on: ubuntu-latest
     env:
@@ -147,7 +149,7 @@ jobs:
   release:
     name: Release to GitHub 🚀
     runs-on: ubuntu-latest
-    needs: [build-windows, build-linux, render-paper]
+    needs: [ build-windows, build-linux, render-paper ]
     env:
       EXPORT_NAME: owgp
     steps:
