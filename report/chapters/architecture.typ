@@ -45,7 +45,7 @@ Parmi les solutions de représentations possibles, la solution _Cesium_ propose 
 Malheureusement elle n'est que rarement adapté dans le développement d'un jeu vidéo, sans compter que la fidélité graphique proposée ne correspond qu'à une faible portion d'expériences de jeu tels que les simulateurs de vol.
 
 La plupart des jeux vidéo préfèrent se tourner vers des solutions plus adaptées à leurs besoins, afin de créer des mondes virtuels, au travers de la génération procédurale.
-Ce travail fera de même, d'autant plus que la complexité des outils de _Cesium_ ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
+Ce travail de Bachelor fera de même, d'autant plus que la complexité des outils de _Cesium_ ne permettrait pas d'implémenter les techniques d'optimisation mentionnées dans le cahier des charges.
 En effet, _Cesium for Unity_ implémente déjà le streaming de données du terrain et le recentrage du joueur en tout temps au centre du monde.
 
 En raison de ces contraintes d'outils et de la décision de la taille du prototype, ce projet se limitera à un terrain de taille minimale de 64km².
@@ -60,6 +60,8 @@ En raison de la complexité de la génération procédurale et des enjeux de ce 
 == Structure
 
 _Unity_ possède de nombreuses structures permettant le développement de jeux vidéo.
+Ces structures prennent plusieurs formes.
+Elles peuvent concerner la manière d'architecturer les fichiers de projets, des fichiers ressources permettant de faire le lien entre plusieurs éléments ou des _patterns_ de programmation.
 Maintenir une bonne structure dès le début est essentiel.
 
 === Fichiers
@@ -149,7 +151,7 @@ Les positions dans le monde des _chunks_ seront déterminées en fonction de cel
   ],
 )
 
-Une autre complication concernant les _chunks_ est l'ajout d'agents en dehors du joueur
+Une autre complication concernant les _chunks_ est l'ajout d'agents en dehors du joueur.
 Les agents incluent toutes formes d'objets capables de mouvement.
 Ceux-ci sont usuellement chargés avec une scène, ici un _chunk_.
 Mais ceci ne peut s'appliquer ici puisque les agents peuvent, au même titre que le joueur, se déplacer d'un _chunk_ à l'autre.
@@ -159,7 +161,7 @@ Cette approche permettrait une permanence des agents ainsi qu'une consistence ac
 Pour arriver à un résultat pareil, il faudrait que l'`AgentManager` mette à jour les agents non chargés, de manière moins soutenue que ceux visibles.
 Ce processus serait similaire aux frames physiques qui ne se produisent qu'à un intervalle donné, indépendant des frames d'affichage.
 
-Malheureusement, la gestion des agents et une implémentation pareille sort du cadre de ce travail de Bachelor et ne sera donc pas abordée plus en détail.
+Malheureusement, la gestion des agents et une implémentation pareille sortent du cadre de ce travail de Bachelor et ne seront donc pas abordées plus en détail.
 
 ==== Grandes coordonnées
 
@@ -193,7 +195,9 @@ Pour un jeu vidéo, la mesure la plus importante n'est pas la moyenne du _framer
 Mettre en évidence ceci permet de suivre les chutes de performances.
 Une chute brutale du _framerate_ en dehors des temps de chargement est particulièrement désagréable comme expérience et nuit à l'immersion du joueur.
 
-En raison de la nature du projet, il est difficile d'implémenter des outils tels que _Cinemachine_ et _Timeline_ pour tester le chargement des chunks, en particulier à cause du recentrage automatique du joueur, ce qui est contraire à l'idée d'un parcours dirigé.
+Malheureusement, les outils tels que _Cinemachine_ et _Timeline_ sont inappropriés pour tester les performances.
+Ceci est dû au recentrage automatique du monde, tout parcours dirigé devrait être établi en prenant compte celui-ci et complique grandement l'implémentation des tests.
+
 Mais puisque ce prototype ne contient aucunes fonctionnalités avancées, il est possible de rationaliser les différents types de tests à effectuer.
 Ainsi on distingue deux types d'interactions principales, se déplacer et contrôler la caméra.
 

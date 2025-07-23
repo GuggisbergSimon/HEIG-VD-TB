@@ -58,7 +58,7 @@ Il a ensuite été porté vers HDRP, en utilisant d'autres assets, pour adhérer
 
 === Packages
 
-Cinemachine est un package officiel Unity qui permet de simplifier implémentation et contrôle d'une caméra @unity-cinemachine.
+Cinemachine est un package officiel Unity qui permet de simplifier l'implémentation et le contrôle d'une caméra @unity-cinemachine.
 Le contrôle de la caméra, au même titre que beaucoup de composantes dans un jeu vidéo, est un élément central.
 Cinemachine offre, entre autres, la possibilité de contraindre la caméra à suivre des objets ou des chemins.
 
