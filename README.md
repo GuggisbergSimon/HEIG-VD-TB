@@ -5,12 +5,16 @@ Author: Simon Guggisberg
 | ![](.images/bg1.jpg) | ![](.images/bg2.jpg) |
 |-|-|
 
-Short video Demo available here : <a href="https://youtu.be/Zo63hHl0_L8" target="_blank">
+Short video Demo available here :
+
+<a href="https://youtu.be/Zo63hHl0_L8" target="_blank">
  <img src="http://img.youtube.com/vi/Zo63hHl0_L8/mqdefault.jpg" alt="Short Demo" width="240" height="180" border="10" />
 </a>
 
-More in depth video Demo available here : <a href="https://youtu.be/7No1_zVjESk" target="_blank">
- <img src="http://img.youtube.com/vi/7No1_zVjESk/mqdefault.jpg" alt="Short Demo" width="240" height="180" border="10" />
+More in depth video Demo available here :
+
+<a href="https://youtu.be/7No1_zVjESk" target="_blank">
+ <img src="http://img.youtube.com/vi/7No1_zVjESk/mqdefault.jpg" alt="Long Demo" width="240" height="180" border="10" />
 </a>
 
 This repository containing all information related to my Bachelor's thesis.
