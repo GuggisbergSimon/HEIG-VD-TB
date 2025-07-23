@@ -311,14 +311,14 @@ Cela a comme avantage visuel de bénéficier de textures uniques pour chaque sur
 
 === Mesh Shader
 
-_Mesh Shader_ est une technologie qui n'a pour le moment qu'une implémentation dans le moteur _Unreal Engine_ sous le nom de _Nanite_ @nvidia-mesh-shader @unreal-doc-nanite.
+_Mesh Shader_ est une technologie moderne qui n'a pour le moment qu'une implémentation dans le moteur _Unreal Engine_ sous le nom de _Nanite_ @nvidia-mesh-shader @unreal-doc-nanite.
 Elle ne s'applique que pour les objets statiques, ceux qui ne bougent pas, typiquement un environnement fixe.
 Les modèles sont analysés lors de l'import afin d'être streamé de manière efficace lors du runtime et de n'afficher que les triangles visibles au niveau de détail requis.
 Cela permet l'affichage de modèles 3D très complexes, en s'affranchissant du nombre de polygones comme métrique de ralentissement, et donc d'améliorer grandement la fidélité visuelle.
 
 Une implémentation future de cette technique est en considération par _Unity_ pour le moment @unity-roadmap.
 
-=== Level of detail (LOD)
+=== Level of Detail (LOD)
 
 Lorsque des modèles au maillage complexe sont affichés à l'écran de manière distante, le GPU va devoir traiter pour chaque pixel tous les triangles à sa position.
 Afficher des modèles complexes distants est donc très coûteux en terme de performances et n'apporte pas une grande valeur au rendu graphique.

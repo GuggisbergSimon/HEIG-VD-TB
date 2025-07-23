@@ -11,7 +11,7 @@ Ce travail de Bachelor explore, dans un premier temps, l'état de l'art des tech
 Dans un second temps, ce projet détaille le développement d'un prototype de jeu en monde ouvert ainsi que l'implémentation de certaines fonctionnalités attendues pour un tel jeu.
 Puis, certaines des techniques recherchées sont implémentées en adhérant autant que faire se peut à l'état de l'art.
 Les techniques choisies sont LODs, chargement du monde asynchrone, imposteurs et optimisation par shader.
-Finalement, une mesure des performance permet de déterminer l'impact de chacune de ces techniques implémentées et de les comparer entre elles.
+Finalement, une mesure de performance permet de déterminer l'impact de chacune de ces techniques implémentées et de les comparer entre elles.
 Ces mesures sont établies par des tests automatisés afin de s'assurer de la reproductibilité des résultats.
 
 

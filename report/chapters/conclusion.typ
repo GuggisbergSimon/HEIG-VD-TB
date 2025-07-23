@@ -10,7 +10,7 @@ La majorité des ressources libres sont disponibles pour la _pipeline_ Standard 
 De plus les spécificités HDRP et le langage HLSL, non content d'être un nouveau langage auquel je n'étais pas familier, ont rendu tout le travail d'implémentation des tâches _nice-to-have_ plus compliqué que prévu, me forçant à revoir mes priorités et à me rabattre sur des solutions pré-existantes, réalisables durant le délai imparti.
 
 Travailler avec de nombreuses et larges ressources, comme ce qui sied à un prototype _Open World_, a également été un défi en soi.
-Trouver des ressources compatibles, ou en convertir vers le format de matériel HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
+Trouver des ressources compatibles, ou en convertir vers le format de matériau HDRP ne s'est pas fait sans mal, même si les outils d'automatisation de Unity ont grandement facilité la tâche.
 Pour les tâches répétitives, je me suis appuyé sur la création d'outils de l'éditeur afin d'automatiser autant que faire se peut ces tâches.
 
 Dans l'ensemble, néanmoins, la totalité des objectifs du cahier des charges ont été atteints, ou, à défaut, traités de manière significative.
@@ -18,7 +18,7 @@ Seule l'utilisation de shaders pour représenter l'herbe n'a pas pu être menée
 Une comparaison des différentes solutions ainsi qu'une démonstration permettant de visualiser l'implémentation de celles-ci ont été implémentés dans le projet, sans qu'elles soient implémentées dans le prototype en elles-mêmes.
 
 Il a également été difficile de suivre la méthodologie de travail décrite dans le cahier des charges.
-L'utilisation de _GitHub Project_ dès la _milestone_ 1 était trop prématurée; le projet constituait principalement de recherche et de prototypage à ce moment-là.
+L'utilisation de _GitHub Project_ dès la _milestone_ 1 était trop prématurée; le projet se constituait principalement de recherche et de prototypage à ce moment-là.
 Mais une fois l'usage du _GitHub Project_ mis en place, après le passage de la _milestone_ 3, celui-ci a été utilisé de manière à consigner et organiser les nombreuses tâches restantes à effectuer.
 Son usage a été plus que bénéfique.
 Les sprints de deux semaines lors de la _milestone_ 4 n'ont également pas été scrupuleusement respectés, mais le compte rendu hebdomadaire m'a forcé à faire le point chaque semaine, bien que moins formel qu'un sprint review.
@@ -32,7 +32,7 @@ Ce moteur est plus adapté à un rendu haute fidélité et permettrait de porter
 
 Finalement, ce travail met en valeur l'importance de l'optimisation des performances, via anciennes et nouvelles techniques.
 Le rendu graphique en temps réel est un domaine complexe.
-Les challenges rencontrés à la course au photoréalisme vont de pair avec ceux qui en découlent pour les performances.
+Les challenges rencontrés à la course au photoréalisme vont de pair avec ceux qui découlent des performances.
 Cette course sur deux fronts est un équilibre délicat à maintenir pour tout projet d'application en temps réel.
 
 == Remerciements

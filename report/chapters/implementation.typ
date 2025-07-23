@@ -514,7 +514,7 @@ Conditions de test :
 - Les tests ont été réalisés avec une distance d'affichage de 25 chunks, sauf dans le cas du test `ChunkLoading`.
 - Il n'y a pas de recentrage du monde effectué
 - Les tests _Impostors_, raccourcis par _Imp._, nécessitent également l'utilisation de LODs.
-  Ils ne sont donc pas représentables des _Impostors_ seuls.
+  Ils ne sont donc pas représentatifs des _Impostors_ seuls.
 - Deux tests d'_Impostors_ existent afin de comparer les performances avec `SRP Batcher` et `GPU Instancing`, la technique présente par défaut dans tous les autres tests.
 
 ==== Résultats
