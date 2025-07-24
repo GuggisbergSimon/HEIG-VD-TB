@@ -40,4 +40,4 @@ Cette course sur deux fronts est un équilibre délicat à maintenir pour tout p
 Je tiens à remercier *Bertil Chapuis* pour son encadrement et ses conseils tout au long de ce travail.
 Sans sa grande confiance dans ce projet ambitieux, celui-ci n'aurait pas vu le jour sous cette forme.
 
-Je remercie également ma famille et mes proches pour leur soutien et leur indéfectible patience.
+Je remercie également ma famille et mes proches pour leur nombreuses relectures ainsi que leur soutien et leur indéfectible patience.

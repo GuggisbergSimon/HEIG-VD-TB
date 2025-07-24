@@ -62,3 +62,5 @@ A release with a PDF of the report and builds for Linux and Windows will be crea
 Builds of the application are located in the [releases](https://github.com/GuggisbergSimon/HEIG-VD-TB/releases/latest) tab of the GitHub repository.
 
 Supported platforms are Windows and Linux, with those requirements for [Unity](https://docs.unity3d.com/Manual/system-requirements.html#desktop) [HDRP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.3/manual/System-Requirements.html).
+
+Linux build is currently untested.
