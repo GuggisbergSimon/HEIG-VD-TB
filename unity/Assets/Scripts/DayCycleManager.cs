@@ -8,7 +8,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 /*
  * Class managing a day-night cycle.
- * Created using this basis : https://www.youtube.com/watch?v=is-OijFIC9o
+ * Written following this as a basis : https://www.youtube.com/watch?v=is-OijFIC9o
  */
 public class DayCycleManager : MonoBehaviour {
     [Header("Time")]

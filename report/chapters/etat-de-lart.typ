@@ -446,9 +446,9 @@ Bien que l'échelle des mondes virtuels varie grandement, il est possible de dis
   Malgré la popularité de cette échelle, elle comporte une charge de travail accru au niveau animation/modélisation de l'avatar, si celui-ci est visible.
   
   Jeux notables : 
-    - _The Elder Scrolls V : Skyrim_ - 40km²
-    - _The Legend of Zelda : Breath of the Wild_ - 80km²
-    - _The Witcher 3_ - 125 km²
+    - _The Elder Scrolls V : Skyrim_ - \~40km²
+    - _The Legend of Zelda : Breath of the Wild_ - \~80km²
+    - _The Witcher 3_ - \~125 km²
 
 - Une échelle à taille véhicule est moins habituelle et dispose d'une grande variation.
   En effet, cela peut autant couvrir la zone d'une ville, la surface d'un continent, voire même de la planète Terre entière.
@@ -456,9 +456,9 @@ Bien que l'échelle des mondes virtuels varie grandement, il est possible de dis
   Les assets pour cette échelle seront souvent moins détaillés puisque ceux-ci seront ou trop éloignés de la caméra, ou le joueur ne pourra pas les examiner attentivement en raison de la vitesse du véhicule.
 
   Jeux notables : 
-    - _The Crew_ - 5 200 km²
-    - _Fuel_ - 15 000 km²
-    - _Microsoft Flight Simulator_ - 510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
+    - _The Crew_ - \~5 200 km²
+    - _Fuel_ - \~15 000 km²
+    - _Microsoft Flight Simulator_ - \~510 000 000 km² - Carte aux dimensions 1:1 de la Terre.
 
 - Une échelle à taille spatiale est tout ce qui se trouve au-delà, couvrant tant un système solaire que celui d'une galaxie entière.
   Les unités pour ces mondes sont souvent quantifiées en unités astronomiques.

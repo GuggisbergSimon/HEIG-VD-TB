@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 
 /*
  * Class controlling a hovercraft physically-based using a magnetic model simulation.
+ * Written following this as a basis : https://www.youtube.com/watch?v=qsfIXopyYHY
  */
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(PlayerInput))]
 public class HovercraftController : MonoBehaviour {
