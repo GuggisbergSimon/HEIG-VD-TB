@@ -41,8 +41,14 @@ Both are located in the [poster](/poster/TB_SG_affiche.pdf) subfolder.
 ## Application
 
 The application is built using `Unity 6000.0.39f1`.
+Using Unity Hub is recommended for managing Unity installation and projects.
 The project files are located in the [unity](/unity/) subfolder.
 System Requirements for a Unity HDRP project can be found [here](https://docs.unity3d.com/Manual/system-requirements.html#editor).
+
+To open and edit the application :
+- open Unity Hub
+- add project from disk and choose the `unity` subfolder
+- open the project
 
 ## GitHub Project
 
