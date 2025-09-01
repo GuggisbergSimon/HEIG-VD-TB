@@ -24,17 +24,24 @@ public class UIManager : MonoBehaviour {
 
     [SerializeField] private Slider viewDistanceSlider;
     [SerializeField] private TextMeshProUGUI viewDistanceText;
+    [SerializeField] private Slider chunkDistanceSlider;
+    [SerializeField] private TextMeshProUGUI chunkDistanceText;
     [SerializeField] private Toggle recenterWorldToggle;
     [SerializeField] private Toggle lodToggle;
     [SerializeField] private Toggle impostorToggle;
     [SerializeField] private Toggle srpBatcherToggle;
     [SerializeField] private Toggle juiceToggle;
+    [SerializeField] private Toggle fogToggle;
 
     private bool _isLoading = false;
     private bool _isPaused = false;
 
     public void UpdateViewDistanceText() {
         viewDistanceText.text = $"{viewDistanceSlider.value}";
+    }
+    
+    public void UpdateChunkDistanceText() {
+        chunkDistanceText.text = $"{chunkDistanceSlider.value}";
     }
 
     public static void ToggleCursor(bool isUIMode) {
@@ -48,9 +55,11 @@ public class UIManager : MonoBehaviour {
         ChunkManagerSettings chunkManagerSettings = new ChunkManagerSettings {
             RecenterChunks = recenterWorldToggle.isOn,
             ViewDistance = (int)viewDistanceSlider.value,
+            ChunkDistance = (int)chunkDistanceSlider.value,
             EnableLOD = lodToggle.isOn,
             EnableImpostor = lodToggle.isOn && impostorToggle.isOn,
             SRPBatcher = srpBatcherToggle.isOn,
+            Fog = fogToggle.isOn,
             Juice = juiceToggle.isOn
         };
         GameManager.Instance.LoadSettings(chunkManagerSettings);
@@ -99,6 +108,7 @@ public class UIManager : MonoBehaviour {
         ToggleCursor(true);
         menuPanel.SetActive(!menuPanel.activeSelf);
         UpdateViewDistanceText();
+        UpdateChunkDistanceText();
     }
 
     public void ToggleLoadingPanel() {

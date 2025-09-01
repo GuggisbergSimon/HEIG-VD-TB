@@ -17,10 +17,12 @@ using UnityEngine.SceneManagement;
 public struct ChunkManagerSettings {
     public bool RecenterChunks;
     public int ViewDistance;
+    public int ChunkDistance;
     public bool EnableLOD;
     public bool EnableImpostor;
     public bool SRPBatcher;
     public bool Juice;
+    public bool Fog;
     public bool IsInitialized;
 }
 
@@ -46,16 +48,20 @@ public class ChunkManager : MonoBehaviour {
     [Tooltip("Grid offset for original instantiation of the player. Must be positive values."), SerializeField]
     private Vector2Int gridOffset = Vector2Int.one * 8;
 
+    [Tooltip("It represents the distance drawn by camera and fog"), SerializeField, Min(1)]
+    private int viewDistance = 3;
+
     [Tooltip("It represents the radius of a circular pattern centered on the player's chunk. " +
              "A distance of 1 means only the chunk where the player is will be loaded. "), SerializeField, Min(1)]
-    private int viewDistance = 3;
+    private int chunkDistance = 3;
 
     [Tooltip("Offset to load chunks at proper height."), SerializeField]
     private float yOffset = 0f;
+
     [SerializeField] private ParticleSystem speedParticles;
     [SerializeField] private CinemachineCamera playerCamera;
     [SerializeField] private VolumeProfile volumeProfile;
-    
+
     public ParticleSystem SpeedParticles => speedParticles;
 
     public HovercraftController Player { get; private set; }
@@ -73,10 +79,12 @@ public class ChunkManager : MonoBehaviour {
         ChunkManagerSettings settings = new ChunkManagerSettings {
             RecenterChunks = recenterChunks,
             ViewDistance = viewDistance,
+            ChunkDistance = chunkDistance,
             EnableLOD = enableLOD,
             EnableImpostor = enableImpostor,
             SRPBatcher = srpBatcher,
             Juice = true,
+            Fog = true,
         };
         Setup(settings);
     }
@@ -85,14 +93,18 @@ public class ChunkManager : MonoBehaviour {
         viewDistance = chunkManagerSettings.ViewDistance;
         playerCamera.Lens.FarClipPlane = chunkManagerSettings.ViewDistance * gridSize.x;
         volumeProfile.TryGet(out Fog fogSettings);
-        fogSettings.maxFogDistance.value = chunkManagerSettings.ViewDistance * gridSize.x * FogDistanceMult;
-        
+        fogSettings.active = chunkManagerSettings.Fog;
+        if (chunkManagerSettings.Fog) {
+            fogSettings.maxFogDistance.value = chunkManagerSettings.ViewDistance * gridSize.x * FogDistanceMult;
+        }
+
         // ChunksToLoad, circular pattern with viewDistance as radius
-        _viewGrid = new bool[viewDistance * 2 + 1, viewDistance * 2 + 1];
-        for (int x = -viewDistance; x <= viewDistance; x++) {
-            for (int y = -viewDistance; y <= viewDistance; y++) {
-                if (x * x + y * y <= viewDistance * viewDistance) {
-                    _viewGrid[x + viewDistance, y + viewDistance] = true;
+        chunkDistance = chunkManagerSettings.ChunkDistance;
+        _viewGrid = new bool[chunkDistance * 2 + 1, chunkDistance * 2 + 1];
+        for (int x = -chunkDistance; x <= chunkDistance; x++) {
+            for (int y = -chunkDistance; y <= chunkDistance; y++) {
+                if (x * x + y * y <= chunkDistance * chunkDistance) {
+                    _viewGrid[x + chunkDistance, y + chunkDistance] = true;
                 }
             }
         }
@@ -185,8 +197,8 @@ public class ChunkManager : MonoBehaviour {
             int relY = coords.y - _playerGridPos.y;
 
             // Skip if within view distance and in the chunksToLoad pattern
-            if (Mathf.Abs(relX) <= viewDistance && Mathf.Abs(relY) <= viewDistance &&
-                _viewGrid[relX + viewDistance, relY + viewDistance]) {
+            if (Mathf.Abs(relX) <= chunkDistance && Mathf.Abs(relY) <= chunkDistance &&
+                _viewGrid[relX + chunkDistance, relY + chunkDistance]) {
                 continue;
             }
 
@@ -213,15 +225,15 @@ public class ChunkManager : MonoBehaviour {
         int gridLength = _sortedScenes.Length;
         List<Vector2Int> chunksToLoad = new List<Vector2Int>();
 
-        for (int x = -viewDistance; x <= viewDistance; x++) {
+        for (int x = -chunkDistance; x <= chunkDistance; x++) {
             int xCoord = _playerGridPos.x + x;
             if (xCoord < 0 || xCoord >= gridLength) {
                 continue;
             }
 
-            for (int y = -viewDistance; y <= viewDistance; y++) {
-                int arrayX = x + viewDistance;
-                int arrayY = y + viewDistance;
+            for (int y = -chunkDistance; y <= chunkDistance; y++) {
+                int arrayX = x + chunkDistance;
+                int arrayY = y + chunkDistance;
 
                 // Pre emptive skips
                 if (!_viewGrid[arrayX, arrayY]) {
